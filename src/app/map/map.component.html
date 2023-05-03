@@ -1,0 +1,8 @@
+<google-map height="400px"
+            width="750px"
+            [center]="center"
+            [zoom]="zoom"
+            [options]="mapOptions"
+            (mapClick)="moveMap($event)"
+            (mapMousemove)="move($event)">
+</google-map>
