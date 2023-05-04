@@ -12,6 +12,13 @@ export class MapComponent implements OnInit {
   zoom = 15;
   mapOptions: google.maps.MapOptions = {
     mapTypeId: 'roadmap',
+    styles: [
+      {
+        featureType: 'poi',
+        elementType: 'labels',
+        stylers: [{ visibility: 'off' }]
+      }
+    ],
     disableDefaultUI: true,
     maxZoom: 20,
     minZoom: 5,
