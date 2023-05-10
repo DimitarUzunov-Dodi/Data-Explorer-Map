@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import * as h3 from 'h3-js';
-
+import { GoogleMapsModule } from '@angular/google-maps';
 
 
 @Component({
