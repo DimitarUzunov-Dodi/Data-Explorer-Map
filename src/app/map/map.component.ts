@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewChild  } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import * as h3 from 'h3-js';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit {
-  @ViewChild('map') map: any;
-  display: any;
-  center!: google.maps.LatLngLiteral;
-  zoom = 15;
+export class MapComponent implements OnInit, AfterViewInit {
+  @ViewChild('map') mapElement: any;
+  map!: google.maps.Map;
+  center: google.maps.LatLngLiteral = { lat: 37.7749, lng: -122.4194 };
+  zoom = 12;
   mapOptions: google.maps.MapOptions = {
     mapTypeId: 'roadmap',
     styles: [
@@ -268,31 +269,60 @@ export class MapComponent implements OnInit {
     ],
     disableDefaultUI: true,
     maxZoom: 20,
-    minZoom: 5,
+    minZoom: 4,
     restriction: {
       latLngBounds: {
         north: 85,
         south: -85,
-        west: -180,
-        east: 180
+        west: -170,
+        east: 170
       },
       strictBounds: true
     }
   };
-  constructor() {}
 
   ngOnInit(): void {
+    
+  }
+
+  ngAfterViewInit(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        this.center = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
+        this.center = { lat: position.coords.latitude, lng: position.coords.longitude };
+        this.initializeMap();
       });
+    } else {
+      this.initializeMap();
     }
   }
 
-  move(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null) this.display = event.latLng.toJSON();
+  initializeMap(): void {
+    this.map = new google.maps.Map(this.mapElement.nativeElement, {
+      center: this.center,
+      zoom: this.zoom,
+      ...this.mapOptions
+    });
+    google.maps.event.addListenerOnce(this.map, 'idle', () => {
+      const hexagonIndex = h3.latLngToCell(this.center.lat, this.center.lng, 1);
+      const hexagonIds = h3.gridDisk(hexagonIndex, 3);
+      for (const hex of hexagonIds) {
+        const hexagonBoundary = h3.cellToBoundary(hex, true);
+        const polygonCoords: google.maps.LatLngLiteral[] = hexagonBoundary.map(coord => ({ lat: coord[1], lng: coord[0] }));
+        const polygon = new google.maps.Polygon({
+          paths: polygonCoords,
+          strokeColor: "#FF0000",
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: "#FF0000",
+          fillOpacity: 0.35,
+          zIndex: 9999
+        });
+        polygon.setMap(this.map);
+      }
+    });
+  }
+
+  moveMap(event: google.maps.MapMouseEvent) {
+    if (event.latLng != null) this.center = (event.latLng.toJSON());
   }
 }
