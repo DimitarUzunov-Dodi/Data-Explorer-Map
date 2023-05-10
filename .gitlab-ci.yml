@@ -1,0 +1,9 @@
+image: node:20.1.0-bullseye
+
+stages:
+  - setup
+
+install:
+  stage: setup
+  script:
+    - npm ci
