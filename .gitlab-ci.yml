@@ -1,4 +1,4 @@
-image: node:20.1.0-bullseye
+image: 18.16.0
 
 stages:
   - setup
