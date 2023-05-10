@@ -274,16 +274,16 @@ export class MapComponent implements OnInit, AfterViewInit {
       latLngBounds: {
         north: 85,
         south: -85,
-        west: -170,
-        east: 170
+        west: -180,
+        east: 180
       },
       strictBounds: true
     }
   };
-
-  ngOnInit(): void {
-    
-  }
+  //hexagonsIds: string[] = []; // Keep track of displayed hexagon IDs
+  displayedHexagons: google.maps.Polygon[] = [];
+  
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     if (navigator.geolocation) {
@@ -302,27 +302,83 @@ export class MapComponent implements OnInit, AfterViewInit {
       zoom: this.zoom,
       ...this.mapOptions
     });
-    google.maps.event.addListenerOnce(this.map, 'idle', () => {
-      const hexagonIndex = h3.latLngToCell(this.center.lat, this.center.lng, 1);
-      const hexagonIds = h3.gridDisk(hexagonIndex, 3);
-      for (const hex of hexagonIds) {
-        const hexagonBoundary = h3.cellToBoundary(hex, true);
-        const polygonCoords: google.maps.LatLngLiteral[] = hexagonBoundary.map(coord => ({ lat: coord[1], lng: coord[0] }));
-        const polygon = new google.maps.Polygon({
-          paths: polygonCoords,
-          strokeColor: "#FF0000",
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: "#FF0000",
-          fillOpacity: 0.35,
-          zIndex: 9999
+    // Initialize the map and create hexagons for the initial bounds
+    google.maps.event.addListener(this.map, 'bounds_changed', () => {
+      const bounds = this.map.getBounds();
+      if (bounds) {
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+  
+        const minLat = sw.lat();
+        const maxLat = ne.lat();
+        const minLng = sw.lng();
+        const maxLng = ne.lng();
+  
+        const coords = [
+          [minLat, minLng],
+          [maxLat, minLng],
+          [maxLat, maxLng],
+          [minLat, maxLng],
+        ];
+        let RESOLUTION_LEVEL: number;
+        const zoom = this.map.getZoom()!;
+        if (zoom! <= 5){
+          RESOLUTION_LEVEL = 1;
+        }
+        else {
+          if (zoom! <= 8){
+            RESOLUTION_LEVEL = 3;
+          }else {
+            if (zoom! <= 10) {
+              RESOLUTION_LEVEL = 5;
+            } 
+            else {
+              if (zoom! <= 13) {
+                RESOLUTION_LEVEL = 7;
+              } 
+              else {
+                if (zoom! <= 15) {
+                  RESOLUTION_LEVEL = 9;
+                } 
+                else {
+                  RESOLUTION_LEVEL = 11;
+                }
+              }
+            }
+          }
+        }
+
+        console.log(zoom)
+        console.log(RESOLUTION_LEVEL)
+        this.displayedHexagons.forEach((hexagon) => {
+          hexagon.setMap(null);
         });
-        polygon.setMap(this.map);
+        this.displayedHexagons = [];
+        const newHexagonIds = h3.polygonToCells(coords, RESOLUTION_LEVEL, false);
+        console.log(newHexagonIds);
+        this.displayHexagons(newHexagonIds);
       }
     });
+  }
+
+  displayHexagons(hexagons: string[]): void {
+    for (const hex of hexagons) {
+      const hexagonCoords = h3.cellToBoundary(hex, true);
+      const hexagonPolygon = new google.maps.Polygon({
+        paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+      });
+      hexagonPolygon.setMap(this.map);
+      this.displayedHexagons.push(hexagonPolygon);
+    };
   }
 
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
   }
+  
 }
