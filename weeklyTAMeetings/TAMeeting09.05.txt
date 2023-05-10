@@ -1,0 +1,59 @@
+//========== Agenda ==========//
+
+Progress last 2 weeks
+- research on project
+- Learning angular
+- Implemented the map
+- Wrote the reports
+
+We have to:
+- implement h3
+- Filter and search  hexagons
+- Implement poi
+- Find the repo with jsons
+
+Questions:
+- some feedback on the reports
+- Are the reports like important or is just pass
+- Are we on track
+- Weekly meetings like this each time?
+
+
+//========== Notes ==========//
+
+Introduction Assignment - it should have  reasonable  word count.
+We produce 5 intros and then we make one perfect from all of them for the final report.
+
+1.Last week work
+    - Implemented the Google map
+    - Learned Angular for the project
+    - Did the work plan and gave out the jobs
+    - produced the project plan assignment
+    - produced the project plan assignment
+
+2.Future plans
+    ! Maybe make smaller issues and add weights to them for more even work flow !
+
+    - get the Jsons files from the company
+    - weekly meetings with Ta - Tuesday 2:30 each week
+    - Figure out if we will have enough work during  5ft and 8th week.
+    - Look back on past meetings regularly
+    
+3.Assignment feedback
+    - Front page - no need for student numbers
+    - make it multi aligned
+    - maybe use Latex - much more formal and professional
+    - do not forget to number the sections
+    - problem statements - we have to say what is the problem wwe are solving
+    - fix grammar and spelling -it might lead to fail in the style category
+    - stakeholder analysis - how do they affect us and how dow e help them
+    - references - fix them they are bad
+    - when listing stuff no need to at etc if there are no other we can think of
+    - Why MoSCoW, show why maybe research
+    - Show why we do things
+    - Links - bad for paper, better to add references
+    - No unnecessary research in project plan
+    - Quotes - leave reference for them, if its just a pretty quote maybe paraphrase, leave it as original if its famous quote.
+    - Show what we mean behind agreed code style and test coverage
+    - keep client in the loop
+   
