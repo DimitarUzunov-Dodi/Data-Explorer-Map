@@ -382,5 +382,26 @@ export class MapComponent implements OnInit, AfterViewInit {
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
   }
+
+  findHexagon(hexagonId: string): void {
+    try {
+      const hexagonCoords = h3.cellToBoundary(hexagonId, true);
+      const hexagonPolygon = new google.maps.Polygon({
+      paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+      strokeColor: '00ff00',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '00ff00',
+      fillOpacity: 0.35,
+    });
+    hexagonPolygon.setMap(this.map);
+    this.displayedHexagons = [];
+    this.displayedHexagons.push(hexagonPolygon);
+  } catch {
+      throw new Error("Hexagon not found");
+  }
+    
+
+  }
   
 }
