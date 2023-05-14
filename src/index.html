@@ -17,6 +17,28 @@
    </div>
    <div class="app-name">Data Map Explorer</div>
   </div>
+ 
+  
+  <div class="infotainment-panel">
+    <div class="field">
+      <h3>Field 1</h3>
+    </div>
+    <div class="field">
+      <h3>Field 2</h3>
+    </div>
+    <div class="field">
+      <h3>Field 3</h3>
+    </div>
+  </div>
+  <button id="toggle-panel-btn">Infotainment Panel</button>
   <app-root></app-root>
+  <script>
+    const infotainmentPanel = document.querySelector('.infotainment-panel');
+    const togglePanelBtn = document.querySelector('#toggle-panel-btn');
+    togglePanelBtn.addEventListener('click', () => {
+      infotainmentPanel.classList.toggle('show');
+    });
+  </script>
+
 </body>
 </html>

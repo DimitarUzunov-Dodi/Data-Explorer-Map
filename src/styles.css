@@ -18,28 +18,28 @@ html, body {
   .top-search-bar {
     display: flex;
     align-items: center;
-    height: 80px; /* Increase the height as desired */
+    height: 80px;
     background-color: #f1f1f1;
     padding: 10px;
   }
 
   .top-search-bar input[type="text"] {
-    padding: 10px; /* Increase the padding as desired */
+    padding: 10px; 
     border-radius: 5px;
     border: none;
-    width: 400px; /* Increase the width as desired */
-    font-size: 20px; /* Increase the font size as desired */
+    width: 400px;
+    font-size: 20px; 
   }
 
   .top-search-bar button {
-    padding: 10px 20px; /* Increase the padding as desired */
+    padding: 10px 20px;
     margin-left: 10px;
     border-radius: 5px;
     border: none;
     background-color: #4CAF50;
     color: white;
     cursor: pointer;
-    font-size: 20px; /* Increase the font size as desired */
+    font-size: 20px;
   }
 
   .app-name {
@@ -52,3 +52,43 @@ html, body {
     align-items: center;
     font-family: 'Roboto', sans-serif;
   }
+
+  .infotainment-panel {
+    position: fixed;
+    top: 120px;
+    left: -300px;
+    width: 300px;
+    height: calc(100% - 300px); 
+    background-color: white;
+    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3); 
+    overflow-y: scroll;
+    z-index: 1;
+    transition: transform 0.3s ease-in-out;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .infotainment-panel .field {
+    text-align: right;
+    padding: 15px; 
+  }
+  
+  .infotainment-panel.show {
+    transform: translateX(200px); 
+  }
+
+  #toggle-panel-btn {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: lightblue;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+  }
+  
+
+  
