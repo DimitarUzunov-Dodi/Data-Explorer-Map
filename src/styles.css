@@ -5,3 +5,50 @@ html, body {
     margin: 0;
     padding: 0;
   }
+
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    background-color: #f1f1f1;
+    padding: 10px;
+  }
+
+  .top-search-bar {
+    display: flex;
+    align-items: center;
+    height: 80px; /* Increase the height as desired */
+    background-color: #f1f1f1;
+    padding: 10px;
+  }
+
+  .top-search-bar input[type="text"] {
+    padding: 10px; /* Increase the padding as desired */
+    border-radius: 5px;
+    border: none;
+    width: 400px; /* Increase the width as desired */
+    font-size: 20px; /* Increase the font size as desired */
+  }
+
+  .top-search-bar button {
+    padding: 10px 20px; /* Increase the padding as desired */
+    margin-left: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    font-size: 20px; /* Increase the font size as desired */
+  }
+
+  .app-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+  }
