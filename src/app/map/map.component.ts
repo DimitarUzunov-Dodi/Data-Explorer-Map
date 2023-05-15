@@ -403,13 +403,29 @@ export class MapComponent implements OnInit, AfterViewInit {
     try {
       this.searchHexId = hexagonId;
       const hexagonCoords = h3.cellToBoundary(hexagonId, true);
+      const resoulution = h3.getResolution(hexagonId);
+      let zoom = 11;
+
+      if (resoulution <= 1) {
+        zoom = 5;
+      } else if (resoulution <= 3) {
+        zoom = 8;
+      } else if (resoulution <= 5) {
+        zoom = 10;
+      } else if (resoulution <= 7) {
+        zoom = 13;
+      } else if (resoulution <= 9) {
+        zoom = 15;
+      } else {
+        zoom = 16;  // or any value greater than 15
+      }
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
-      console.log(hexagonCoords);
       this.map.panTo(newLocation);
-      this.initializeMap();
+      this.map.setZoom(zoom);
 
     } catch { throw new Error("Hexagon not found") }
   
   }
+  
   
 }
