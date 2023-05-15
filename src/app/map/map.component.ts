@@ -282,17 +282,23 @@ export class MapComponent implements OnInit, AfterViewInit {
       strictBounds: true
     }
   };
-  //hexagonsIds: string[] = []; // Keep track of displayed hexagon IDs
-  displayedHexagons: google.maps.Polygon[] = [];
+  displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
+
   
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.center = { lat: position.coords.latitude, lng: position.coords.longitude };
-        this.initializeMap();
-      });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.center = { lat: position.coords.latitude, lng: position.coords.longitude };
+          this.initializeMap();
+        },
+        () => {
+          // Use default coordinates when user position is blocked or not available
+          this.initializeMap();
+        }
+      );
     } else {
       this.initializeMap();
     }
@@ -350,32 +356,32 @@ export class MapComponent implements OnInit, AfterViewInit {
           }
         }
 
-        console.log(zoom)
-        console.log(RESOLUTION_LEVEL)
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
-        this.displayedHexagons = [];
-        const newHexagonIds = h3.polygonToCells(coords, RESOLUTION_LEVEL, false);
-        console.log(newHexagonIds);
-        this.displayHexagons(newHexagonIds);
+        this.displayedHexagons = new Map<string, google.maps.Polygon>();;
+        const newHexagonIds = h3.polygonToCells(coords, RESOLUTION_LEVEL+2, false);
+        this.displayHexagons(newHexagonIds, RESOLUTION_LEVEL);
       }
     });
   }
 
-  displayHexagons(hexagons: string[]): void {
+  displayHexagons(hexagons: string[], targetResolution: number): void {
     for (const hex of hexagons) {
-      const hexagonCoords = h3.cellToBoundary(hex, true);
-      const hexagonPolygon = new google.maps.Polygon({
-        paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35,
-      });
-      hexagonPolygon.setMap(this.map);
-      this.displayedHexagons.push(hexagonPolygon);
+      const parentOfHex = h3.cellToParent(hex, targetResolution);
+      if (!this.displayedHexagons.has(parentOfHex)){
+        const hexagonCoords = h3.cellToBoundary(parentOfHex, true);
+        const hexagonPolygon = new google.maps.Polygon({
+          paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35,
+        });
+        hexagonPolygon.setMap(this.map);
+        this.displayedHexagons.set(parentOfHex, hexagonPolygon);
+      }
     };
   }
 
