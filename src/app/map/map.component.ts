@@ -3,6 +3,7 @@ import * as h3 from 'h3-js';
 import { GoogleMapsModule } from '@angular/google-maps';
 
 
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -282,9 +283,9 @@ export class MapComponent implements OnInit, AfterViewInit {
       strictBounds: true
     }
   };
-  //hexagonsIds: string[] = []; // Keep track of displayed hexagon IDs
+
   displayedHexagons: google.maps.Polygon[] = [];
-  
+  searchHexId: string = ''!;
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
@@ -292,12 +293,14 @@ export class MapComponent implements OnInit, AfterViewInit {
       navigator.geolocation.getCurrentPosition((position) => {
         this.center = { lat: position.coords.latitude, lng: position.coords.longitude };
         this.initializeMap();
+        
       });
+      //this.findHexagon('87196b392ffffff')
     } else {
       this.initializeMap();
     }
   }
-
+   
   initializeMap(): void {
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
       center: this.center,
@@ -350,14 +353,12 @@ export class MapComponent implements OnInit, AfterViewInit {
           }
         }
 
-        console.log(zoom)
-        console.log(RESOLUTION_LEVEL)
+
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
         this.displayedHexagons = [];
         const newHexagonIds = h3.polygonToCells(coords, RESOLUTION_LEVEL, false);
-        console.log(newHexagonIds);
         this.displayHexagons(newHexagonIds);
       }
     });
@@ -365,17 +366,33 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   displayHexagons(hexagons: string[]): void {
     for (const hex of hexagons) {
-      const hexagonCoords = h3.cellToBoundary(hex, true);
-      const hexagonPolygon = new google.maps.Polygon({
-        paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35,
-      });
-      hexagonPolygon.setMap(this.map);
-      this.displayedHexagons.push(hexagonPolygon);
+      if (hex == this.searchHexId){
+        const hexagonCoords = h3.cellToBoundary(hex, true);
+        const hexagonPolygon = new google.maps.Polygon({
+          paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#00FF00',
+          fillOpacity: 0.35,
+        });
+        hexagonPolygon.setMap(this.map);
+        this.displayedHexagons.push(hexagonPolygon);
+      }
+      else {
+        const hexagonCoords = h3.cellToBoundary(hex, true);
+        const hexagonPolygon = new google.maps.Polygon({
+          paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35,
+        });
+        hexagonPolygon.setMap(this.map);
+        this.displayedHexagons.push(hexagonPolygon);
+      }
+
     };
   }
 
@@ -385,23 +402,17 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   findHexagon(hexagonId: string): void {
     try {
+      this.searchHexId = hexagonId;
       const hexagonCoords = h3.cellToBoundary(hexagonId, true);
-      const hexagonPolygon = new google.maps.Polygon({
-      paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-      strokeColor: '00ff00',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '00ff00',
-      fillOpacity: 0.35,
-    });
-    hexagonPolygon.setMap(this.map);
-    this.displayedHexagons = [];
-    this.displayedHexagons.push(hexagonPolygon);
-  } catch {
-      throw new Error("Hexagon not found");
-  }
-    
+      this.map = new google.maps.Map(this.mapElement.nativeElement, {
+        center: this.center = { lat: hexagonCoords[0][1], lng: hexagonCoords[0][0] },
+        zoom: this.zoom,
+        ...this.mapOptions
+      });
+      this.initializeMap();
 
+    } catch { throw new Error("Hexagon not found") }
+  
   }
   
 }
