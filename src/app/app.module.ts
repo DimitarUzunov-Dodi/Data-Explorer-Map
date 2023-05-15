@@ -4,6 +4,7 @@ import { AppComponent } from './app.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MapComponent } from './map/map.component'
 import { Routes, RouterModule } from '@angular/router';
+import { FilterCheckbox } from './filter/filter.component';
 
 
 const routes: Routes = [
@@ -14,6 +15,7 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     MapComponent,
+    FilterCheckbox,
   ],
   imports: [
     BrowserModule,

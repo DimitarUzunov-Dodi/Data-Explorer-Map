@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FilterCheckbox } from './filter/filter.component';
 
 @Component({
   selector: 'app-root',
