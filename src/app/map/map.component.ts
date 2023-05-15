@@ -295,7 +295,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.initializeMap();
         
       });
-      //this.findHexagon('87196b392ffffff')
+      
     } else {
       this.initializeMap();
     }
