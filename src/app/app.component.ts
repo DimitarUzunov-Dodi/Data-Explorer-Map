@@ -5,19 +5,10 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
+export class AppComponent {
   title = 'Angular';
 
-  ngOnInit() {
-    const infotainmentPanel = document.querySelector('.infotainment-panel');
-    const togglePanelBtn = document.querySelector('#toggle-panel-btn');
-    if(togglePanelBtn!=null && infotainmentPanel!=null){
-      togglePanelBtn.addEventListener('click', () => {
-        infotainmentPanel.classList.toggle('show');
-      });
-    }
-    
-  }
+  
 }
 
 
