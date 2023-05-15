@@ -293,7 +293,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       navigator.geolocation.getCurrentPosition((position) => {
         this.center = { lat: position.coords.latitude, lng: position.coords.longitude };
         this.initializeMap();
-        
       });
       
     } else {
@@ -404,11 +403,9 @@ export class MapComponent implements OnInit, AfterViewInit {
     try {
       this.searchHexId = hexagonId;
       const hexagonCoords = h3.cellToBoundary(hexagonId, true);
-      this.map = new google.maps.Map(this.mapElement.nativeElement, {
-        center: this.center = { lat: hexagonCoords[0][1], lng: hexagonCoords[0][0] },
-        zoom: this.zoom,
-        ...this.mapOptions
-      });
+      const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
+      console.log(hexagonCoords);
+      this.map.panTo(newLocation);
       this.initializeMap();
 
     } catch { throw new Error("Hexagon not found") }
