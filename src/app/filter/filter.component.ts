@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { PointOfInterest, RoadHazardType } from '../map/models/poi'
-import { isValidCell } from 'h3-js';
 
 @Component({
     selector: 'filter-checkbox',
@@ -9,6 +8,7 @@ import { isValidCell } from 'h3-js';
   })
 
 export class FilterCheckbox {
+
     ngOnInit(): void {
         this.initializeCheckBox();
       }
@@ -27,7 +27,10 @@ export class FilterCheckbox {
             const checkBox : HTMLInputElement = document.createElement('input');
             checkBox.type = 'checkbox';
             //checkBox.checked = true
+
+            // new Array of keys of RoadHazardTypes for checkbox value so a method can return the key?
             checkBox.value = haz;
+            checkBox.onchange = (e : Event) => { this.handleCheckboxChange(checkBox.checked, checkBox.value) };
 
             const label : HTMLLabelElement = document.createElement('label');
             label.textContent = haz;
@@ -38,7 +41,9 @@ export class FilterCheckbox {
         }
     }
 
-    // handleCheckboxChange() {
-
-    // }
+    handleCheckboxChange(isChecked: boolean, hazardType: string) : [hazType: string, isChecked: boolean] {
+      // console.log(hazardType);
+      // console.log(isChecked);
+      return [hazardType, isChecked];
+    }
 }
