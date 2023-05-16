@@ -1,10 +1,10 @@
 .infotainment-panel {
     position: fixed;
-    top: 120px;
-    left: -300px;
-    width: 300px;
-    height: calc(100% - 300px); 
-    background-color: white;
+    top: 25%;
+    left: -700px;
+    width: 700px;
+    height: 100%; 
+    background-color: #f1f1f1;
     box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3); 
     overflow-y: scroll;
     z-index: 1;
@@ -21,16 +21,18 @@
   }
   
   .infotainment-panel.show {
-    transform: translateX(200px); 
+    transform: translateX(350px); 
   }
 
   #toggle-panel-btn {
     padding: 10px 20px;
-    margin-left: 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
     border-radius: 5px;
     border: none;
     background-color: lightblue;
     color: white;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 20px;
   }

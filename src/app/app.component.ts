@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { FilterCheckbox } from './filter/filter.component';
 
 @Component({
@@ -8,8 +8,6 @@ import { FilterCheckbox } from './filter/filter.component';
 })
 export class AppComponent {
   title = 'Angular';
-
-  
 }
 
 
