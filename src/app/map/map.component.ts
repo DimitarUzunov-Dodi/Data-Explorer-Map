@@ -328,14 +328,6 @@ export class MapComponent implements OnInit, AfterViewInit {
           [maxLat, maxLng],
           [minLat, maxLng],
         ];
-        enum ResolutionLevel {
-          CountryLevel = 1,
-          StateLevel = 3,
-          CityLevel = 5,
-          TownLevel = 7,
-          RoadLevel = 9,
-          RoadwayLevel = 11
-        }
         
         let resolutionLevel: ResolutionLevel;
         const zoom = this.map.getZoom()!;
@@ -385,4 +377,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
   }
   
+}
+
+enum ResolutionLevel {
+  CountryLevel = 1,
+  StateLevel = 3,
+  CityLevel = 5,
+  TownLevel = 7,
+  RoadLevel = 9,
+  RoadwayLevel = 11
 }
