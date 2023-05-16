@@ -1,8 +1,8 @@
 google-map {
-    height: 100% !important;
+    height: 80% !important;
     width: 100% !important;
 }
 :host ::ng-deep .map-container {
-    height: 100% !important;
+    height: 80% !important;
     width: 100% !important;
 }
