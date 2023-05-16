@@ -26,7 +26,7 @@ export class FilterCheckbox {
 
             const checkBox : HTMLInputElement = document.createElement('input');
             checkBox.type = 'checkbox';
-            //checkBox.checked = true
+            checkBox.checked = true
 
             // new Array of keys of RoadHazardTypes for checkbox value so a method can return the key?
             checkBox.value = haz;
