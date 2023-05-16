@@ -359,8 +359,8 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
-        this.displayedHexagons = new Map<string, google.maps.Polygon>();;
-        const newHexagonIds = h3.polygonToCells(coords, RESOLUTION_LEVEL+2, false);
+        this.displayedHexagons = new Map<string, google.maps.Polygon>();
+        const newHexagonIds = h3.polygonToCells(coords, RESOLUTION_LEVEL+1, false);
         this.displayHexagons(newHexagonIds, RESOLUTION_LEVEL);
       }
     });
