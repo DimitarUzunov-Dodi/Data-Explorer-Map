@@ -1,15 +1,18 @@
-.content {
-    height: 88% !important;
+.inf {
+    height: 2% !important;
     width: 100% !important;
   }
+.map {
+    height: 90% !important;
+    width: 100% !important;
+}
   
   .top-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 12%;
+    height: 8%;
     background-color: #f1f1f1;
-    padding: 10px;
   }
 
   .top-search-bar {
