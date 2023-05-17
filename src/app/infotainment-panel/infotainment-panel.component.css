@@ -1,10 +1,29 @@
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  background-color: #f1f1f1;
+}
+
+#toggle-panel-btn  {
+  padding: 10px 20px;
+  margin-left: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  font-size: 20px;
+}
+
 .infotainment-panel {
     position: fixed;
-    top: 120px;
-    left: -300px;
-    width: 300px;
-    height: calc(100% - 300px); 
-    background-color: white;
+    top: 15%;
+    left: -700px;
+    width: 700px;
+    height: 85%; 
+    background-color: #f1f1f1;
     box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3); 
     overflow-y: scroll;
     z-index: 1;
@@ -21,16 +40,6 @@
   }
   
   .infotainment-panel.show {
-    transform: translateX(200px); 
+    transform: translateX(350px); 
   }
 
-  #toggle-panel-btn {
-    padding: 10px 20px;
-    margin-left: 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: lightblue;
-    color: white;
-    cursor: pointer;
-    font-size: 15px;
-  }

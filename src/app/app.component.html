@@ -1,17 +1,13 @@
 
 <div class="top-bar">
-  <div class="top-search-bar">
-   <input type="text" placeholder="Search...">
-   <button type="button">Search</button>
-   <button type="button">Filter</button>
-  </div>
-  <div class="app-name">Data Map Explorer</div>
- </div>
-
-<app-infotainment-panel> </app-infotainment-panel>
- 
-<div class="content">
-  
-<router-outlet> </router-outlet>
-
+  <app-top-bar (searchTriggered)="handleSearchTriggered($event)"></app-top-bar>
 </div>
+
+<div class="inf">
+  <app-infotainment-panel></app-infotainment-panel>
+</div>
+
+<div class="map">
+  <app-map ></app-map>
+</div>
+
