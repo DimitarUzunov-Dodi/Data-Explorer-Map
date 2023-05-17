@@ -328,40 +328,28 @@ export class MapComponent implements OnInit, AfterViewInit {
           [maxLat, maxLng],
           [minLat, maxLng],
         ];
-        let RESOLUTION_LEVEL: number;
+        
+        let resolutionLevel: ResolutionLevel;
         const zoom = this.map.getZoom()!;
-        if (zoom! <= 5){
-          RESOLUTION_LEVEL = 1;
+        if (zoom <= 5) {
+          resolutionLevel = ResolutionLevel.CountryLevel;
+        } else if (zoom <= 8) {
+          resolutionLevel = ResolutionLevel.StateLevel;
+        } else if (zoom <= 10) {
+          resolutionLevel = ResolutionLevel.CityLevel;
+        } else if (zoom <= 13) {
+          resolutionLevel = ResolutionLevel.TownLevel;
+        } else if (zoom <= 15) {
+          resolutionLevel = ResolutionLevel.RoadLevel;
+        } else {
+          resolutionLevel = ResolutionLevel.RoadwayLevel;
         }
-        else {
-          if (zoom! <= 8){
-            RESOLUTION_LEVEL = 3;
-          }else {
-            if (zoom! <= 10) {
-              RESOLUTION_LEVEL = 5;
-            } 
-            else {
-              if (zoom! <= 13) {
-                RESOLUTION_LEVEL = 7;
-              } 
-              else {
-                if (zoom! <= 15) {
-                  RESOLUTION_LEVEL = 9;
-                } 
-                else {
-                  RESOLUTION_LEVEL = 11;
-                }
-              }
-            }
-          }
-        }
-
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
-        this.displayedHexagons = new Map<string, google.maps.Polygon>();;
-        const newHexagonIds = h3.polygonToCells(coords, RESOLUTION_LEVEL+2, false);
-        this.displayHexagons(newHexagonIds, RESOLUTION_LEVEL);
+        this.displayedHexagons = new Map<string, google.maps.Polygon>();
+        const newHexagonIds = h3.polygonToCells(coords, resolutionLevel + 1, false);
+        this.displayHexagons(newHexagonIds, resolutionLevel);
       }
     });
   }
@@ -389,4 +377,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
   }
   
+}
+
+enum ResolutionLevel {
+  CountryLevel = 1,
+  StateLevel = 3,
+  CityLevel = 5,
+  TownLevel = 7,
+  RoadLevel = 9,
+  RoadwayLevel = 11
 }

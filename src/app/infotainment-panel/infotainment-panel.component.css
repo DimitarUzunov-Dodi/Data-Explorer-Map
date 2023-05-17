@@ -6,20 +6,23 @@
   background-color: #f1f1f1;
 }
 
-.toggle-panel-btn  {
-  display: flex;
-  align-items: center;
-  height: 80px;
-  background-color: #f1f1f1;
-  padding: 10px;
+#toggle-panel-btn  {
+  padding: 10px 20px;
+  margin-left: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  font-size: 20px;
 }
 
 .infotainment-panel {
     position: fixed;
-    top: 10%;
+    top: 15%;
     left: -700px;
     width: 700px;
-    height: 90%; 
+    height: 85%; 
     background-color: #f1f1f1;
     box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3); 
     overflow-y: scroll;
