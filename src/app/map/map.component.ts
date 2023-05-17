@@ -1,8 +1,7 @@
 import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import * as h3 from 'h3-js';
 import { AggregatorService } from 'src/app/aggregator/aggregator.service';
-
-
+import { GoogleMapsModule } from '@angular/google-maps';
 
 
 @Component({
