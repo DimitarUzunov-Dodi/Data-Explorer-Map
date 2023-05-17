@@ -397,7 +397,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       const hexagonCoords = h3.cellToBoundary(hexagonId, true);
       const resoulution = h3.getResolution(hexagonId);
       if(resoulution == -1){ 
-        throw new Error("Hexagon not found")
+        throw new Error("Hexagon not found");
       }
       let zoom = 11;
 
@@ -418,7 +418,10 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.panTo(newLocation);
       this.map.setZoom(zoom);
 
-    } catch(error) { alert("Hexagon not found") }
+    } catch(error) {
+       alert("Hexagon not found");
+       throw new Error("Hexagon not found");
+       }
   
   }
 
