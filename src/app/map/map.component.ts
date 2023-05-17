@@ -1,6 +1,7 @@
 import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import * as h3 from 'h3-js';
-import { GoogleMapsModule } from '@angular/google-maps';
+import { AggregatorService } from 'src/app/aggregator/aggregator.service';
+
 
 
 
@@ -283,10 +284,13 @@ export class MapComponent implements OnInit, AfterViewInit {
       strictBounds: true
     }
   };
+  constructor(private aggregatorService: AggregatorService) { }
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   searchHexId: string = ''!;
   @Output() searchTriggered: EventEmitter<string> = new EventEmitter<string>();
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    
+  }
 
   ngAfterViewInit(): void {
     if (navigator.geolocation) {
@@ -296,7 +300,6 @@ export class MapComponent implements OnInit, AfterViewInit {
           this.initializeMap();
         },
         () => {
-          // Use default coordinates when user position is blocked or not available
           this.initializeMap();
         }
       );

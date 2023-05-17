@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { AggregatorService } from 'src/app/aggregator/aggregator.service';
 
 @Component({
   selector: 'app-infotainment-panel',
@@ -9,7 +10,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 export class InfotainmentPanelComponent {
   showInfotainmentPanel = false;
   @Output() searchTriggered: EventEmitter<any> = new EventEmitter<any>();
-
+  
+  constructor(private aggregatorService: AggregatorService) { }
   togglePanel(): void {
     this.showInfotainmentPanel = !this.showInfotainmentPanel;
   }
