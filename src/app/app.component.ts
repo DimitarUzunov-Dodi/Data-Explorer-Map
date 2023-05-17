@@ -15,6 +15,10 @@ export class AppComponent {
     this.mapComponent.findHexagon(hexagonId)
     
   }
+  handleClearSearchTriggered(){
+    this.mapComponent.clearSearch();
+    
+  }
   
 }
 
