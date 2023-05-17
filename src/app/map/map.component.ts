@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import * as h3 from 'h3-js';
 import { GoogleMapsModule } from '@angular/google-maps';
 import {PoiService} from "src/app/Services/poi.service";
-import { HttpClientModule } from '@angular/common/http';
+
 
 
 

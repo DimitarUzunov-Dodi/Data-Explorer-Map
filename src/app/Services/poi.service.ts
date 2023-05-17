@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {PointOfInterest} from "./models/poi";
-import { HttpClient } from '@angular/common/http';
+
 
 
 @Injectable({
@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PoiService {
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
   processJson(rawData: any[]): void {
 

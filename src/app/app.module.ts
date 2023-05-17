@@ -6,7 +6,7 @@ import { MapComponent } from './map/map.component'
 import { Routes, RouterModule } from '@angular/router';
 import { InfotainmentPanelComponent } from './infotainment-panel/infotainment-panel.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
-import {HttpClientModule} from "@angular/common/http";
+
 
 
 const routes: Routes = [
@@ -25,7 +25,6 @@ const routes: Routes = [
     BrowserModule,
     GoogleMapsModule,
     RouterModule.forRoot(routes),
-    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
