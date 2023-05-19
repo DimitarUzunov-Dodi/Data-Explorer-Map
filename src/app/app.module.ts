@@ -7,10 +7,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { InfotainmentPanelComponent } from './infotainment-panel/infotainment-panel.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { FormsModule } from '@angular/forms';
+import { HomepageComponent } from './homepage/homepage.component';
 
 
 const routes: Routes = [
-  { path: '', component: MapComponent }
+  { path: '', component: HomepageComponent }
   
 ];
 
@@ -20,6 +21,7 @@ const routes: Routes = [
     MapComponent,
     InfotainmentPanelComponent,
     TopBarComponent,
+    HomepageComponent,
   ],
   imports: [
     BrowserModule,

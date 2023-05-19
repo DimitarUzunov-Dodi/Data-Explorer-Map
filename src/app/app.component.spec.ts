@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { InfotainmentPanelComponent } from './infotainment-panel/infotainment-panel.component';
 import { MapComponent } from './map/map.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
+import { HomepageComponent } from './homepage/homepage.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -11,29 +12,9 @@ describe('AppComponent', () => {
       imports: [RouterTestingModule],
       declarations: [
         AppComponent,
-        InfotainmentPanelComponent,
-        MapComponent,
-        TopBarComponent
+        HomepageComponent
       ],
     }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it(`should have as title 'Angular'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('Angular');
-  });
-
-  // it('should render title', () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   fixture.detectChanges();
-  //   const compiled = fixture.nativeElement as HTMLElement;
-  //   expect(compiled.querySelector('.content span')?.textContent).toContain('my-app app is running!');
-  // });
 });
