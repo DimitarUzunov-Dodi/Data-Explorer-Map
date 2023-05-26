@@ -10,16 +10,6 @@ import { FilterCheckbox } from './filter/filter.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  @ViewChild(MapComponent) mapComponent!: MapComponent;
-  title = 'Angular';
-  handleSearchTriggered(hexagonId: string){
-    this.mapComponent.findHexagon(hexagonId)
-    
-  }
-  handleClearSearchTriggered(){
-    this.mapComponent.clearSearch();
-    
-  }
   
 }
 
