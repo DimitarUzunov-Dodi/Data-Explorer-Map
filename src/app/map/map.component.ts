@@ -2,7 +2,7 @@ import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output } fr
 import * as h3 from 'h3-js';
 import { GoogleMapsModule } from '@angular/google-maps';
 import {PoiService} from "src/app/Services/poi.service";
-import { PointOfInterest, RoadHazardType } from './models/poi';
+import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
 
 
 
@@ -295,7 +295,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     //   ['87196b848ffffff', [ new PointOfInterest(RoadHazardType.Fog, new Date(), "87196b848ffffff", true)]],
     //   ['87196b858ffffff', [new PointOfInterest(RoadHazardType.Aquaplaning, new Date(), "87196b858ffffff", true)]]
     // ]);
-  searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>();
+  searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
     // ([RoadHazardType.Aquaplaning, RoadHazardType.Fog]);
   searchHexId: string = ''!;
 

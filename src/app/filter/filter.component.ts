@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { PointOfInterest, RoadHazardType } from '../map/models/poi'
+import { Component, Output, EventEmitter } from '@angular/core';
+import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi'
 
 @Component({
     selector: 'filter-checkbox',
@@ -8,6 +8,8 @@ import { PointOfInterest, RoadHazardType } from '../map/models/poi'
   })
 
 export class FilterCheckbox {
+
+  @Output() hazardChecked: EventEmitter<[hazType: string, isChecked: boolean]> = new EventEmitter<[hazType: string, isChecked: boolean]>()
 
     ngOnInit(): void {
         this.initializeCheckBox();
@@ -30,7 +32,7 @@ export class FilterCheckbox {
 
             // new Array of keys of RoadHazardTypes for checkbox value so a method can return the key?
             checkBox.value = haz;
-            checkBox.onchange = (e : Event) => { this.handleCheckboxChange(checkBox.checked, checkBox.value) };
+            checkBox.onchange = (e : Event) => { this.handleCheckboxChange(checkBox.value, checkBox.checked) };
 
             const label : HTMLLabelElement = document.createElement('label');
             label.textContent = haz;
@@ -41,9 +43,10 @@ export class FilterCheckbox {
         }
     }
 
-    handleCheckboxChange(isChecked: boolean, hazardType: string) : [hazType: string, isChecked: boolean] {
+    handleCheckboxChange(hazardType: string, isChecked: boolean) {
       // console.log(hazardType);
       // console.log(isChecked);
-      return [hazardType, isChecked];
+      console.log([hazardType, isChecked])
+      this.hazardChecked.emit([hazardType, isChecked]);
     }
 }
