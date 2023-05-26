@@ -1,6 +1,5 @@
 import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import * as h3 from 'h3-js';
-import { AggregatorService } from 'src/app/aggregator/aggregator.service';
 import { GoogleMapsModule } from '@angular/google-maps';
 import {PoiService} from "src/app/Services/poi.service";
 
@@ -286,7 +285,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       strictBounds: true
     }
   };
-  constructor(private aggregatorService: AggregatorService, private PoiService: PoiService) { }
+
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   searchHexId: string = ''!;
   @Output() searchTriggered: EventEmitter<string> = new EventEmitter<string>();
@@ -294,7 +293,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // Loads json files from file
     fetch('./assets/mock_data_explorer.json').then(async res => {
-      this.PoiService.processJson(await res.json())
+      this.poiService.processJson(await res.json())
     })
 
   }
@@ -314,6 +313,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.initializeMap();
     }
   }
+
+  constructor(private poiService: PoiService) {}
 
   initializeMap(): void {
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
@@ -451,7 +452,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     poligonToRemove?.setMap(null);
     hexagonPolygon.setMap(this.map);
     this.displayedHexagons.set(hexToClear, hexagonPolygon);
-    console.log("yes");
   }
 
 
