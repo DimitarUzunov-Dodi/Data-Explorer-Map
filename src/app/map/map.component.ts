@@ -288,11 +288,6 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   searchHexId: string = ''!;
-  @Output() searchTriggered: EventEmitter<string> = new EventEmitter<string>();
-  ngOnInit(): void {
-    
-  }
-
 
   constructor(private PoiService: PoiService) {}
 
