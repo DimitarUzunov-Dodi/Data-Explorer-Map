@@ -2,6 +2,7 @@ import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output } fr
 import * as h3 from 'h3-js';
 import { AggregatorService } from 'src/app/aggregator/aggregator.service';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { PointOfInterest, RoadHazardType } from './models/poi';
 
 
 @Component({
@@ -285,6 +286,15 @@ export class MapComponent implements OnInit, AfterViewInit {
   };
   constructor(private aggregatorService: AggregatorService) { }
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
+  // poiPerHexPerResolution: Map<ResolutionLevel, Map<string, PointOfInterest[]>> = 
+  //   new Map<ResolutionLevel, Map<string, PointOfInterest[]>>();
+  poisPerHex : Map<string, PointOfInterest[]> = new Map<string, PointOfInterest[]>();
+    // ([
+    //   ['87196b848ffffff', [ new PointOfInterest(RoadHazardType.Fog, new Date(), "87196b848ffffff", true)]],
+    //   ['87196b858ffffff', [new PointOfInterest(RoadHazardType.Aquaplaning, new Date(), "87196b858ffffff", true)]]
+    // ]);
+  searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>();
+    // ([RoadHazardType.Aquaplaning, RoadHazardType.Fog]);
   searchHexId: string = ''!;
   @Output() searchTriggered: EventEmitter<string> = new EventEmitter<string>();
   ngOnInit(): void {
@@ -351,42 +361,59 @@ export class MapComponent implements OnInit, AfterViewInit {
           hexagon.setMap(null);
         });
         this.displayedHexagons = new Map<string, google.maps.Polygon>();
-        const newHexagonIds = h3.polygonToCells(coords, resolutionLevel + 1, false);
-        this.displayHexagons(newHexagonIds, resolutionLevel);
+        const newHexagonChildIds : string[] = h3.polygonToCells(coords, resolutionLevel + 1, false);
+        const newHexIds : Set<string> = new Set(newHexagonChildIds.map(x => h3.cellToParent(x, resolutionLevel)))
+        console.log(newHexIds)
+        this.filterHexagons(newHexIds, resolutionLevel);
       }
     });
   }
 
-  displayHexagons(hexagons: string[], targetResolution: number): void {
+
+  filterHexagons(hexagons: Set<string>, targetResolution: number) {
+    this.displayHexagons(hexagons, targetResolution)
+  }
+
+  displayHexagons(hexagons: Set<string>, targetResolution: number): void {
     for (const hex of hexagons) {
-      const parentOfHex = h3.cellToParent(hex, targetResolution);
-      if (!this.displayedHexagons.has(parentOfHex)){  
-        const hexagonCoords = h3.cellToBoundary(parentOfHex, true);
-        if(parentOfHex == this.searchHexId){
-          const hexagonPolygon = new google.maps.Polygon({
-            paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#00FF00',
-            fillOpacity: 0.35,
-          });
-          hexagonPolygon.setMap(this.map);
-          this.displayedHexagons.set(parentOfHex, hexagonPolygon);
-        }else{
-          const hexagonPolygon = new google.maps.Polygon({
-            paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.35,
-          })
-          hexagonPolygon.setMap(this.map);
-          this.displayedHexagons.set(parentOfHex, hexagonPolygon);
-        }  
-      }
+      const hexagonCoords = h3.cellToBoundary(hex, true);
+      if(hex == this.searchHexId){
+        const hexagonPolygon = new google.maps.Polygon({
+          paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#00FF00',
+          fillOpacity: 0.35,
+        });
+        hexagonPolygon.setMap(this.map);
+        this.displayedHexagons.set(hex, hexagonPolygon);
+      }else{
+        let pois : PointOfInterest[] | undefined  = this.poisPerHex.get(hex);
+        if (typeof pois !== "undefined" && pois.length > 0){
+          if(pois.map(x => x.type).filter(y => this.searchedHazards.has(y)).length > 0) {
+            const hexagonPolygon = new google.maps.Polygon({
+              paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+              strokeColor: '#FF0000',
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: '#FF0000',
+              fillOpacity: 0.35,
+            })
+            hexagonPolygon.setMap(this.map);
+            this.displayedHexagons.set(hex, hexagonPolygon);
+          }
+        }
+      }  
     };
+  }
+
+  updateHazards(neededHazards: Set<RoadHazardType>) {
+    this.searchedHazards = neededHazards;
+  }
+
+  updatePOIData(newData: Map<string, PointOfInterest[]>) {
+    this.poisPerHex = newData;
   }
 
   moveMap(event: google.maps.MapMouseEvent) {
