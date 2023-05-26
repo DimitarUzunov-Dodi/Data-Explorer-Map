@@ -357,6 +357,8 @@ export class MapComponent implements OnInit, AfterViewInit {
         } else {
           resolutionLevel = ResolutionLevel.RoadwayLevel;
         }
+        console.log(zoom)
+        console.log(resolutionLevel)
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
@@ -427,31 +429,15 @@ export class MapComponent implements OnInit, AfterViewInit {
       } else if (resoulution <= ResolutionLevel.RoadLevel) {
         zoom = 18;
       } else {
-        zoom = 19;  
+        zoom = 20;  
       }
 
-
-      // if (zoom <= 6) {
-      //   resolutionLevel = ResolutionLevel.CountryLevel;
-      // } else if (zoom <= 9) {
-      //   resolutionLevel = ResolutionLevel.StateLevel;
-      // } else if (zoom <= 12) {
-      //   resolutionLevel = ResolutionLevel.CityLevel;
-      // } else if (zoom <= 14) {
-      //   resolutionLevel = ResolutionLevel.TownLevel;
-      // } else if (zoom <= 16) {
-      //   resolutionLevel = ResolutionLevel.HighWayLevel;
-      // } else if (zoom <= 18) {
-      //   resolutionLevel = ResolutionLevel.RoadLevel;
-      // } else {
-      //   resolutionLevel = ResolutionLevel.RoadwayLevel;
-      // }
 
 
 
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
-      this.map.setZoom(zoom);
+      this.map.setZoom(zoom-1);
 
     } catch(error) {
        alert("Hexagon not found");
