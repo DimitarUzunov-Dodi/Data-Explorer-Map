@@ -17,4 +17,10 @@ describe('AppComponent', () => {
     }).compileComponents();
   });
 
+  it('should create', () => {
+    expect(HomepageComponent).toBeTruthy();
+  });
+
+  
+
 });

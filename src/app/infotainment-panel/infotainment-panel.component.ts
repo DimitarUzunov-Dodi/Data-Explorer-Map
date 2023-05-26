@@ -8,12 +8,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class InfotainmentPanelComponent {
   showInfotainmentPanel = false;
-  @Output() searchTriggered: EventEmitter<any> = new EventEmitter<any>();
   
   togglePanel(): void {
     this.showInfotainmentPanel = !this.showInfotainmentPanel;
-  }
-  triggerMethod() {
-    this.searchTriggered.emit();
   }
 }

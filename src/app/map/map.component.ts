@@ -282,6 +282,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       strictBounds: true
     }
   };
+
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   searchHexId: string = ''!;
   @Output() searchTriggered: EventEmitter<string> = new EventEmitter<string>();
@@ -441,7 +442,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     poligonToRemove?.setMap(null);
     hexagonPolygon.setMap(this.map);
     this.displayedHexagons.set(hexToClear, hexagonPolygon);
-    console.log("yes");
   }
 
 
