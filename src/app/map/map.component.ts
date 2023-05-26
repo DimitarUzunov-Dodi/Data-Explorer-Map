@@ -292,9 +292,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     // Loads json files from file
-    fetch('./assets/mock_data_explorer.json').then(async res => {
-      this.poiService.processJson(await res.json())
-    })
+    // fetch('./assets/mock_data_explorer.json').then(async res => {
+    //   this.poiService.processJson(await res.json())
+    // })
 
   }
 
@@ -314,7 +314,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
   }
 
-  constructor(private poiService: PoiService) {}
+  // constructor(private poiService: PoiService) {}
 
   initializeMap(): void {
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
