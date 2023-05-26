@@ -1,0 +1,32 @@
+TA Meating 3 Agenda
+
+What we have done:
+- Improved UI
+- Filter fuctionality
+- Search Functioanlity
+- POI classes
+- Pipeline set up
+
+Wht we have to do:
+- Testing the fuctionalities
+- Finish the search and filter 
+- Infotainment panel
+- hexagons only on roads?
+
+//========== Notes ==========//
+
+TA Meating 3
+Date: Tuesday, May 17th
+
+Recap of Last Week's Progress
+- Many  improvemnts to the map
+- Addion of search bar
+- filter pannel
+- infotainment panel
+- poi implemantation
+
+Discussion 
+- Midterm presentation week 6 Teusday 1:30
+- Showed demo
+- We should show more invovlment on gitlab
+- next meeting will be 10:30 wednesday

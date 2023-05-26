@@ -1,18 +1,13 @@
 <div class="top-bar">
-  <div class="top-search-bar">
-   <input type="text" placeholder="Search...">
-   <button type="button">Search</button>
-   <button type="button">Filter</button>
-  </div>
-  <div class="app-name">Data Map Explorer</div>
- </div>
+  <app-top-bar (searchTriggered)="handleSearchTriggered($event)" (clearSearchTriggered)="handleClearSearchTriggered()"></app-top-bar>
+</div>
 
 <div class="inf">
-<app-infotainment-panel> </app-infotainment-panel>
+  <app-infotainment-panel></app-infotainment-panel>
 </div>
 
 <div class="map">
-<router-outlet> </router-outlet>
+  <app-map ></app-map>
 </div>
 
 <filter-checkbox></filter-checkbox>
