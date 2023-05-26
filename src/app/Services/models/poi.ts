@@ -1,14 +1,18 @@
 export class PointOfInterest {
+  id: string;
   type: RoadHazardType;
-  date: Date;
+  createdAt: Date;
   hexId: string;
-  isActive: boolean;
+  status: string;
+  note: string;
 
-  constructor(type: RoadHazardType, date: Date, hexId: string, isActive: boolean) {
+  constructor(id: string, type: RoadHazardType, createdAt: Date, hexId: string, status: string, note: string) {
+    this.id = id
     this.type = type;
-    this.date = date;
+    this.createdAt = createdAt;
     this.hexId = hexId;
-    this.isActive = isActive;
+    this.status = status;
+    this.note = note;
   }
 }
 

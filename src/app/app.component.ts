@@ -1,7 +1,5 @@
 import { Component, ViewChild} from '@angular/core';
 import { MapComponent } from './map/map.component';
-import { map } from 'rxjs';
-import { FilterCheckbox } from './filter/filter.component';
 
 
 @Component({
