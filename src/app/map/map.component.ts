@@ -1,6 +1,5 @@
 import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import * as h3 from 'h3-js';
-import { AggregatorService } from 'src/app/aggregator/aggregator.service';
 import { GoogleMapsModule } from '@angular/google-maps';
 
 
@@ -283,7 +282,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       strictBounds: true
     }
   };
-  constructor(private aggregatorService: AggregatorService) { }
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   searchHexId: string = ''!;
   @Output() searchTriggered: EventEmitter<string> = new EventEmitter<string>();
