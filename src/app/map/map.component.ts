@@ -286,11 +286,10 @@ export class MapComponent implements OnInit, AfterViewInit {
       strictBounds: true
     }
   };
-  constructor(private aggregatorService: AggregatorService) { }
+  constructor(private aggregatorService: AggregatorService, private PoiService: PoiService) { }
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
-
-
-  constructor(private PoiService: PoiService) {}
+  searchHexId: string = ''!;
+  @Output() searchTriggered: EventEmitter<string> = new EventEmitter<string>();
 
   ngOnInit(): void {
     // Loads json files from file
@@ -315,7 +314,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.initializeMap();
     }
   }
-   
+
   initializeMap(): void {
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
       center: this.center,
@@ -369,7 +368,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   displayHexagons(hexagons: string[], targetResolution: number): void {
     for (const hex of hexagons) {
       const parentOfHex = h3.cellToParent(hex, targetResolution);
-      if (!this.displayedHexagons.has(parentOfHex)){  
+      if (!this.displayedHexagons.has(parentOfHex)){
         const hexagonCoords = h3.cellToBoundary(parentOfHex, true);
         if(parentOfHex == this.searchHexId){
           const hexagonPolygon = new google.maps.Polygon({
@@ -393,7 +392,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           })
           hexagonPolygon.setMap(this.map);
           this.displayedHexagons.set(parentOfHex, hexagonPolygon);
-        }  
+        }
       }
     };
   }
@@ -407,7 +406,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       const searchedHex = hexagonId.replace(/\s/g, "");
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
       const resoulution = h3.getResolution(searchedHex);
-      if(resoulution == -1){ 
+      if(resoulution == -1){
         throw new Error("Hexagon not found");
       }
       this.searchHexId = searchedHex;
@@ -424,7 +423,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       } else if (resoulution <= ResolutionLevel.RoadLevel) {
         zoom = 15;
       } else {
-        zoom = 16;  
+        zoom = 16;
       }
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
@@ -434,7 +433,7 @@ export class MapComponent implements OnInit, AfterViewInit {
        alert("Hexagon not found");
        throw new Error("Hexagon not found");
        }
-  
+
   }
   clearSearch(){
     const hexToClear = this.searchHexId;
@@ -456,8 +455,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
 
-  
-  
+
+
 }
 
 enum ResolutionLevel {
