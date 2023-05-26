@@ -1,4 +1,5 @@
-import { Component} from '@angular/core';
+import { Component, ViewChild} from '@angular/core';
+import { MapComponent } from './map/map.component';
 
 
 @Component({
@@ -7,9 +8,7 @@ import { Component} from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Angular';
-
-
+  
 }
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import * as h3 from 'h3-js';
 import { GoogleMapsModule } from '@angular/google-maps';
 import {PoiService} from "src/app/Services/poi.service";
@@ -9,7 +9,7 @@ import {PoiService} from "src/app/Services/poi.service";
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+  styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements OnInit, AfterViewInit {
   @ViewChild('map') mapElement: any;
@@ -285,7 +285,13 @@ export class MapComponent implements OnInit, AfterViewInit {
       strictBounds: true
     }
   };
+
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
+  searchHexId: string = ''!;
+  @Output() searchTriggered: EventEmitter<string> = new EventEmitter<string>();
+  ngOnInit(): void {
+    
+  }
 
 
   constructor(private PoiService: PoiService) {}
@@ -306,7 +312,6 @@ export class MapComponent implements OnInit, AfterViewInit {
           this.initializeMap();
         },
         () => {
-          // Use default coordinates when user position is blocked or not available
           this.initializeMap();
         }
       );
@@ -314,7 +319,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.initializeMap();
     }
   }
-
+   
   initializeMap(): void {
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
       center: this.center,
@@ -368,18 +373,31 @@ export class MapComponent implements OnInit, AfterViewInit {
   displayHexagons(hexagons: string[], targetResolution: number): void {
     for (const hex of hexagons) {
       const parentOfHex = h3.cellToParent(hex, targetResolution);
-      if (!this.displayedHexagons.has(parentOfHex)){
+      if (!this.displayedHexagons.has(parentOfHex)){  
         const hexagonCoords = h3.cellToBoundary(parentOfHex, true);
-        const hexagonPolygon = new google.maps.Polygon({
-          paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-          strokeColor: '#FF0000',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#FF0000',
-          fillOpacity: 0.35,
-        });
-        hexagonPolygon.setMap(this.map);
-        this.displayedHexagons.set(parentOfHex, hexagonPolygon);
+        if(parentOfHex == this.searchHexId){
+          const hexagonPolygon = new google.maps.Polygon({
+            paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#00FF00',
+            fillOpacity: 0.35,
+          });
+          hexagonPolygon.setMap(this.map);
+          this.displayedHexagons.set(parentOfHex, hexagonPolygon);
+        }else{
+          const hexagonPolygon = new google.maps.Polygon({
+            paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+          })
+          hexagonPolygon.setMap(this.map);
+          this.displayedHexagons.set(parentOfHex, hexagonPolygon);
+        }  
       }
     };
   }
@@ -388,6 +406,61 @@ export class MapComponent implements OnInit, AfterViewInit {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
   }
 
+  findHexagon(hexagonId: string): void {
+    try {
+      const searchedHex = hexagonId.replace(/\s/g, "");
+      const hexagonCoords = h3.cellToBoundary(searchedHex, true);
+      const resoulution = h3.getResolution(searchedHex);
+      if(resoulution == -1){ 
+        throw new Error("Hexagon not found");
+      }
+      this.searchHexId = searchedHex;
+      let zoom = 11;
+
+      if (resoulution <= ResolutionLevel.CountryLevel) {
+        zoom = 5;
+      } else if (resoulution <= ResolutionLevel.StateLevel) {
+        zoom = 8;
+      } else if (resoulution <= ResolutionLevel.CityLevel) {
+        zoom = 10;
+      } else if (resoulution <= ResolutionLevel.TownLevel) {
+        zoom = 13;
+      } else if (resoulution <= ResolutionLevel.RoadLevel) {
+        zoom = 15;
+      } else {
+        zoom = 16;  
+      }
+      const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
+      this.map.panTo(newLocation);
+      this.map.setZoom(zoom);
+
+    } catch(error) {
+       alert("Hexagon not found");
+       throw new Error("Hexagon not found");
+       }
+  
+  }
+  clearSearch(){
+    const hexToClear = this.searchHexId;
+    this.searchHexId = "";
+    const hexagonCoords = h3.cellToBoundary(hexToClear, true);
+    const hexagonPolygon = new google.maps.Polygon({
+      paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35,
+    });
+    const poligonToRemove = this.displayedHexagons.get(hexToClear);
+    poligonToRemove?.setMap(null);
+    hexagonPolygon.setMap(this.map);
+    this.displayedHexagons.set(hexToClear, hexagonPolygon);
+  }
+
+
+  
+  
 }
 
 enum ResolutionLevel {

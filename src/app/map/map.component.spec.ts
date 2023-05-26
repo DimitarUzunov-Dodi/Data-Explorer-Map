@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MapComponent } from './map.component';
+import * as h3 from 'h3-js';
 
 describe('MapComponent', () => {
   let component: MapComponent;
@@ -17,7 +18,11 @@ describe('MapComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+
+  it('should throw an error if hexagon not found', () => {
+    const hexagonId = 'non-existent-hexagon-id';
+
+    expect(() => component.findHexagon(hexagonId)).toThrowError('Hexagon not found');
   });
+  
 });

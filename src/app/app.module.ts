@@ -6,12 +6,14 @@ import { MapComponent } from './map/map.component'
 import { Routes, RouterModule } from '@angular/router';
 import { InfotainmentPanelComponent } from './infotainment-panel/infotainment-panel.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
+import { FormsModule } from '@angular/forms';
+import { HomepageComponent } from './homepage/homepage.component';
 
 
 
 const routes: Routes = [
-  { path: '', component: MapComponent }
-
+  { path: '', component: HomepageComponent }
+  
 ];
 
 @NgModule({
@@ -20,11 +22,13 @@ const routes: Routes = [
     MapComponent,
     InfotainmentPanelComponent,
     TopBarComponent,
+    HomepageComponent,
   ],
   imports: [
     BrowserModule,
     GoogleMapsModule,
     RouterModule.forRoot(routes),
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
