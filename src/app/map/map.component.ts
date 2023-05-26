@@ -1,6 +1,9 @@
 import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import * as h3 from 'h3-js';
 import { GoogleMapsModule } from '@angular/google-maps';
+import {PoiService} from "src/app/Services/poi.service";
+
+
 
 
 @Component({
@@ -285,9 +288,15 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   searchHexId: string = ''!;
-  @Output() searchTriggered: EventEmitter<string> = new EventEmitter<string>();
+
+  constructor(private PoiService: PoiService) {}
+
   ngOnInit(): void {
-    
+    // Loads json files from file
+    fetch('./assets/mock_data_explorer.json').then(async res => {
+      this.PoiService.processJson(await res.json())
+    })
+
   }
 
   ngAfterViewInit(): void {
@@ -318,19 +327,19 @@ export class MapComponent implements OnInit, AfterViewInit {
       if (bounds) {
         const sw = bounds.getSouthWest();
         const ne = bounds.getNorthEast();
-  
+
         const minLat = sw.lat();
         const maxLat = ne.lat();
         const minLng = sw.lng();
         const maxLng = ne.lng();
-  
+
         const coords = [
           [minLat, minLng],
           [maxLat, minLng],
           [maxLat, maxLng],
           [minLat, maxLng],
         ];
-        
+
         let resolutionLevel: ResolutionLevel;
         const zoom = this.map.getZoom()!;
         if (zoom <= 5) {
