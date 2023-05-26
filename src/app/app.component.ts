@@ -1,6 +1,5 @@
 import { Component, ViewChild} from '@angular/core';
 import { MapComponent } from './map/map.component';
-import { map } from 'rxjs';
 
 
 @Component({
@@ -9,16 +8,6 @@ import { map } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  @ViewChild(MapComponent) mapComponent!: MapComponent;
-  title = 'Angular';
-  handleSearchTriggered(hexagonId: string){
-    this.mapComponent.findHexagon(hexagonId)
-    
-  }
-  handleClearSearchTriggered(){
-    this.mapComponent.clearSearch();
-    
-  }
   
 }
 
