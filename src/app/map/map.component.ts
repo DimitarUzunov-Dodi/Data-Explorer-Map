@@ -368,6 +368,9 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  
+  @Output() parentHexIdChange = new EventEmitter<string>();
+
 
   displayHexagons(hexagons: string[], targetResolution: number): void {
     for (const hex of hexagons) {
@@ -375,6 +378,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       if (!this.displayedHexagons.has(parentOfHex)){  
         const hexagonCoords = h3.cellToBoundary(parentOfHex, true);
         if(parentOfHex == this.searchHexId){
+          
+
           const hexagonPolygon = new google.maps.Polygon({
             paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
             strokeColor: '#FF0000',
@@ -415,6 +420,9 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
       this.searchHexId = searchedHex;
       let zoom = 11;
+
+      const parentOfHex = h3.cellToParent(this.searchHexId, resoulution-1);
+      this.parentHexIdChange.emit(parentOfHex);
 
       if (resoulution <= ResolutionLevel.CountryLevel) {
         zoom = 6;
