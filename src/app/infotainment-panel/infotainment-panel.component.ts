@@ -8,6 +8,8 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 })
 export class InfotainmentPanelComponent {
   @Input() parentHexId: string = '';
+  @Input() foundHexId: string = '';
+  @Input() areaHex: number = 0;
 
   showInfotainmentPanel = false;
   
