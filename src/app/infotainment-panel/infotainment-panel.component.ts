@@ -28,14 +28,19 @@ export class InfotainmentPanelComponent {
 
   ngOnInit(): void {
     this.calculateParentHexId();
+    this.calculateArea();
   }
 
   togglePanel(): void {
     this.showInfotainmentPanel = !this.showInfotainmentPanel;
   }
   calculateParentHexId(): void {
-    const resoulution = h3.getResolution(this.foundHexId);
-    this.parentHexId =  h3.cellToParent(this.foundHexId, resoulution-1);
+      const resoulution = h3.getResolution(this.foundHexId);
+      if(resoulution!=-1){
+        this.parentHexId =  h3.cellToParent(this.foundHexId, resoulution-1);
+      }
+    
+    
   }
   calculateArea():void{
     const areaMeters = (h3.cellArea(this.foundHexId, 'km2')).toFixed(3);
