@@ -7,7 +7,5 @@
 </div>
 
 <div class="map">
-  <app-map (parentHexIdChange)="infotainmentPanel.parentHexId = $event"
-   (foundHexId)="infotainmentPanel.foundHexId = $event"
-   (areaHex)="infotainmentPanel.areaHex = $event"></app-map>
+  <app-map  (foundHexId)="infotainmentPanel.foundHexId = $event" ></app-map>
 </div>

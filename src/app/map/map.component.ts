@@ -369,10 +369,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
   
-  @Output() parentHexIdChange = new EventEmitter<string>();
   @Output() foundHexId = new EventEmitter<string>();
-  @Output() areaHex = new EventEmitter<number>();
-
 
   displayHexagons(hexagons: string[], targetResolution: number): void {
     for (const hex of hexagons) {
@@ -421,14 +418,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.searchHexId = searchedHex;
       let zoom = 11;
 
-      //Get parent of found hex
-      const parentOfHex = h3.cellToParent(this.searchHexId, resoulution-1);
-      this.parentHexIdChange.emit(parentOfHex); //send parent id to infot panel
       this.foundHexId.emit(this.searchHexId); //send found hex id to infot panel
-      //Calculate area of hex in km^2
-      const areaMeters = (h3.cellArea(this.searchHexId, 'km2')).toFixed(3);
-      this.areaHex.emit(+areaMeters); //send area to infot panel
-
+      
       if (resoulution <= ResolutionLevel.CountryLevel) {
         zoom = 6;
       } else if (resoulution <= ResolutionLevel.StateLevel) {
