@@ -290,13 +290,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = 
     new Map<number, Map<string, PointOfInterest[]>>();
-  //poisPerHex : Map<string, PointOfInterest[]> = new Map<string, PointOfInterest[]>();
-    // ([
-    //   ['87196b848ffffff', [ new PointOfInterest(RoadHazardType.Fog, new Date(), "87196b848ffffff", true)]],
-    //   ['87196b858ffffff', [new PointOfInterest(RoadHazardType.Aquaplaning, new Date(), "87196b858ffffff", true)]]
-    // ]);
+
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
-    // ([RoadHazardType.Aquaplaning, RoadHazardType.Fog]);
   searchHexId: string = ''!;
 
   constructor(private poiService: PoiService) {}
@@ -337,11 +332,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       return map;
     }, beginMapSetup);
-    //console.log(this.poisPerHex);
   }
 
   ngAfterViewInit(): void {
-    //console.log(Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v))));
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -409,8 +402,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.displayedHexagons = new Map<string, google.maps.Polygon>();
         const newHexagonChildIds : string[] = h3.polygonToCells(coords, resolutionLevel + 1, false);
         const newHexIds : Set<string> = new Set(newHexagonChildIds.map(x => h3.cellToParent(x, resolutionLevel)))
-        //console.log(newHexIds)
-        //console.log(this.poisPerHex);
+
         this.filterHexagons(newHexIds, resolutionLevel);
       }
     }
@@ -437,7 +429,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         });
         hexagonPolygon.setMap(this.map);
         this.displayedHexagons.set(hex, hexagonPolygon);
-      }else{
+      } else {
         let pois : PointOfInterest[] | undefined  = poisPerHex.get(hex);
         if (typeof pois !== "undefined" && pois.length > 0){
           if(pois.map(x => x.type).filter(y => this.searchedHazards.has(y)).length > 0) {
