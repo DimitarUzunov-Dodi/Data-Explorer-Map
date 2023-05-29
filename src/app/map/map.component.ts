@@ -321,9 +321,10 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.poiPerHexPerResolution = poiArr.reduce((map, poi) => {
         for(const res of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
           try {
-            let poiForRes = h3.cellToParent(poi.hexId, Number(res));
-          let currResMap = map.get(Number(res))!;
-          if (currResMap.has(poiForRes)) {
+            let coords = h3.cellToLatLng(poi.hexId);
+            let poiForRes = h3.latLngToCell(coords[0], coords[1], Number(res));
+            let currResMap = map.get(Number(res))!;
+            if (currResMap.has(poiForRes)) {
             currResMap.get(poiForRes)!.push(poi);
           } else {
             currResMap.set(poiForRes, [poi]);
