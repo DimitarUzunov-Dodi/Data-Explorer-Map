@@ -8,7 +8,9 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class InfotainmentPanelComponent {
   showInfotainmentPanel = false;
-  
+  // chooseInfPanel = "hex";
+  // chooseInfPanel = "user";
+  chooseInfPanel = "poi";
   togglePanel(): void {
     this.showInfotainmentPanel = !this.showInfotainmentPanel;
   }

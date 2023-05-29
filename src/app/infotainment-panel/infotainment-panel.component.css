@@ -17,29 +17,5 @@
   font-size: 20px;
 }
 
-.infotainment-panel {
-    position: fixed;
-    top: 15%;
-    left: -700px;
-    width: 700px;
-    height: 85%; 
-    background-color: #f1f1f1;
-    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3); 
-    overflow-y: scroll;
-    z-index: 1;
-    transition: transform 0.3s ease-in-out;
 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-  
-  .infotainment-panel .field {
-    text-align: right;
-    padding: 15px; 
-  }
-  
-  .infotainment-panel.show {
-    transform: translateX(350px); 
-  }
 
