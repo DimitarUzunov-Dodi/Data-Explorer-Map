@@ -18,13 +18,13 @@ export class FilterCheckbox {
     initializeCheckBox() {
 
         // add try/catch to make sure poi is array of string and form is an HTMLElement ?
-        const poi : RoadHazardType[] = Object.values(RoadHazardType);
+        const hazards : RoadHazardType[] = Object.values(RoadHazardType);
         const form : HTMLElement | null = document.getElementById('checkBoxForm');
 
         // console.log(poi);
 
-        for (var i : number = 0; i < poi.length; i++) {
-            var haz : string = poi[i].toString();
+        for (var i : number = 0; i < hazards.length; i++) {
+            var haz : string = hazards[i].toString();
 
             const checkBox : HTMLInputElement = document.createElement('input');
             checkBox.type = 'checkbox';

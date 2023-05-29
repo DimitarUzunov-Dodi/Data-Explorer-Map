@@ -288,9 +288,9 @@ export class MapComponent implements OnInit, AfterViewInit {
   };
 
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
-  // poiPerHexPerResolution: Map<ResolutionLevel, Map<string, PointOfInterest[]>> = 
-  //   new Map<ResolutionLevel, Map<string, PointOfInterest[]>>();
-  poisPerHex : Map<string, PointOfInterest[]> = new Map<string, PointOfInterest[]>();
+  poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = 
+    new Map<number, Map<string, PointOfInterest[]>>();
+  //poisPerHex : Map<string, PointOfInterest[]> = new Map<string, PointOfInterest[]>();
     // ([
     //   ['87196b848ffffff', [ new PointOfInterest(RoadHazardType.Fog, new Date(), "87196b848ffffff", true)]],
     //   ['87196b858ffffff', [new PointOfInterest(RoadHazardType.Aquaplaning, new Date(), "87196b858ffffff", true)]]
@@ -299,17 +299,49 @@ export class MapComponent implements OnInit, AfterViewInit {
     // ([RoadHazardType.Aquaplaning, RoadHazardType.Fog]);
   searchHexId: string = ''!;
 
-  constructor(private PoiService: PoiService) {}
+  constructor(private poiService: PoiService) {}
 
   ngOnInit(): void {
     // Loads json files from file
     fetch('./assets/mock_data_explorer.json').then(async res => {
-      this.PoiService.processJson(await res.json())
-    })
+      this.poiService.processJson(await res.json())
+      this.setupPois(this.poiService.getPoiArr());
+    });
 
   }
 
+  setupPois(poiArr : PointOfInterest[]) {
+    let beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
+    
+    for (const x of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
+      console.log(x);
+      beginMapSetup.set(Number(x), new Map<string, PointOfInterest[]>);
+    }
+
+    this.poiPerHexPerResolution = poiArr.reduce((map, poi) => {
+        for(const res of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
+          try {
+            let poiForRes = h3.cellToParent(poi.hexId, Number(res));
+          let currResMap = map.get(Number(res))!;
+          if (currResMap.has(poiForRes)) {
+            currResMap.get(poiForRes)!.push(poi);
+          } else {
+            currResMap.set(poiForRes, [poi]);
+          }
+          } catch (error) {
+            console.log("this ahi:" + res + " " + poi)
+          }
+          
+        }
+
+      return map;
+    }, beginMapSetup);
+    //console.log(this.poisPerHex);
+  }
+
   ngAfterViewInit(): void {
+    //console.log(Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v))));
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -371,7 +403,8 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.displayedHexagons = new Map<string, google.maps.Polygon>();
         const newHexagonChildIds : string[] = h3.polygonToCells(coords, resolutionLevel + 1, false);
         const newHexIds : Set<string> = new Set(newHexagonChildIds.map(x => h3.cellToParent(x, resolutionLevel)))
-        console.log(newHexIds)
+        //console.log(newHexIds)
+        //console.log(this.poisPerHex);
         this.filterHexagons(newHexIds, resolutionLevel);
       }
     });
@@ -379,10 +412,12 @@ export class MapComponent implements OnInit, AfterViewInit {
 
 
   filterHexagons(hexagons: Set<string>, targetResolution: number) {
-    this.displayHexagons(hexagons, targetResolution)
+    if(this.poiPerHexPerResolution.has(targetResolution)) {
+      this.displayHexagons(hexagons, targetResolution, this.poiPerHexPerResolution.get(targetResolution)!)
+    } 
   }
 
-  displayHexagons(hexagons: Set<string>, targetResolution: number): void {
+  displayHexagons(hexagons: Set<string>, targetResolution: number, poisPerHex : Map<string, PointOfInterest[]>): void {
     for (const hex of hexagons) {
       const hexagonCoords = h3.cellToBoundary(hex, true);
       if(hex == this.searchHexId){
@@ -397,7 +432,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         hexagonPolygon.setMap(this.map);
         this.displayedHexagons.set(hex, hexagonPolygon);
       }else{
-        let pois : PointOfInterest[] | undefined  = this.poisPerHex.get(hex);
+        let pois : PointOfInterest[] | undefined  = poisPerHex.get(hex);
         if (typeof pois !== "undefined" && pois.length > 0){
           if(pois.map(x => x.type).filter(y => this.searchedHazards.has(y)).length > 0) {
             const hexagonPolygon = new google.maps.Polygon({
@@ -418,10 +453,6 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   updateHazards(neededHazards: Set<RoadHazardType>) {
     this.searchedHazards = neededHazards;
-  }
-
-  updatePOIData(newData: Map<string, PointOfInterest[]>) {
-    this.poisPerHex = newData;
   }
 
   moveMap(event: google.maps.MapMouseEvent) {
