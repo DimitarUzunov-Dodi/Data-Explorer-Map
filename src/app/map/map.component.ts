@@ -365,7 +365,12 @@ export class MapComponent implements OnInit, AfterViewInit {
       ...this.mapOptions
     });
     // Initialize the map and create hexagons for the initial bounds
-    google.maps.event.addListener(this.map, 'bounds_changed', () => {
+    google.maps.event.addListener(this.map, 'bounds_changed', () => this.visualizeMap());
+    
+  }
+
+  visualizeMap(): void {
+    {
       const bounds = this.map.getBounds();
       if (bounds) {
         const sw = bounds.getSouthWest();
@@ -408,7 +413,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         //console.log(this.poisPerHex);
         this.filterHexagons(newHexIds, resolutionLevel);
       }
-    });
+    }
   }
 
 

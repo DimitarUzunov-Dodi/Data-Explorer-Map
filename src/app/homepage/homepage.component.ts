@@ -24,6 +24,7 @@ export class HomepageComponent {
     this.mapComponent.clearSearch();
     
   }
+
   handleHazardCheckboxChange(status: [hazType: string, isChecked: boolean]) {
     try {
       let currentHaz : Set<RoadHazardType> = this.mapComponent.searchedHazards;
@@ -34,7 +35,7 @@ export class HomepageComponent {
       }
       console.log(currentHaz);
       this.mapComponent.updateHazards(currentHaz);
-      
+      this.mapComponent.visualizeMap();
     } catch (error) {
       console.log(error);
     }
