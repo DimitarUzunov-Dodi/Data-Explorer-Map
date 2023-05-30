@@ -19,6 +19,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   maxTemp: number = 0;
   feelsLikes: number = 0;
   windspeed: number = 0;
+  rain: number = 0;
   constructor(private http: HttpClient) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -98,6 +99,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
           weather: { icon: string; description: string }[];
           main: { temp_min: number; temp_max: number; feels_like: number };
           wind: { speed: number };
+          rain?: { '1h': number };
         };
         this.weatherIcon = weatherResponse .weather[0].icon
         this.weatherDescription = weatherResponse .weather[0].description
@@ -105,6 +107,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
         this.maxTemp = weatherResponse.main.temp_max
         this.feelsLikes = weatherResponse.main.feels_like
         this.windspeed = weatherResponse.wind.speed
+        this.rain = weatherResponse.rain? weatherResponse.rain?.['1h'] : 0;
         return response;
       } else {
         throw new Error('Failed to fetch weather forecast');
