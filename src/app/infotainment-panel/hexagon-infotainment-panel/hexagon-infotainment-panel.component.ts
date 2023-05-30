@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import * as h3 from 'h3-js';
 
 @Component({
@@ -6,20 +7,33 @@ import * as h3 from 'h3-js';
   templateUrl: './hexagon-infotainment-panel.component.html',
   styleUrls: ['./hexagon-infotainment-panel.component.css']
 })
-export class HexagonInfotainmentPanelComponent {
+export class HexagonInfotainmentPanelComponent implements OnChanges{
   @Input() showInfotainmentPanel: boolean = false;
   @Input() searchedHex: string = '';
   parentHexId: string = '';
   area: number = 0;
   countries: string[] = [];
+  weatherIcon: string = '';
+  weatherDescription: string = '';
 
+  constructor(private http: HttpClient) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['searchedHex'] && !changes['searchedHex'].firstChange) {
+      this.ngOnInit();
+    }
+  }
   async ngOnInit(): Promise<void> {
-    this.calculateParentHexId();
-    this.calculateArea();
-
-    const geocodingPromise = this.getCountries(this.searchedHex)
-    const countries: string[] = await geocodingPromise;
-    this.countries = [...new Set(countries)];
+    try {
+      this.calculateParentHexId();
+      this.calculateArea();
+      const geocodingPromise = this.getCountries()
+      const countries: string[] = await geocodingPromise;
+      this.countries = [...new Set(countries)];
+      await this.getWeatherForecast();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   calculateParentHexId(): void {
@@ -35,11 +49,9 @@ export class HexagonInfotainmentPanelComponent {
 
   }
 
-
-
-  async getCountries(hexagonId: string): Promise<string[]> {
+  async getCountries(): Promise<string[]> {
     try {
-      const newHexagonIds = h3.cellToChildren(hexagonId, h3.getResolution(hexagonId) + 2);
+      const newHexagonIds = h3.cellToChildren(this.searchedHex, h3.getResolution(this.searchedHex) + 2);
       const geocoder = new google.maps.Geocoder();
       const geocodingRequests = newHexagonIds.map(newHexId => {
         const hexagonCoords = h3.cellToBoundary(newHexId, true);
@@ -70,4 +82,24 @@ export class HexagonInfotainmentPanelComponent {
       throw new Error('Hexagon not found');
     }
   }
+
+  async getWeatherForecast(): Promise<any> {
+    const coords = h3.cellToLatLng(this.searchedHex)
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&appid=61179205d75402bec9bf8541e2a2846b`;
+    try {
+      const response = await this.http.get(apiUrl).toPromise();
+      console.log(response)
+      if (response && response.hasOwnProperty('weather')){
+        const weatherResponse = response as { weather: { icon: string; description: string }[] };
+        this.weatherIcon = weatherResponse .weather[0].icon;
+        this.weatherDescription = weatherResponse .weather[0].description;
+        return response;
+      } else {
+        throw new Error('Failed to fetch weather forecast');
+      }
+    } catch (error) {
+      throw new Error('Failed to fetch weather forecast');
+    }
+  }
 }
+

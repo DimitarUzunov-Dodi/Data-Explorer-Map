@@ -24,4 +24,10 @@
         <li *ngFor="let country of countries">{{ country }}</li>
       </ul>
     </div>
+
+    <div class="field">
+      <h3>Weather Forecast:</h3>
+      <img src="http://openweathermap.org/img/wn/{{ weatherIcon }}.png" alt="Weather Icon">
+      <p>{{ weatherDescription }}</p>
+    </div>
   </div>
