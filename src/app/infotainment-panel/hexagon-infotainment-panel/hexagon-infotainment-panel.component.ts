@@ -32,13 +32,4 @@ export class HexagonInfotainmentPanelComponent {
     this.calculateParentHexId();
     this.calculateArea();
   }
-
-  ngOnChanges(): void {
-    if (h3.isValidCell(this.searchedHex)) {
-      this.hexagonInfotainmentPanel = this;
-     // this.area = h3.cellArea(this.searchedHex, 'km2');
-    } else {
-      this.hexagonInfotainmentPanel = null;
-    }
-  }
 }

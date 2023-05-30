@@ -4,8 +4,6 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import {PoiService} from "src/app/Services/poi.service";
 
 
-
-
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -359,18 +357,18 @@ export class MapComponent implements OnInit, AfterViewInit {
           hexagon.setMap(null);
         });
         this.displayedHexagons = new Map<string, google.maps.Polygon>();
-        const newHexagonIds = h3.polygonToCells(coords, resolutionLevel + 1, false);
-        this.displayHexagons(newHexagonIds, resolutionLevel);
+        const newHexagonIds = h3.polygonToCells(coords, resolutionLevel, false);
+        this.displayHexagons(newHexagonIds);
       }
     });
   }
 
-  displayHexagons(hexagons: string[], targetResolution: number): void {
+  displayHexagons(hexagons: string[]): void {
+    console.log(hexagons)
     for (const hex of hexagons) {
-      const parentOfHex = h3.cellToParent(hex, targetResolution);
-      if (!this.displayedHexagons.has(parentOfHex)){  
-        const hexagonCoords = h3.cellToBoundary(parentOfHex, true);
-        if(parentOfHex == this.searchHexId){
+      if (!this.displayedHexagons.has(hex)){  
+        const hexagonCoords = h3.cellToBoundary(hex, true);
+        if(hex == this.searchHexId){
           const hexagonPolygon = new google.maps.Polygon({
             paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
             strokeColor: '#FF0000',
@@ -380,7 +378,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             fillOpacity: 0.35,
           });
           hexagonPolygon.setMap(this.map);
-          this.displayedHexagons.set(parentOfHex, hexagonPolygon);
+          this.displayedHexagons.set(hex, hexagonPolygon);
         }else{
           const hexagonPolygon = new google.maps.Polygon({
             paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
@@ -391,7 +389,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             fillOpacity: 0.35,
           })
           hexagonPolygon.setMap(this.map);
-          this.displayedHexagons.set(parentOfHex, hexagonPolygon);
+          this.displayedHexagons.set(hex, hexagonPolygon);
         }  
       }
     };
@@ -453,10 +451,43 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.displayedHexagons.set(hexToClear, hexagonPolygon);
   }
 
-
-  
-  
+  async getCountries(hexagonId: string): Promise<string[]> {
+    try {
+      const newHexagonIds = h3.cellToChildren(hexagonId, h3.getResolution(hexagonId) + 1);
+      const geocoder = new google.maps.Geocoder();
+      const geocodingRequests = newHexagonIds.map(newHexId => {
+        const hexagonCoords = h3.cellToBoundary(newHexId, true);
+        return {
+          location: new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0])
+        };
+      });
+      const geocodingPromises = geocodingRequests.map(request => {
+        return new Promise<string[]>((resolve, reject) => {
+          geocoder.geocode(request, (results, status) => {
+            if (status === google.maps.GeocoderStatus.OK && results && results.length > 0) {
+              const countryNames: string[] = results.map(result =>
+                result.address_components.find(component =>
+                  component.types.includes('country')
+                )?.long_name as string
+              ).filter(Boolean);
+              resolve(countryNames);
+            } else {
+              reject(new Error('Reverse geocoding failed'));
+            }
+          });
+        });
+      });
+      const countryNamesArrays: string[][] = await Promise.all(geocodingPromises);
+      const countryNames: string[] = countryNamesArrays.flat();
+      const uniqueCountries: string[] = [...new Set(countryNames)];
+      console.log(uniqueCountries)
+      return uniqueCountries;
+    } catch (error) {
+      throw new Error('Hexagon not found');
+    }
+  }
 }
+
 
 enum ResolutionLevel {
   CountryLevel = 1,

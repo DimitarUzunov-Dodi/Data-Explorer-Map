@@ -13,9 +13,15 @@ export class HomepageComponent {
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   title = 'Angular';
-  handleSearchTriggered(hexagonId: string){
+  async handleSearchTriggered(hexagonId: string){
     const hexId = hexagonId.replace(/\s/g, "");
     this.mapComponent.findHexagon(hexId)
+
+    const geocodingPromise = this.mapComponent.getCountries(hexId)
+    const countries: string[] = await geocodingPromise;
+    const uniqueCountries: string[] = [...new Set(countries)];
+    console.log(uniqueCountries)
+
     this.infotainmentPanelComponent.searchedHex = hexId;
     this.infotainmentPanelComponent.chooseInfPanel = "hex"
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
