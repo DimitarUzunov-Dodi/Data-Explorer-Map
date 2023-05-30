@@ -25,6 +25,20 @@ export class HomepageComponent {
     
   }
 
+  allHazardsSelection(status: boolean) {
+    try {
+      if(status) {
+        this.mapComponent.updateHazards(new Set(Object.values(RoadHazardType)));
+        console.log("Selected All");
+      } else {
+        this.mapComponent.updateHazards(new Set());
+        console.log("Deselected All");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   handleHazardCheckboxChange(status: [hazType: string, isChecked: boolean]) {
     try {
       let currentHaz : Set<RoadHazardType> = this.mapComponent.searchedHazards;
@@ -33,7 +47,6 @@ export class HomepageComponent {
       } else {
         currentHaz.delete(status[0] as RoadHazardType);
       }
-      console.log(currentHaz);
       this.mapComponent.updateHazards(currentHaz);
       this.mapComponent.visualizeMap();
     } catch (error) {
