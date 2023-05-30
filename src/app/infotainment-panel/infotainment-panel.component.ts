@@ -1,4 +1,5 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { HexagonInfotainmentPanelComponent } from './hexagon-infotainment-panel/hexagon-infotainment-panel.component';
 
 @Component({
   selector: 'app-infotainment-panel',
@@ -7,6 +8,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 })
 export class InfotainmentPanelComponent {
+  @ViewChild(HexagonInfotainmentPanelComponent) infotainmentPanelComponent!: HexagonInfotainmentPanelComponent;
   showInfotainmentPanel = false;
   // chooseInfPanel = "hex";
   // chooseInfPanel = "user";

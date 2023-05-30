@@ -8,4 +8,5 @@ import { Component, Input } from '@angular/core';
 export class HexagonInfotainmentPanelComponent {
   @Input()
   showInfotainmentPanel: boolean = false;
+  area = 0;
 }
