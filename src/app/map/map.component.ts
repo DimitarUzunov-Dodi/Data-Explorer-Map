@@ -403,13 +403,13 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   findHexagon(hexagonId: string): void {
     try {
-      const searchedHex = hexagonId.replace(/\s/g, "");
-      const hexagonCoords = h3.cellToBoundary(searchedHex, true);
-      const resoulution = h3.getResolution(searchedHex);
+      
+      const hexagonCoords = h3.cellToBoundary(hexagonId, true);
+      const resoulution = h3.getResolution(hexagonId);
       if(resoulution == -1){ 
         throw new Error("Hexagon not found");
       }
-      this.searchHexId = searchedHex;
+      this.searchHexId = hexagonId;
       let zoom = 11;
 
       if (resoulution <= ResolutionLevel.CountryLevel) {

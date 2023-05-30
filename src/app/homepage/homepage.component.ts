@@ -11,10 +11,11 @@ import { InfotainmentPanelComponent } from '../infotainment-panel/infotainment-p
 export class HomepageComponent {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
-  @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: MapComponent;
+  @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   title = 'Angular';
   handleSearchTriggered(hexagonId: string){
-    this.mapComponent.findHexagon(hexagonId)
+    const searchedHex = hexagonId.replace(/\s/g, "");
+    this.mapComponent.findHexagon(searchedHex)
     
   }
   handleClearSearchTriggered(){
