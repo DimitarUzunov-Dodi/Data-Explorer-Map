@@ -19,10 +19,10 @@
 
 .infotainment-panel {
     position: fixed;
-    top: 15%;
+    top: 140;
     left: -700px;
     width: 700px;
-    height: 85%; 
+    height: calc(100% - 140px); 
     background-color: #f1f1f1;
     box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3); 
     overflow-y: scroll;

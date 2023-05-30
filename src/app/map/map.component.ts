@@ -383,19 +383,23 @@ export class MapComponent implements OnInit, AfterViewInit {
 
         let resolutionLevel: ResolutionLevel;
         const zoom = this.map.getZoom()!;
-        if (zoom <= 5) {
+        if (zoom <= 6) {
           resolutionLevel = ResolutionLevel.CountryLevel;
-        } else if (zoom <= 8) {
+        } else if (zoom <= 9) {
           resolutionLevel = ResolutionLevel.StateLevel;
-        } else if (zoom <= 10) {
+        } else if (zoom <= 12) {
           resolutionLevel = ResolutionLevel.CityLevel;
-        } else if (zoom <= 13) {
+        } else if (zoom <= 14) {
           resolutionLevel = ResolutionLevel.TownLevel;
-        } else if (zoom <= 15) {
+        } else if (zoom <= 16) {
+          resolutionLevel = ResolutionLevel.HighWayLevel;
+        } else if (zoom <= 18) {
           resolutionLevel = ResolutionLevel.RoadLevel;
         } else {
           resolutionLevel = ResolutionLevel.RoadwayLevel;
         }
+        console.log(zoom)
+        console.log(resolutionLevel)
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
@@ -469,21 +473,27 @@ export class MapComponent implements OnInit, AfterViewInit {
       let zoom = 11;
 
       if (resoulution <= ResolutionLevel.CountryLevel) {
-        zoom = 5;
+        zoom = 6;
       } else if (resoulution <= ResolutionLevel.StateLevel) {
-        zoom = 8;
+        zoom = 9;
       } else if (resoulution <= ResolutionLevel.CityLevel) {
-        zoom = 10;
+        zoom = 12;
       } else if (resoulution <= ResolutionLevel.TownLevel) {
-        zoom = 13;
+        zoom = 14;
+      } else if (resoulution <= ResolutionLevel.HighWayLevel) {
+        zoom = 16;
       } else if (resoulution <= ResolutionLevel.RoadLevel) {
-        zoom = 15;
+        zoom = 18;
       } else {
-        zoom = 16;  
+        zoom = 20;  
       }
+
+
+
+
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
-      this.map.setZoom(zoom);
+      this.map.setZoom(zoom-1);
 
     } catch(error) {
        alert("Hexagon not found");
@@ -508,10 +518,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     hexagonPolygon.setMap(this.map);
     this.displayedHexagons.set(hexToClear, hexagonPolygon);
   }
-
-
-  
-  
 }
 
 enum ResolutionLevel {
@@ -519,6 +525,7 @@ enum ResolutionLevel {
   StateLevel = 3,
   CityLevel = 5,
   TownLevel = 7,
-  RoadLevel = 9,
-  RoadwayLevel = 11
+  HighWayLevel = 9,
+  RoadLevel = 11,
+  RoadwayLevel = 13
 }
