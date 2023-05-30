@@ -14,9 +14,9 @@ export class HomepageComponent {
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   title = 'Angular';
   handleSearchTriggered(hexagonId: string){
-    const searchedHex = hexagonId.replace(/\s/g, "");
-    this.mapComponent.findHexagon(searchedHex)
-    this.infotainmentPanelComponent.searchedHex = searchedHex;
+    const hexId = hexagonId.replace(/\s/g, "");
+    this.mapComponent.findHexagon(hexId)
+    this.infotainmentPanelComponent.searchedHex = hexId;
     this.infotainmentPanelComponent.chooseInfPanel = "hex"
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
   }

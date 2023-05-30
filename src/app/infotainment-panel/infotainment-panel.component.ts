@@ -10,10 +10,11 @@ import { HexagonInfotainmentPanelComponent } from './hexagon-infotainment-panel/
 export class InfotainmentPanelComponent {
   @ViewChild(HexagonInfotainmentPanelComponent) infotainmentPanelComponent!: HexagonInfotainmentPanelComponent;
   showInfotainmentPanel = false;
+  searchedHex: string = '';
   // chooseInfPanel = "hex";
   // chooseInfPanel = "user";
-  chooseInfPanel = "poi";
-  searchedHex: string = '';
+  chooseInfPanel = "";
+  
   togglePanel(): void {
     this.showInfotainmentPanel = !this.showInfotainmentPanel;
   }
