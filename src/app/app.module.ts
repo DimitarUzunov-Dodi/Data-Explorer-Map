@@ -8,6 +8,7 @@ import { InfotainmentPanelComponent } from './infotainment-panel/infotainment-pa
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { FormsModule } from '@angular/forms';
 import { HomepageComponent } from './homepage/homepage.component';
+import { FilterCheckbox } from './filter/filter.component';
 
 
 
@@ -23,6 +24,7 @@ const routes: Routes = [
     InfotainmentPanelComponent,
     TopBarComponent,
     HomepageComponent,
+    FilterCheckbox,
   ],
   imports: [
     BrowserModule,
