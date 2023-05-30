@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { HexagonInfotainmentPanelComponent } from './hexagon-infotainment-panel.component';
 
@@ -8,7 +9,8 @@ describe('HexagonInfotainmentPanelComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HexagonInfotainmentPanelComponent ]
+      declarations: [ HexagonInfotainmentPanelComponent ],
+      imports: [HttpClientTestingModule], 
     })
     .compileComponents();
 
