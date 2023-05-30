@@ -8,7 +8,7 @@ import { HexagonInfotainmentPanelComponent } from './hexagon-infotainment-panel/
 
 })
 export class InfotainmentPanelComponent {
-  @ViewChild(HexagonInfotainmentPanelComponent) infotainmentPanelComponent!: HexagonInfotainmentPanelComponent;
+  @ViewChild(HexagonInfotainmentPanelComponent) currentPanel!: HexagonInfotainmentPanelComponent;
   showInfotainmentPanel = false;
   searchedHex: string = '';
   // chooseInfPanel = "hex";

@@ -17,12 +17,7 @@ export class HomepageComponent {
     const hexId = hexagonId.replace(/\s/g, "");
     this.mapComponent.findHexagon(hexId)
 
-    const geocodingPromise = this.mapComponent.getCountries(hexId)
-    const countries: string[] = await geocodingPromise;
-    const uniqueCountries: string[] = [...new Set(countries)];
-    console.log(uniqueCountries)
-
-    this.infotainmentPanelComponent.searchedHex = hexId;
+    this.infotainmentPanelComponent.searchedHex = hexId
     this.infotainmentPanelComponent.chooseInfPanel = "hex"
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
   }
