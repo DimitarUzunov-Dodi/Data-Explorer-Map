@@ -22,6 +22,6 @@ export class HomepageComponent {
   }
   handleClearSearchTriggered(){
     this.mapComponent.clearSearch();
-    
+    this.infotainmentPanelComponent.showInfotainmentPanel = false;
   }
 }
