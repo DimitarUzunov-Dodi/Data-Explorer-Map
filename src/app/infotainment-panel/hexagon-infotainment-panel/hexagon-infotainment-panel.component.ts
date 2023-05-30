@@ -15,7 +15,10 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   countries: string[] = [];
   weatherIcon: string = '';
   weatherDescription: string = '';
-
+  minTemp: number = 0;
+  maxTemp: number = 0;
+  feelsLikes: number = 0;
+  windspeed: number = 0;
   constructor(private http: HttpClient) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -89,10 +92,19 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     try {
       const response = await this.http.get(apiUrl).toPromise();
       console.log(response)
-      if (response && response.hasOwnProperty('weather')){
-        const weatherResponse = response as { weather: { icon: string; description: string }[] };
-        this.weatherIcon = weatherResponse .weather[0].icon;
-        this.weatherDescription = weatherResponse .weather[0].description;
+      if (response && response.hasOwnProperty('weather') && response.hasOwnProperty('main') && response.hasOwnProperty('wind')) {
+        console.log("enters")
+        const weatherResponse = response as {
+          weather: { icon: string; description: string }[];
+          main: { temp_min: number; temp_max: number; feels_like: number };
+          wind: { speed: number };
+        };
+        this.weatherIcon = weatherResponse .weather[0].icon
+        this.weatherDescription = weatherResponse .weather[0].description
+        this.minTemp = weatherResponse.main.temp_min
+        this.maxTemp = weatherResponse.main.temp_max
+        this.feelsLikes = weatherResponse.main.feels_like
+        this.windspeed = weatherResponse.wind.speed
         return response;
       } else {
         throw new Error('Failed to fetch weather forecast');
