@@ -13,6 +13,7 @@ export class InfotainmentPanelComponent {
   // chooseInfPanel = "hex";
   // chooseInfPanel = "user";
   chooseInfPanel = "poi";
+  searchedHex: string = '';
   togglePanel(): void {
     this.showInfotainmentPanel = !this.showInfotainmentPanel;
   }

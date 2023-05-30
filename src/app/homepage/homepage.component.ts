@@ -16,6 +16,7 @@ export class HomepageComponent {
   handleSearchTriggered(hexagonId: string){
     const searchedHex = hexagonId.replace(/\s/g, "");
     this.mapComponent.findHexagon(searchedHex)
+    this.infotainmentPanelComponent.searchedHex = searchedHex;
     this.infotainmentPanelComponent.chooseInfPanel = "hex"
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
   }

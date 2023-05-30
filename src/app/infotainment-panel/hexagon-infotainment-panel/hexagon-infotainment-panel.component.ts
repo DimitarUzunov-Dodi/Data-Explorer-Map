@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import * as h3 from "h3-js";
 
 @Component({
   selector: 'app-hexagon-infotainment-panel',
@@ -8,5 +9,6 @@ import { Component, Input } from '@angular/core';
 export class HexagonInfotainmentPanelComponent {
   @Input()
   showInfotainmentPanel: boolean = false;
-  area = 0;
+  @Input() searchedHex: string = '';
+  area = h3.cellArea(this.searchedHex, "km2");
 }
