@@ -65,23 +65,30 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
           location: new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0])
         };
       });
-      const geocodingPromises = geocodingRequests.map(request => {
-        return new Promise<string[]>((resolve, reject) => {
-          geocoder.geocode(request, (results, status) => {
-            if (status === google.maps.GeocoderStatus.OK && results && results.length > 0) {
-              const countryNames: string[] = results.map(result =>
-                result.address_components.find(component =>
-                  component.types.includes('country')
-                )?.long_name as string
-              ).filter(Boolean);
-              resolve(countryNames);
-            } else {
-              reject(new Error('Reverse geocoding failed'));
-            }
+  
+      const countryNamesArrays: string[][] = [];
+      for (const request of geocodingRequests) {
+        try {
+          const countryNames: string[] = await new Promise<string[]>((resolve, reject) => {
+            geocoder.geocode(request, (results, status) => {
+              if (status === google.maps.GeocoderStatus.OK && results && results.length > 0) {
+                const names: string[] = results.map(result =>
+                  result.address_components.find(component =>
+                    component.types.includes('country')
+                  )?.long_name as string
+                ).filter(Boolean);
+                resolve(names);
+              } else {
+                reject(new Error('Reverse geocoding failed'));
+              }
+            });
           });
-        });
-      });
-      const countryNamesArrays: string[][] = await Promise.all(geocodingPromises);
+          countryNamesArrays.push(countryNames);
+        } catch (error) {
+          console.error('Error occurred during geocoding:', error);
+        }
+      }
+  
       const countryNames: string[] = countryNamesArrays.flat();
       return countryNames;
     } catch (error) {
@@ -94,9 +101,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&appid=61179205d75402bec9bf8541e2a2846b`;
     try {
       const response = await this.http.get(apiUrl).toPromise();
-      console.log(response)
       if (response && response.hasOwnProperty('weather') && response.hasOwnProperty('main') && response.hasOwnProperty('wind')) {
-        console.log("enters")
         const weatherResponse = response as {
           weather: { icon: string; description: string }[];
           main: { temp_min: number; temp_max: number; feels_like: number };
