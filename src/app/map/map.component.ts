@@ -307,7 +307,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     let beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
     
     for (const x of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
-      console.log(x);
       beginMapSetup.set(Number(x), new Map<string, PointOfInterest[]>);
     }
 
@@ -396,8 +395,6 @@ export class MapComponent implements OnInit, AfterViewInit {
         } else {
           resolutionLevel = ResolutionLevel.RoadwayLevel;
         }
-        console.log(zoom)
-        console.log(resolutionLevel)
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
@@ -417,6 +414,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   displayHexagons(hexagons: Set<string>, targetResolution: number, poisPerHex : Map<string, PointOfInterest[]>): void {
+    console.log(hexagons)
     for (const hex of hexagons) {
       const hexagonCoords = h3.cellToBoundary(hex, true);
       if(hex == this.searchHexId){
