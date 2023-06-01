@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Output, EventEmitter } from '@angular/core';
 import { HomepageComponent } from './homepage.component';
 import { FilterCheckbox } from '../filter/filter.component';
+import { InfotainmentPanelComponent } from '../infotainment-panel/infotainment-panel.component';
 
 @Component({
   selector: 'app-top-bar',
@@ -12,16 +13,6 @@ class MockTopBarComponent {
   @Output() clearSearchTriggered = new EventEmitter();
 }
 
-@Component({
-  selector: 'filter-checkbox',
-  template: '',
-})
-
-@Component({
-  selector: 'app-infotainment-panel',
-  template: '',
-})
-class MockInfotainmentPanelComponent {}
 
 @Component({
   selector: 'app-map',
@@ -35,7 +26,7 @@ describe('HomepageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HomepageComponent, MockTopBarComponent, MockInfotainmentPanelComponent, MockMapComponent, FilterCheckbox ]
+      declarations: [ HomepageComponent, MockTopBarComponent, MockMapComponent, FilterCheckbox, InfotainmentPanelComponent ]
     })
     .compileComponents();
 

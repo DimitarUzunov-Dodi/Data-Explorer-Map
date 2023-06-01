@@ -2,8 +2,9 @@ import {  Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angul
 import * as h3 from 'h3-js';
 import {PoiService} from "src/app/Services/poi.service";
 import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
-
-
+/* eslint-disable */
+import { GoogleMapsModule } from '@angular/google-maps';
+/* eslint-enable */
 
 
 @Component({
