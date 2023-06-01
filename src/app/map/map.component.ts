@@ -461,13 +461,25 @@ export class MapComponent implements OnInit, AfterViewInit {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
   }
 
-  findHexagon(hexagonId: string): void {
+  findHexagon(searchTouple: [number,string]): void {
+    const searchCommand = searchTouple[0];
     try {
-      const searchedHex = hexagonId.replace(/\s/g, "");
+      
+      var searchedHex: string = '';
+      if(searchCommand == SearchFunction.SearchByHex){
+        searchedHex = searchTouple[1].replace(/\s/g, "");
+      } else if(searchCommand == SearchFunction.SearchByPoiId){
+        searchedHex  = this.poiService.getPoiArr()
+                                      .filter(x => x.id === searchTouple[1].replace(/\s/g, ""))
+                                      .map(x => x.hexId)[0];
+      }
+       
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
       const resoulution = h3.getResolution(searchedHex);
-      if(resoulution == -1){ 
+      if(resoulution == -1 && searchCommand == SearchFunction.SearchByHex){ 
         throw new Error("Hexagon not found");
+      } else if(resoulution == -1 && searchCommand == SearchFunction.SearchByPoiId){
+        throw new Error("Point of Interest not found");
       }
       this.searchHexId = searchedHex;
       let zoom = 11;
@@ -496,27 +508,19 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.setZoom(zoom-1);
 
     } catch(error) {
-       alert("Hexagon not found");
-       throw new Error("Hexagon not found");
-       }
+      if( searchCommand == SearchFunction.SearchByHex){ 
+        alert("Hexagon not found");
+        throw new Error("Hexagon not found");
+      } else if ( searchCommand == SearchFunction.SearchByPoiId){
+        alert("Point of Interest not found");
+        throw new Error("Point of Interest not found");
+      }      
+    }
   
   }
   clearSearch(){
-    const hexToClear = this.searchHexId;
     this.searchHexId = "";
-    const hexagonCoords = h3.cellToBoundary(hexToClear, true);
-    const hexagonPolygon = new google.maps.Polygon({
-      paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-      strokeColor: '#FF0000',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#FF0000',
-      fillOpacity: 0.35,
-    });
-    const poligonToRemove = this.displayedHexagons.get(hexToClear);
-    poligonToRemove?.setMap(null);
-    hexagonPolygon.setMap(this.map);
-    this.displayedHexagons.set(hexToClear, hexagonPolygon);
+    this.visualizeMap();
   }
 }
 
@@ -528,4 +532,9 @@ enum ResolutionLevel {
   HighWayLevel = 9,
   RoadLevel = 11,
   RoadwayLevel = 13
+}
+
+enum SearchFunction{
+  SearchByHex = 1,
+  SearchByPoiId = 2,
 }

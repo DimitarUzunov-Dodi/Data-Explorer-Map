@@ -16,8 +16,8 @@ export class HomepageComponent {
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: MapComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
   title = 'Angular';
-  handleSearchTriggered(hexagonId: string){
-    this.mapComponent.findHexagon(hexagonId)
+  handleSearchTriggered(searchTouple: [number,string]){
+    this.mapComponent.findHexagon(searchTouple)
     
   }
   handleClearSearchTriggered(){

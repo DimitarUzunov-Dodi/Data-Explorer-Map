@@ -22,7 +22,7 @@ describe('MapComponent', () => {
   it('should throw an error if hexagon not found', () => {
     const hexagonId = 'non-existent-hexagon-id';
 
-    expect(() => component.findHexagon(hexagonId)).toThrowError('Hexagon not found');
+    expect(() => component.findHexagon([1,hexagonId]).toThrowError('Hexagon not found');
   });
   
 });
