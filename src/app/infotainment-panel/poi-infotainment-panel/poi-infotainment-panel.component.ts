@@ -16,9 +16,6 @@ export class PoiInfotainmentPanelComponent {
 
   pois: PointOfInterest[] = [];
 
-  @Input() poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = 
-    new Map<number, Map<string, PointOfInterest[]>>();
-
   constructor(private poiService: PoiService) {}
 
   ngOnInit(): void {
@@ -26,14 +23,7 @@ export class PoiInfotainmentPanelComponent {
   }
 
   fetchPois(): void {
-    
-    const smth = (this.poiPerHexPerResolution.get(h3.getResolution(this.selectedHexId)))?.get(this.selectedHexId)
-    if (smth) {
-      this.pois = smth;
-    } else {
-      this.pois = [];
-    }
-    console.log(this.pois)
-   //this.pois  = this.poiService.getPoIsByHexId(this.selectedHexId);
+    this.pois = this.poiService.getPoIsByHexId(this.selectedHexId)
   }
+
 }

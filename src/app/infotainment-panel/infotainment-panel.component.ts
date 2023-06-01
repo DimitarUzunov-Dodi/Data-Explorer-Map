@@ -12,7 +12,6 @@ import { PointOfInterest } from '../Services/models/poi';
 export class InfotainmentPanelComponent {
   @ViewChild(HexagonInfotainmentPanelComponent) currentPanel!: HexagonInfotainmentPanelComponent;
   @ViewChild(PoiInfotainmentPanelComponent) poiPan!: PoiInfotainmentPanelComponent;
-  @Input() poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>();
   showInfotainmentPanel = false;
   searchedHex: string = '';
   // chooseInfPanel = "hex";
@@ -21,7 +20,6 @@ export class InfotainmentPanelComponent {
 
   ngOnIt(): void{
     this.poiPan.selectedHexId = this.currentPanel.searchedHex
-    this.poiPan.poiPerHexPerResolution = this.poiPerHexPerResolution
   }
   
   togglePanel(): void {
