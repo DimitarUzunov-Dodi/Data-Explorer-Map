@@ -10,8 +10,7 @@ import {PointOfInterest} from "./models/poi";
 export class PoiService {
 
   constructor() { }
-
-  poiArr: PointOfInterest[] = [];
+  poiArr: PointOfInterest[] = []; 
 
   processJson(rawData: any[]): void {
 
@@ -22,17 +21,19 @@ export class PoiService {
       data.hexId,
       data.status,
       data.note,
+      data.userId
     ));
 
-    //Add filters or directly visualize
-
-    console.log(this.poiArr);
+    console.log(this.poiArr)
 
   }
-
   getPoiArr() : PointOfInterest[] {
     return this.poiArr;
   }
+  getPoIsByHexId(hexId: string): PointOfInterest[] {
+    return this.poiArr.filter(poi => poi.hexId === hexId);
+  }
+
 
 
   // loadData(): void {

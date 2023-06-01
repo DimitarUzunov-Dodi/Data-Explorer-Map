@@ -13,16 +13,37 @@ import { RoadHazardType } from '../Services/models/poi';
 export class HomepageComponent {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
-  @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: MapComponent;
+  @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
   title = 'Angular';
-  handleSearchTriggered(searchTouple: [number,string]){
-    this.mapComponent.findHexagon(searchTouple)
-    
+  async handleSearchTriggered(hexagonId: string){
+    const hexId = hexagonId.replace(/\s/g, "");
+    this.mapComponent.findHexagon(hexId)
+
+    this.infotainmentPanelComponent.searchedHex = hexId
+    this.infotainmentPanelComponent.chooseInfPanel = "hex"
+    this.infotainmentPanelComponent.showInfotainmentPanel = true;
   }
   handleClearSearchTriggered(){
     this.mapComponent.clearSearch();
-    
+    this.infotainmentPanelComponent.chooseInfPanel = ""
+    this.infotainmentPanelComponent.showInfotainmentPanel = false;
+    this.topBarComponent.searchText = "" 
+  }
+
+  allHazardsSelection(status: boolean) {
+    try {
+      if(status) {
+        this.mapComponent.updateHazards(new Set(Object.values(RoadHazardType)));
+        console.log("Selected All");
+      } else {
+        this.mapComponent.updateHazards(new Set());
+        console.log("Deselected All");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    this.mapComponent.visualizeMap();
   }
 
   handleHazardCheckboxChange(status: [hazType: string, isChecked: boolean]) {
@@ -33,7 +54,6 @@ export class HomepageComponent {
       } else {
         currentHaz.delete(status[0] as RoadHazardType);
       }
-      console.log(currentHaz);
       this.mapComponent.updateHazards(currentHaz);
       this.mapComponent.visualizeMap();
     } catch (error) {
