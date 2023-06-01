@@ -20,6 +20,7 @@ export class TopBarComponent {
       
   }
   switchSearch() {
+    this.searchText = ''
     if(this.searchBar === 'Search by Hex'){
       this.searchBar = 'Search by POI';
     }else{
