@@ -9,6 +9,11 @@ install:
   script:
     - npm ci
 
+checkstyle:
+  stage: setup
+  script:
+    - npx eslint --ext .ts .
+
 tests:
   stage: test
   before_script:
