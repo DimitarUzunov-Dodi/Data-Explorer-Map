@@ -12,7 +12,7 @@ export class FilterCheckbox {
   @Output() hazardChecked: EventEmitter<[hazType: string, isChecked: boolean]> = new EventEmitter<[hazType: string, isChecked: boolean]>()
   @Output() shouldSelectAll: EventEmitter<boolean> = new EventEmitter();
 
-    isShown : boolean = false;
+    isShown  = false;
 
     ngOnInit(): void {
         this.initializeCheckBox();
@@ -50,8 +50,8 @@ export class FilterCheckbox {
 
         // console.log(poi);
 
-        for (var i : number = 0; i < hazards.length; i++) {
-            var haz : string = hazards[i].toString();
+        for (let i  = 0; i < hazards.length; i++) {
+            const haz : string = hazards[i].toString();
 
             const checkBox : HTMLInputElement = document.createElement('input');
             checkBox.type = 'checkbox';

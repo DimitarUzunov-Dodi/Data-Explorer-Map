@@ -306,7 +306,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   setupPois(poiArr : PointOfInterest[]) {
-    let beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
+    const beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
     
     for (const x of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
       console.log(x);
@@ -316,9 +316,9 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.poiPerHexPerResolution = poiArr.reduce((map, poi) => {
         for(const res of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
           try {
-            let coords = h3.cellToLatLng(poi.hexId);
-            let poiForRes = h3.latLngToCell(coords[0], coords[1], Number(res));
-            let currResMap = map.get(Number(res))!;
+            const coords = h3.cellToLatLng(poi.hexId);
+            const poiForRes = h3.latLngToCell(coords[0], coords[1], Number(res));
+            const currResMap = map.get(Number(res))!;
             if (currResMap.has(poiForRes)) {
             currResMap.get(poiForRes)!.push(poi);
           } else {
@@ -434,7 +434,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         hexagonPolygon.setMap(this.map);
         this.displayedHexagons.set(hex, hexagonPolygon);
       } else {
-        let pois : PointOfInterest[] | undefined  = poisPerHex.get(hex);
+        const pois : PointOfInterest[] | undefined  = poisPerHex.get(hex);
         if (typeof pois !== "undefined" && pois.length > 0){
           if(pois.map(x => x.type).filter(y => this.searchedHazards.has(y)).length > 0) {
             const hexagonPolygon = new google.maps.Polygon({
@@ -450,7 +450,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           }
         }
       }  
-    };
+    }
   }
 
   updateHazards(neededHazards: Set<RoadHazardType>) {
