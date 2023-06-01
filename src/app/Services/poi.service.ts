@@ -21,6 +21,7 @@ export class PoiService {
       data.hexId,
       data.status,
       data.note,
+      data.userId
     ));
 
     console.log(this.poiArr)
