@@ -21,6 +21,14 @@
     </div>
 
     <div class="field">
+      <h3>User id: <a  href="javascript:void(0)" (click)="openUserInfotainment()"> 1234546</a></h3>
+    </div>
+
+    <div *ngIf="showUserInfotainment">
+      <app-user-infotainment-panel></app-user-infotainment-panel>
+    </div>
+
+    <div class="field">
       <h3>User Id:  3</h3>
     </div>
 

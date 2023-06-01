@@ -123,10 +123,13 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   showPOIsInfotainment = false;
 
   openPOIsInfotainment() {
-    
-
     this.showPOIsInfotainment =  !this.showPOIsInfotainment ;
+  }
 
+  showUserInfotainment =false;
+
+  openUserInfotainment(){
+    this.showUserInfotainment=!this.showUserInfotainment;
   }
 
   findClosestResolutionLevel(target: number): ResolutionLevel {

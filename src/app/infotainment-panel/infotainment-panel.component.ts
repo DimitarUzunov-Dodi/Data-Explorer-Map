@@ -2,6 +2,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { HexagonInfotainmentPanelComponent } from './hexagon-infotainment-panel/hexagon-infotainment-panel.component';
 import { PoiInfotainmentPanelComponent } from './poi-infotainment-panel/poi-infotainment-panel.component';
 import { PointOfInterest } from '../Services/models/poi';
+import { UserInfotainmentPanelComponent } from './user-infotainment-panel/user-infotainment-panel.component';
 
 @Component({
   selector: 'app-infotainment-panel',
@@ -12,6 +13,7 @@ import { PointOfInterest } from '../Services/models/poi';
 export class InfotainmentPanelComponent {
   @ViewChild(HexagonInfotainmentPanelComponent) currentPanel!: HexagonInfotainmentPanelComponent;
   @ViewChild(PoiInfotainmentPanelComponent) poiPan!: PoiInfotainmentPanelComponent;
+  @ViewChild(UserInfotainmentPanelComponent) userPan!:UserInfotainmentPanelComponent
   showInfotainmentPanel = false;
   searchedHex: string = '';
   // chooseInfPanel = "hex";
