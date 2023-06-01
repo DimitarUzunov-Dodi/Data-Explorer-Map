@@ -33,12 +33,14 @@
 
     <div class="field">
       <h3>Weather Forecast:</h3>
-      <img src="http://openweathermap.org/img/wn/{{ weatherIcon }}.png" alt="Weather Icon">
-      <p>{{ weatherDescription }}</p>
+      <div>
+        <img src="http://openweathermap.org/img/wn/{{ weatherIcon }}.png" alt="Weather Icon" style="width: 50px; height: 50px;">
+        {{ weatherDescription }}
+      </div>
       <p>{{ minTemp }}</p>
       <p>{{ maxTemp }}</p>
       <p>{{ feelsLikes }}</p>
       <p>{{ windspeed }}</p>
-      <p>{{ rain }}</p>
+      <p>Rain: {{ rain }}mm</p>
     </div>
   </div>
