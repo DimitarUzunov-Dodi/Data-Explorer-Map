@@ -1,9 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MapComponent } from '../map/map.component';
 import { TopBarComponent } from '../top-bar/top-bar.component';
 import { InfotainmentPanelComponent } from '../infotainment-panel/infotainment-panel.component';
 import { FilterCheckbox } from '../filter/filter.component';
 import { RoadHazardType } from '../Services/models/poi';
+import { PointOfInterest } from '../Services/models/poi';
 
 @Component({
   selector: 'app-homepage',
@@ -15,6 +16,13 @@ export class HomepageComponent {
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
+  @Input() poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>();
+
+  ngOnIt(){
+    this.poiPerHexPerResolution=this.mapComponent.poiPerHexPerResolution;
+    this.infotainmentPanelComponent.poiPerHexPerResolution = this.poiPerHexPerResolution
+  }
+
   title = 'Angular';
   async handleSearchTriggered(hexagonId: string){
     const hexId = hexagonId.replace(/\s/g, "");

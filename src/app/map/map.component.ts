@@ -1,4 +1,4 @@
-import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
+import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output, Input } from '@angular/core';
 import * as h3 from 'h3-js';
 import { GoogleMapsModule } from '@angular/google-maps';
 import {PoiService} from "src/app/Services/poi.service";
@@ -286,7 +286,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   };
 
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
-  poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = 
+  @Input() poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = 
     new Map<number, Map<string, PointOfInterest[]>>();
 
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
