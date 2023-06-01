@@ -12,8 +12,7 @@ install:
 checkstyle:
   stage: setup
   script:
-    - npm install eslint@8.41.0
-    - npm install @typescript-eslint/eslint-plugin@latest --save-dev
+    - npm install
     - npx eslint --ext .ts .
 
 tests:
