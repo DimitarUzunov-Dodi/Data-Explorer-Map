@@ -9,7 +9,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 export class TopBarComponent {
   searchText = '';
   @Output() searchTriggered: EventEmitter<string> = new EventEmitter<string>();
-  @Output() clearSearchTriggered: EventEmitter<any> = new EventEmitter<any>();
+  @Output() clearSearchTriggered: EventEmitter<null> = new EventEmitter<null>();
   triggerSearch() {
     this.searchTriggered.emit(this.searchText); 
   }

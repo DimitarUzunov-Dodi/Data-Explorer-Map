@@ -1,6 +1,5 @@
-import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
+import {  Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import * as h3 from 'h3-js';
-import { GoogleMapsModule } from '@angular/google-maps';
 import {PoiService} from "src/app/Services/poi.service";
 import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
 
@@ -13,7 +12,7 @@ import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
   styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements OnInit, AfterViewInit {
-  @ViewChild('map') mapElement: any;
+  @ViewChild('map') mapElement!: ElementRef;
   map!: google.maps.Map;
   center: google.maps.LatLngLiteral = { lat: 37.7749, lng: -122.4194 };
   zoom = 12;
@@ -292,7 +291,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     new Map<number, Map<string, PointOfInterest[]>>();
 
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
-  searchHexId: string = ''!;
+  searchHexId = '';
 
   constructor(private poiService: PoiService) {}
 
@@ -309,7 +308,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     const beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
     
     for (const x of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
-      console.log(x);
+      // console.log(x);
       beginMapSetup.set(Number(x), new Map<string, PointOfInterest[]>);
     }
 
@@ -318,12 +317,9 @@ export class MapComponent implements OnInit, AfterViewInit {
           try {
             const coords = h3.cellToLatLng(poi.hexId);
             const poiForRes = h3.latLngToCell(coords[0], coords[1], Number(res));
-            const currResMap = map.get(Number(res))!;
-            if (currResMap.has(poiForRes)) {
-            currResMap.get(poiForRes)!.push(poi);
-          } else {
-            currResMap.set(poiForRes, [poi]);
-          }
+            const currResMap: Map<string, PointOfInterest[]> = map.get(Number(res)) as Map<string, PointOfInterest[]>;
+
+            currResMap.get(poiForRes)?.push(poi) ?? currResMap.set(poiForRes, [poi])
           } catch (error) {
             console.log("this ahi:" + res + " " + poi)
           }
@@ -382,7 +378,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         ];
 
         let resolutionLevel: ResolutionLevel;
-        const zoom = this.map.getZoom()!;
+        const zoom = this.map.getZoom() as number;
         if (zoom <= 6) {
           resolutionLevel = ResolutionLevel.CountryLevel;
         } else if (zoom <= 9) {
@@ -398,8 +394,8 @@ export class MapComponent implements OnInit, AfterViewInit {
         } else {
           resolutionLevel = ResolutionLevel.RoadwayLevel;
         }
-        console.log(zoom)
-        console.log(resolutionLevel)
+        // console.log(zoom)
+        // console.log(resolutionLevel)
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
@@ -415,7 +411,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   filterHexagons(hexagons: Set<string>, targetResolution: number) {
     if(this.poiPerHexPerResolution.has(targetResolution)) {
-      this.displayHexagons(hexagons, targetResolution, this.poiPerHexPerResolution.get(targetResolution)!)
+      this.displayHexagons(hexagons, targetResolution, this.poiPerHexPerResolution.get(targetResolution) as Map<string, PointOfInterest[]>)
     } 
   }
 
