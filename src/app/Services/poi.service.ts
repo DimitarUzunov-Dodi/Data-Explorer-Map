@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {PointOfInterest} from "./models/poi";
+import {ChartModel} from "./models/chartModel";
 
 
 
@@ -10,7 +11,7 @@ import {PointOfInterest} from "./models/poi";
 export class PoiService {
 
   constructor() { }
-  poiArr: PointOfInterest[] = []; 
+  poiArr: PointOfInterest[] = [];
 
   processJson(rawData: any[]): void {
 
@@ -34,24 +35,73 @@ export class PoiService {
     return this.poiArr.filter(poi => poi.hexId === hexId);
   }
 
+  loadData(hexId: string, history: string) {
+
+    const retModel = new ChartModel(0,
+      0, 0,0,
+      0,0,0,
+      0,0,0)
 
 
-  // loadData(): void {
-  //     // Just in case data needs to be fetched from server
-  //     // this.http.get<any[]>('./example_data/mock_data_explorer.json').subscribe(
-  //     //   (data: any[]) => {
-  //     //     this.processJson(data)
-  //     //     // Process the JSON array here
-  //     //   },
-  //     //   (error: any) => {
-  //     //     console.error('Error reading JSON file:', error);
-  //     //   }
-  //     // );
-  //
-  //     this.processJson(pois)
-  //
-  //
-  // }
+    const poInt = this.getPoIsByHexId(hexId)
+
+    let daysFilter = 3650
+
+    if(history == "month"){
+      daysFilter = 30
+    }
+    else if(history == "week"){
+      daysFilter = 7
+    }
+    else if(history == "day"){
+      daysFilter = 1
+    }
+
+    const currentDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - daysFilter); // Calculate the start date
+
+    const filtered= poInt.filter(obj => obj.createdAt >= startDate && obj.createdAt <= currentDate);
+
+    for (const pointOfInterest of filtered) {
+
+      if(pointOfInterest.type == 'Potholes'){
+        retModel.potCount++
+      }
+      if(pointOfInterest.type == 'Fog'){
+        retModel.fogCount++
+      }
+      if(pointOfInterest.type == 'Aquaplaning'){
+        retModel.aqCount++
+      }
+      if(pointOfInterest.type == 'Icy Roads'){
+        retModel.icyCount++
+      }
+      if(pointOfInterest.type == 'Traffic Jams'){
+        retModel.trafficCount++
+      }
+      if(pointOfInterest.type == 'Road Emergencies'){
+        retModel.emergCount++
+      }
+      if(pointOfInterest.type == 'Road Conditions'){
+        retModel.condCount++
+      }
+      if(pointOfInterest.type == 'Police'){
+        retModel.policeCount++
+      }
+      if(pointOfInterest.type == 'Cameras And Radars'){
+        retModel.cameraCount++
+      }
+      else{
+        retModel.incCount++
+      }
+
+    }
+
+    return retModel
+
+  }
+
 
 
 }

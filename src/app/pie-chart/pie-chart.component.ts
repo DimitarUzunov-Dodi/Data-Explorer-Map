@@ -6,13 +6,9 @@ import Chart from 'chart.js/auto';
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent implements OnInit{
+export class PieChartComponent{
 
   public chart: any;
-
-  ngOnInit(): void {
-    this.createChart();
-  }
 
 
   createChart(){
