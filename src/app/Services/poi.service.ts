@@ -9,11 +9,10 @@ import {PointOfInterest} from "./models/poi";
 
 export class PoiService {
 
-  constructor() { }
-
   poiArr: PointOfInterest[] = [];
 
-  processJson(rawData: any[]): void {
+  processJson(rawData: PointOfInterest[]): void {
+    console.log("type is" + (typeof rawData));
 
     this.poiArr = rawData.map(data => new PointOfInterest(
       data.id,
@@ -24,8 +23,6 @@ export class PoiService {
       data.note,
       data.userId
     ));
-
-    //Add filters or directly visualize
 
     console.log(this.poiArr);
 

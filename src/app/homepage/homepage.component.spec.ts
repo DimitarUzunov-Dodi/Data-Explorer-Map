@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-
+import { Component, Output, EventEmitter } from '@angular/core';
 import { HomepageComponent } from './homepage.component';
 import { FilterCheckbox } from '../filter/filter.component';
 
@@ -17,7 +16,6 @@ class MockTopBarComponent {
   selector: 'filter-checkbox',
   template: '',
 })
-class MockFilterComponent {}
 
 @Component({
   selector: 'app-infotainment-panel',

@@ -1,6 +1,4 @@
-import { Component, ViewChild} from '@angular/core';
-import { MapComponent } from './map/map.component';
-import { FilterCheckbox } from './filter/filter.component';
+import { Component} from '@angular/core';
 
 
 @Component({
