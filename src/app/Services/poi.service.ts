@@ -9,10 +9,12 @@ import {PointOfInterest} from "./models/poi";
 export class PoiService {
 
   constructor() { }
+  poiArr: PointOfInterest[] = []; 
+
 
   processJson(rawData: any[]): void {
 
-    let poiArr = rawData.map(data => new PointOfInterest(
+    this.poiArr = rawData.map(data => new PointOfInterest(
       data.type,
       data.hexId,
       data.id,
@@ -23,9 +25,13 @@ export class PoiService {
 
     //Add filters or directly visualize
 
-    console.log(poiArr)
+    console.log(this.poiArr)
 
   }
+  getPoIsByHexId(hexId: string): PointOfInterest[] {
+    return this.poiArr.filter(poi => poi.hexId === hexId);
+  }
+
 
   // loadData(): void {
   //     // Just in case data needs to be fetched from server
