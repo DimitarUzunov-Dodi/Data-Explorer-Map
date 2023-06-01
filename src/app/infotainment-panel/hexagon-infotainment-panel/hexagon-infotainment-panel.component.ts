@@ -45,7 +45,8 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   calculateParentHexId(): void {
     const resoulution = h3.getResolution(this.searchedHex);
     if(resoulution!=-1){
-      this.parentHexId=  h3.cellToParent(this.searchedHex, resoulution-1);
+       const res = this.findClosestResolutionLevel(resoulution-1)
+      this.parentHexId=  h3.cellToParent(this.searchedHex,res);
     }
   }
 
@@ -127,5 +128,33 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     this.showPOIsInfotainment =  !this.showPOIsInfotainment ;
 
   }
+ findClosestResolutionLevel(target: number): ResolutionLevel {
+    let closestResolution: ResolutionLevel = ResolutionLevel.CountryLevel;
+    let closestDifference: number = Math.abs(target - closestResolution);
+  
+    for (const resolutionLevel in ResolutionLevel) {
+      if (isNaN(Number(resolutionLevel))) {
+        const resolutionValue = ResolutionLevel[resolutionLevel] as unknown as number;
+        const difference = Math.abs(target - resolutionValue);
+  
+        if (difference < closestDifference) {
+          closestDifference = difference;
+          closestResolution = resolutionValue;
+        }
+      }
+    }
+  
+    return closestResolution;
+  }
+  
+  
+}
+enum ResolutionLevel {
+  CountryLevel = 1,
+  StateLevel = 3,
+  CityLevel = 5,
+  TownLevel = 7,
+  RoadLevel = 9,
+  RoadwayLevel = 11
 }
 
