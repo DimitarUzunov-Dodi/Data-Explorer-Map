@@ -37,6 +37,7 @@ export class HomepageComponent {
     } catch (error) {
       console.log(error);
     }
+    this.mapComponent.visualizeMap();
   }
 
   handleHazardCheckboxChange(status: [hazType: string, isChecked: boolean]) {
