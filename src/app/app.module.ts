@@ -12,6 +12,7 @@ import { HexagonInfotainmentPanelComponent } from './infotainment-panel/hexagon-
 import { UserInfotainmentPanelComponent } from './infotainment-panel/user-infotainment-panel/user-infotainment-panel.component';
 import { PoiInfotainmentPanelComponent } from './infotainment-panel/poi-infotainment-panel/poi-infotainment-panel.component';
 import { HttpClientModule } from '@angular/common/http';
+import { FilterCheckbox } from './filter/filter.component';
 
 
 
@@ -30,6 +31,7 @@ const routes: Routes = [
     HexagonInfotainmentPanelComponent,
     UserInfotainmentPanelComponent,
     PoiInfotainmentPanelComponent,
+    FilterCheckbox,
   ],
   imports: [
     BrowserModule,

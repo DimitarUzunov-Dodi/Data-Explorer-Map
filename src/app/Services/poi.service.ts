@@ -6,31 +6,33 @@ import {PointOfInterest} from "./models/poi";
 @Injectable({
   providedIn: 'root'
 })
+
 export class PoiService {
 
   constructor() { }
   poiArr: PointOfInterest[] = []; 
 
-
   processJson(rawData: any[]): void {
 
     this.poiArr = rawData.map(data => new PointOfInterest(
-      data.type,
-      data.hexId,
       data.id,
-      data.note,
+      data.type,
+      data.createdAt,
+      data.hexId,
       data.status,
-      data.createdAt
+      data.note,
     ));
-
-    //Add filters or directly visualize
 
     console.log(this.poiArr)
 
   }
+  getPoiArr() : PointOfInterest[] {
+    return this.poiArr;
+  }
   getPoIsByHexId(hexId: string): PointOfInterest[] {
     return this.poiArr.filter(poi => poi.hexId === hexId);
   }
+
 
 
   // loadData(): void {

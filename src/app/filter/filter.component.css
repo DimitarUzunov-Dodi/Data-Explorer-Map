@@ -1,0 +1,10 @@
+.filter {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    height: 40vh;
+    width: 20vw;
+    background-color: whitesmoke;
+    border: 1px solid black;
+    z-index: 1;
+}
