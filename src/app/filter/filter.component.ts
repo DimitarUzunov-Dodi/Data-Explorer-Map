@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi'
+import { RoadHazardType } from 'src/app/Services/models/poi'
 
 @Component({
     selector: 'filter-checkbox',
@@ -12,22 +12,25 @@ export class FilterCheckbox {
   @Output() hazardChecked: EventEmitter<[hazType: string, isChecked: boolean]> = new EventEmitter<[hazType: string, isChecked: boolean]>()
   @Output() shouldSelectAll: EventEmitter<boolean> = new EventEmitter();
 
-    isShown : boolean = false;
+    isShown  = false;
 
     ngOnInit(): void {
         this.initializeCheckBox();
       }
 
     changeState() {
-      this.isShown = !this.isShown;
-      const minibtn : HTMLElement | null = document.getElementById('minimizeBtn');
-      if(typeof minibtn != null) {
+      try {
+        const minibtn : HTMLElement = document.getElementById('minimizeBtn') as HTMLElement;
         if(this.isShown) {
-          minibtn!.innerHTML = 'Open Hazard List'
+          minibtn.innerHTML = 'Open Hazard List';
         } else {
-          minibtn!.innerHTML = 'Close Hazard List'
+          minibtn.innerHTML = 'Close Hazard List';
         }
+        this.isShown = !this.isShown;
+      } catch (error) {
+        console.log(error);
       }
+      
     }
 
     selectAll(areChecked: boolean) {
@@ -50,8 +53,8 @@ export class FilterCheckbox {
 
         // console.log(poi);
 
-        for (var i : number = 0; i < hazards.length; i++) {
-            var haz : string = hazards[i].toString();
+        for (let i  = 0; i < hazards.length; i++) {
+            const haz : string = hazards[i].toString();
 
             const checkBox : HTMLInputElement = document.createElement('input');
             checkBox.type = 'checkbox';
@@ -59,7 +62,7 @@ export class FilterCheckbox {
 
             // new Array of keys of RoadHazardTypes for checkbox value so a method can return the key?
             checkBox.value = haz;
-            checkBox.onchange = (e : Event) => { this.handleCheckboxChange(checkBox.value, checkBox.checked) };
+            checkBox.onchange = () => { this.handleCheckboxChange(checkBox.value, checkBox.checked) };
             checkBox.name = 'boxcheck';
 
             const label : HTMLLabelElement = document.createElement('label');

@@ -42,7 +42,7 @@ export class HomepageComponent {
 
   handleHazardCheckboxChange(status: [hazType: string, isChecked: boolean]) {
     try {
-      let currentHaz : Set<RoadHazardType> = this.mapComponent.searchedHazards;
+      const currentHaz : Set<RoadHazardType> = this.mapComponent.searchedHazards;
       if (status[1]) {
         currentHaz.add(status[0] as RoadHazardType);
       } else {
