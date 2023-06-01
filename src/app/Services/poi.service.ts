@@ -22,6 +22,7 @@ export class PoiService {
       data.hexId,
       data.status,
       data.note,
+      data.userId
     ));
 
     //Add filters or directly visualize
