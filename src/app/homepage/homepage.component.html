@@ -7,9 +7,9 @@
 </div>
 
 <div class="map">
-  <app-map ></app-map>
+<app-map ></app-map>
 </div>
 
 <div>
-  <filter-checkbox (hazardChecked)="handleHazardCheckboxChange($event)"></filter-checkbox>
+  <filter-checkbox (shouldSelectAll)="allHazardsSelection($event)" (hazardChecked)="handleHazardCheckboxChange($event)"></filter-checkbox>
 </div>

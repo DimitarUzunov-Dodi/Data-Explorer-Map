@@ -2,9 +2,54 @@
     position: fixed;
     bottom: 0;
     right: 0;
-    height: 40vh;
     width: 20vw;
+    z-index: 1;
+}
+
+.hazards {
+    height: 50vh;
     background-color: whitesmoke;
     border: 1px solid black;
-    z-index: 1;
+    border-radius: 10px;
+}
+
+#checkBoxForm {
+    overflow-y: scroll;
+}
+
+p {
+    text-align: center;
+    padding: auto;
+}
+
+#selectAll{
+    background-color:#4CAF50;
+    color:white;
+    width: 10vw;
+    height: 40px;
+}
+
+#deselectAll{
+    background-color:#4CAF50;
+    color:white;
+    position: absolute;
+    width: 10vw;
+    height: 40px;
+    right: 0;
+}
+
+#minimizeBtn {
+    height: 40px;
+    width: 20vw;
+    background-color:#4CAF50;
+    color:white;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 10vh;
+}
+
+.filter.show {
+    transform: translateY(50vh); 
+    transition-duration: 0.75s;
 }

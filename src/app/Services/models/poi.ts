@@ -5,14 +5,16 @@ export class PointOfInterest {
   hexId: string;
   status: string;
   note: string;
+  userId: string
 
-  constructor(id: string, type: RoadHazardType, createdAt: Date, hexId: string, status: string, note: string) {
+  constructor(id: string, type: RoadHazardType, createdAt: Date, hexId: string, status: string, note: string, userId: string) {
     this.id = id
     this.type = type;
     this.createdAt = createdAt;
     this.hexId = hexId;
     this.status = status;
     this.note = note;
+    this.userId = userId;
   }
 }
 
