@@ -1,0 +1,17 @@
+<div class = "filter" [class.show]="isShown">
+    <div class = "buttonHolder">
+        <button id="minimizeBtn" (click)="changeState()">Close Hazard List</button> 
+    </div>
+    <div class = "hazards">
+        <p>Which types of hazards would you like to be shown on the map?</p> 
+        
+        <button id="selectAll" (click)="selectAll(true)">Select All</button>
+        <button id="deselectAll" (click)="selectAll(false)">Clear Selections</button>
+
+        <form action="" method="" id="checkBoxForm">
+            
+            <!-- On page load checkboxes are added by initializeCheckBox() -->
+            
+        </form>
+    </div>
+</div>
