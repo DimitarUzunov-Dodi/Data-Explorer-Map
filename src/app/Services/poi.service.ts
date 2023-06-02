@@ -27,10 +27,13 @@ export class PoiService {
     console.log(this.poiArr);
 
   }
-
   getPoiArr() : PointOfInterest[] {
     return this.poiArr;
   }
+  getPoIsByHexId(hexId: string): PointOfInterest[] {
+    return this.poiArr.filter(poi => poi.hexId === hexId);
+  }
+
 
 
   // loadData(): void {

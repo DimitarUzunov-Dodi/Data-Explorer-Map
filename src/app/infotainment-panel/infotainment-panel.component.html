@@ -2,16 +2,13 @@
   <button id="toggle-panel-btn" (click)="togglePanel()">Infotainment Panel</button>  
 </div>
 
+<app-hexagon-infotainment-panel *ngIf="chooseInfPanel === 'hex'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedHex]="searchedHex"  >
+</app-hexagon-infotainment-panel>
+
+<app-user-infotainment-panel *ngIf="chooseInfPanel === 'user'" [showInfotainmentPanel]="showInfotainmentPanel">
+</app-user-infotainment-panel>
+
+<app-poi-infotainment-panel *ngIf="chooseInfPanel === 'poi'" [showInfotainmentPanel]="showInfotainmentPanel">
+</app-poi-infotainment-panel>
 
 
-<div class="infotainment-panel" [class.show]="showInfotainmentPanel">
-    <div class="field">
-      <h3>Field 1</h3>
-    </div>
-    <div class="field">
-      <h3>Field 2</h3>
-    </div>
-    <div class="field">
-      <h3>Field 3</h3>
-    </div>
-  </div>

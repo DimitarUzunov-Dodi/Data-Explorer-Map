@@ -13,16 +13,23 @@ import { RoadHazardType } from '../Services/models/poi';
 export class HomepageComponent {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
-  @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: MapComponent;
+  @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
+
   title = 'Angular';
-  handleSearchTriggered(hexagonId: string){
-    this.mapComponent.findHexagon(hexagonId)
-    
+  async handleSearchTriggered(searchTouple: [string,string]){
+    this.mapComponent.findHexagon(searchTouple)
+    const hexId = searchTouple[1].replace(/\s/g, "");
+    this.infotainmentPanelComponent.searchedHex = hexId
+    this.infotainmentPanelComponent.showInfotainmentPanel = true;
+    this.infotainmentPanelComponent.chooseInfPanel = searchTouple[0];
+
   }
   handleClearSearchTriggered(){
     this.mapComponent.clearSearch();
-    
+    this.infotainmentPanelComponent.chooseInfPanel = ""
+    this.infotainmentPanelComponent.showInfotainmentPanel = false;
+    this.topBarComponent.searchText = "" 
   }
 
   allHazardsSelection(status: boolean) {

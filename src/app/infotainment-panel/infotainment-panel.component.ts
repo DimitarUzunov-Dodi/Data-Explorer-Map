@@ -8,6 +8,8 @@ import { Component } from '@angular/core';
 })
 export class InfotainmentPanelComponent {
   showInfotainmentPanel = false;
+  searchedHex = '';
+  chooseInfPanel = "";
   
   togglePanel(): void {
     this.showInfotainmentPanel = !this.showInfotainmentPanel;
