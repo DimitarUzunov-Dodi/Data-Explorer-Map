@@ -1,3 +1,4 @@
+
 import { Component, Input, ViewChild } from '@angular/core';
 import { HexagonInfotainmentPanelComponent } from './hexagon-infotainment-panel/hexagon-infotainment-panel.component';
 import { PoiInfotainmentPanelComponent } from './poi-infotainment-panel/poi-infotainment-panel.component';
@@ -12,20 +13,9 @@ import { UserInfotainmentPanelComponent } from './user-infotainment-panel/user-i
 
 })
 export class InfotainmentPanelComponent {
-  @ViewChild(HexagonInfotainmentPanelComponent) currentPanel!: HexagonInfotainmentPanelComponent;
-  @ViewChild(PoiInfotainmentPanelComponent) poiPan!: PoiInfotainmentPanelComponent;
-  @ViewChild(PieChartComponent) pieChart!: PieChartComponent;
-  @Input() poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>();
   showInfotainmentPanel = false;
-  searchedHex: string = '';
-  // chooseInfPanel = "hex";
-  // chooseInfPanel = "user";
+  searchedHex = '';
   chooseInfPanel = "";
-
-  ngOnIt(): void{
-    this.poiPan.selectedHexId = this.currentPanel.searchedHex
-  }
-
   togglePanel(): void {
     this.showInfotainmentPanel = !this.showInfotainmentPanel;
   }

@@ -12,8 +12,9 @@ export class PoiService {
 
   constructor() { }
   poiArr: PointOfInterest[] = [];
-  processJson(rawData: any[]): void {
 
+  processJson(rawData: PointOfInterest[]): void {
+    console.log("type is" + (typeof rawData));
     this.poiArr = rawData.map(data => new PointOfInterest(
       data.id,
       data.type,
@@ -24,7 +25,7 @@ export class PoiService {
       data.userId
     ));
 
-    console.log(this.poiArr)
+    console.log(this.poiArr);
 
   }
   getPoiArr() : PointOfInterest[] {

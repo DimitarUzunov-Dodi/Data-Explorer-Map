@@ -1,7 +1,8 @@
 <div class="top-search-bar">
-    <input type="text" placeholder="Search..." [(ngModel)]="searchText">
+    <input type="text" [placeholder]="searchBar" [(ngModel)]="searchText">
     <button type="button" (click)="triggerSearch()">Search</button>
-    <button type="button" (click)="triggerClearSearch()">Clear</button>
+    <button type="button" (click)="switchSearch()">Switch</button>
+    <button type="button" (click)="triggerClearSearch()">Clear</button> 
     <div class="app-name">Data Map Explorer</div>
 </div>
   

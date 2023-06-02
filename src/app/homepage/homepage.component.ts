@@ -1,10 +1,9 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MapComponent } from '../map/map.component';
 import { TopBarComponent } from '../top-bar/top-bar.component';
 import { InfotainmentPanelComponent } from '../infotainment-panel/infotainment-panel.component';
 import { FilterCheckbox } from '../filter/filter.component';
 import { RoadHazardType } from '../Services/models/poi';
-import { PointOfInterest } from '../Services/models/poi';
 
 @Component({
   selector: 'app-homepage',
@@ -17,15 +16,14 @@ export class HomepageComponent {
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
 
-
   title = 'Angular';
-  async handleSearchTriggered(hexagonId: string){
-    const hexId = hexagonId.replace(/\s/g, "");
-    this.mapComponent.findHexagon(hexId)
-
+  async handleSearchTriggered(searchTouple: [string,string]){
+    this.mapComponent.findHexagon(searchTouple)
+    const hexId = searchTouple[1].replace(/\s/g, "");
     this.infotainmentPanelComponent.searchedHex = hexId
-    this.infotainmentPanelComponent.chooseInfPanel = "hex"
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
+    this.infotainmentPanelComponent.chooseInfPanel = searchTouple[0];
+
   }
   handleClearSearchTriggered(){
     this.mapComponent.clearSearch();
@@ -51,7 +49,7 @@ export class HomepageComponent {
 
   handleHazardCheckboxChange(status: [hazType: string, isChecked: boolean]) {
     try {
-      let currentHaz : Set<RoadHazardType> = this.mapComponent.searchedHazards;
+      const currentHaz : Set<RoadHazardType> = this.mapComponent.searchedHazards;
       if (status[1]) {
         currentHaz.add(status[0] as RoadHazardType);
       } else {

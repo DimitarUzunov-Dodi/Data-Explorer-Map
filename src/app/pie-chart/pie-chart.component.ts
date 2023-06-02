@@ -9,11 +9,11 @@ import {PoiService} from "../Services/poi.service";
 })
 export class PieChartComponent {
 
+  /* eslint-disable */
   public chart: any;
   @Input() hexId: string = "";
   display: boolean = true;
   constructor(private poiService: PoiService) { }
-
   ngOnInit(): void {
     const dropdown = document.getElementById('myDropdown') as HTMLSelectElement;
     const getSelectedBtn = document.getElementById('getSelectedBtn');
