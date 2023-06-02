@@ -117,7 +117,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
         this.maxTemp = "Maximum temperatur: " + this.convertToCelcius(weatherResponse.main.temp_max)
         this.feelsLikes ="Feels like: " +  this.convertToCelcius(weatherResponse.main.feels_like)
         this.windspeed = "Wind speed: " + weatherResponse.wind.speed.toFixed(0) + " meter/sec"
-        this.rain = weatherResponse.rain? weatherResponse.rain?.['1h'] : "Unavailable";
+        this.rain = weatherResponse.rain? weatherResponse.rain?.['1h'] + " mm" : "Unavailable";
         return response;
       } else {
         throw new Error('Failed to fetch weather forecast');
