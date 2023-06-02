@@ -4,6 +4,7 @@ import * as h3 from 'h3-js';
 import { PoiInfotainmentPanelComponent } from '../poi-infotainment-panel/poi-infotainment-panel.component';
 import { PoiService } from 'src/app/Services/poi.service';
 import { PointOfInterest } from 'src/app/Services/models/poi';
+import { ResolutionLevel } from 'src/app/Services/models/mapModels';
 
 @Component({
   selector: 'app-hexagon-infotainment-panel',
@@ -167,13 +168,5 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     this.pois = this.poiService.getPoIsByHexId(this.searchedHex)
   }
   
-}
-enum ResolutionLevel {
-  CountryLevel = 1,
-  StateLevel = 3,
-  CityLevel = 5,
-  TownLevel = 7,
-  RoadLevel = 9,
-  RoadwayLevel = 11
 }
 

@@ -3,6 +3,7 @@ import * as h3 from 'h3-js';
 import { GoogleMapsModule } from '@angular/google-maps';
 import {PoiService} from "src/app/Services/poi.service";
 import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
+import { ResolutionLevel } from '../Services/models/mapModels';
 
 
 @Component({
@@ -516,12 +517,4 @@ export class MapComponent implements OnInit, AfterViewInit {
 }
 
 
-enum ResolutionLevel {
-  CountryLevel = 1,
-  StateLevel = 3,
-  CityLevel = 5,
-  TownLevel = 7,
-  HighWayLevel = 9,
-  RoadLevel = 11,
-  RoadwayLevel = 13
-}
+
