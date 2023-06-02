@@ -456,7 +456,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     if (event.latLng != null) this.center = (event.latLng.toJSON());
   }
 
-  findHexagon(searchTouple: [number,string]): void {
+  findHexagon(searchTouple: [string,string]): void {
     const searchCommand = searchTouple[0];
     try {
       
@@ -503,10 +503,10 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.setZoom(zoom-1);
 
     } catch(error) {
-      if( searchCommand == SearchFunction.SearchByHex){ 
+      if( searchCommand === SearchFunction.SearchByHex){ 
         alert("Hexagon not found");
         throw new Error("Hexagon not found");
-      } else if ( searchCommand == SearchFunction.SearchByPoiId){
+      } else if ( searchCommand === SearchFunction.SearchByPoiId){
         alert("Point of Interest not found");
         throw new Error("Point of Interest not found");
       }      
@@ -531,6 +531,7 @@ enum ResolutionLevel {
 }
 
 enum SearchFunction{
-  SearchByHex = 1,
-  SearchByPoiId = 2,
+  SearchByHex = 'hex',
+  SearchByPoiId = 'poi',
+  SearchByUser = 'user'
 }

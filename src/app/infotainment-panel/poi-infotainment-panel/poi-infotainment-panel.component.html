@@ -1,23 +1,14 @@
 <div class="infotainment-panel" [class.show]="showInfotainmentPanel">
-        <div class="field">
-          <h3>Hex Id: {{selectedHexId}} </h3>
-        </div>
-        <div class="field" *ngIf="pois.length > 0">
-          <h3>POIs</h3>
-          <ul>
-            <li *ngFor="let poi of pois">
-              <p>POI hexId: {{ poi.hexId }}</p>
-              <p>POI id: {{ poi.id }}</p>
-              <p>POI note: {{ poi.note }}</p>
-              <p>POI status: {{ poi.status }}</p>
-              <p>POI created at: {{ poi.createdAt }}</p>
-              
-            </li>
-          </ul>
-        </div>
-
-        <div class="field" *ngIf="pois.length === 0">
-          <h3>No POIs available for this hexagon.</h3>
-        </div>
-
+  <div class="poi">
+      <h3>Poi</h3>
+    </div>
+  <div class="field">
+    <h3>Field 1</h3>
   </div>
+  <div class="field">
+    <h3>Field 2</h3>
+  </div>
+  <div class="field">
+    <h3>Field 3</h3>
+  </div>
+</div>

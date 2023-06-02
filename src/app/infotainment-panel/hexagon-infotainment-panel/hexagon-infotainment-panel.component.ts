@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges,ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as h3 from 'h3-js';
-import { PoiInfotainmentPanelComponent } from '../poi-infotainment-panel/poi-infotainment-panel.component';
 
 @Component({
   selector: 'app-hexagon-infotainment-panel',
@@ -9,7 +8,6 @@ import { PoiInfotainmentPanelComponent } from '../poi-infotainment-panel/poi-inf
   styleUrls: ['./hexagon-infotainment-panel.component.css']
 })
 export class HexagonInfotainmentPanelComponent implements OnChanges{
- // @(PoiInfotainmentPanelComponent) currentPanel!: PoiInfotainmentPanelComponent;
   @Input() showInfotainmentPanel: boolean = false;
   @Input() searchedHex: string = '';
   parentHexId: string = '';

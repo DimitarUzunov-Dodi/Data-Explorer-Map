@@ -9,13 +9,13 @@ import { Component, Output, EventEmitter } from '@angular/core';
 export class TopBarComponent {
   searchText: string = '';
   searchBar: string = 'Search by Hex';
-  @Output() searchTriggered: EventEmitter<[number,string]> = new EventEmitter<[number,string]>();
+  @Output() searchTriggered: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
   @Output() clearSearchTriggered: EventEmitter<any> = new EventEmitter<any>();
   triggerSearch() { 
     if (this.searchBar == 'Search by Hex'){
-      this.searchTriggered.emit([1,this.searchText]);
+      this.searchTriggered.emit(['hex',this.searchText]);
     } else if(this.searchBar == 'Search by POI'){
-      this.searchTriggered.emit([2,this.searchText]);
+      this.searchTriggered.emit(['poi',this.searchText]);
     }
       
   }

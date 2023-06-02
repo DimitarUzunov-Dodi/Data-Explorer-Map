@@ -16,21 +16,15 @@ export class HomepageComponent {
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
-  @Input() poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>();
-
-  ngOnIt(){
-    this.poiPerHexPerResolution=this.mapComponent.poiPerHexPerResolution;
-    this.infotainmentPanelComponent.poiPerHexPerResolution = this.poiPerHexPerResolution
-  }
 
   title = 'Angular';
-  async handleSearchTriggered(searchTouple: [number,string]){
+  async handleSearchTriggered(searchTouple: [string,string]){
     this.mapComponent.findHexagon(searchTouple)
     const hexId = searchTouple[1].replace(/\s/g, "");
-
     this.infotainmentPanelComponent.searchedHex = hexId
-    this.infotainmentPanelComponent.chooseInfPanel = "hex"
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
+    this.infotainmentPanelComponent.chooseInfPanel = searchTouple[0];
+
   }
   handleClearSearchTriggered(){
     this.mapComponent.clearSearch();
