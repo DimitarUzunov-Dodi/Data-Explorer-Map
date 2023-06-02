@@ -12,7 +12,6 @@ export class PoiService {
 
   constructor() { }
   poiArr: PointOfInterest[] = [];
-
   processJson(rawData: any[]): void {
 
     this.poiArr = rawData.map(data => new PointOfInterest(
@@ -47,22 +46,21 @@ export class PoiService {
 
     let daysFilter = 3650
 
-    if(history == "month"){
+    if(history == "year"){
+      daysFilter = 365
+    }
+    else if(history == "month"){
       daysFilter = 30
     }
     else if(history == "week"){
       daysFilter = 7
-    }
-    else if(history == "day"){
-      daysFilter = 1
     }
 
     const currentDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - daysFilter); // Calculate the start date
 
-    const filtered= poInt.filter(obj => obj.createdAt >= startDate && obj.createdAt <= currentDate);
-
+    const filtered= poInt.filter(obj => new Date(obj.createdAt) >= startDate && new Date(obj.createdAt) <= currentDate);
     for (const pointOfInterest of filtered) {
 
       if(pointOfInterest.type == 'Potholes'){
@@ -101,7 +99,4 @@ export class PoiService {
     return retModel
 
   }
-
-
-
 }

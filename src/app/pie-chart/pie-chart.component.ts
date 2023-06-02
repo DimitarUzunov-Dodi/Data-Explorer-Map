@@ -1,44 +1,78 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import Chart from 'chart.js/auto';
+import {PoiService} from "../Services/poi.service";
 
 @Component({
   selector: 'app-pie-chart',
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent{
+export class PieChartComponent {
 
   public chart: any;
+  @Input() hexId: string = "";
+  display: boolean = true;
+  constructor(private poiService: PoiService) { }
 
+  ngOnInit(): void {
+    const dropdown = document.getElementById('myDropdown') as HTMLSelectElement;
+    const getSelectedBtn = document.getElementById('getSelectedBtn');
+    this.createChart("")
 
-  createChart(){
+    // @ts-ignore
+    getSelectedBtn.addEventListener('click', () => {
+      const selectedOption = dropdown.value;
+      console.log(selectedOption)
 
-
-    this.chart = new Chart("MyChart", {
-      type: 'pie', //this denotes tha type of chart
-
-      data: {// values on X-Axis
-        labels: ['Red', 'Pink','Green','Yellow','Orange','Blue', ],
-        datasets: [{
-          label: 'My First Dataset',
-          data: [300, 240, 100, 432, 253, 34],
-          backgroundColor: [
-            'red',
-            'pink',
-            'green',
-            'yellow',
-            'orange',
-            'blue',
-          ],
-          hoverOffset: 4
-        }],
-      },
-      options: {
-        aspectRatio:2.5
-      }
-
+      this.createChart(selectedOption);
     });
+
   }
+
+  createChart(hist: string){
+
+    // button needs to be added for time period
+    const tt = this.poiService.loadData(this.hexId,hist)
+    // console.log(tt)
+    if(tt.incCount == 0 && tt.cameraCount == 0 &&
+      tt.policeCount == 0 && tt.potCount == 0 && tt.aqCount == 0
+      && tt.fogCount == 0 && tt.trafficCount == 0 && tt.condCount == 0
+      && tt.icyCount == 0 && tt.emergCount == 0){
+      window.alert("No Data Available for This Period")
+    }
+    else{
+      this.chart = new Chart("MyChart", {
+        type: 'pie', //this denotes tha type of chart
+
+        data: {// values on X-Axis
+          labels: ['Potholes', 'Fog','Aquaplaning','Icy Roads','Traffic','Emergencies', 'Traffic Conditions', 'Police', 'Cameras/Radars', 'Incidents'],
+          datasets: [{
+            label: 'Occurrences',
+            data: [tt.potCount, tt.fogCount, tt.aqCount, tt.icyCount, tt.trafficCount, tt.emergCount, tt.condCount, tt.policeCount, tt.cameraCount, tt.incCount],
+            backgroundColor: [
+              'red',
+              'pink',
+              'green',
+              'yellow',
+              'orange',
+              'blue',
+              'black',
+              'brown',
+              'violet',
+              'purple'
+            ],
+            hoverOffset: 4
+          }],
+        },
+        options: {
+        }
+
+      });
+    }
+
+    }
+
+
 
 
 }
