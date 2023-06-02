@@ -132,6 +132,11 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   openPoiData() {
     this.showPoiData =  !this.showPoiData ;
   }
+  
+  poiPanel = false;
+  openPoiInfotainment() {
+    this.poiPanel = true ;
+  }
 
   showUserInfotainment =false;
 

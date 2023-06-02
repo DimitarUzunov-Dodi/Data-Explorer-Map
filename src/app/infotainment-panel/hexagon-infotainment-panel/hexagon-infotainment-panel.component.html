@@ -25,7 +25,7 @@
               <th>userId</th>
             </tr>
             <tr *ngFor="let poi of pois">
-              <td>{{ poi.id }}</td>
+              <a href="javascript:void(0)" (click)="openPoiInfotainment()"> <td> {{ poi.id }} </td></a>
               <td>{{ poi.type }}</td>
               <td><a href="javascript:void(0)" (click)="openUserInfotainment()">{{ poi.userId }}</a></td>
             </tr>
@@ -38,8 +38,8 @@
 
       </div>
     </div>
-    
-    
+
+
 
     <div class="field">
       <h3>Countries:</h3>
@@ -63,5 +63,9 @@
 
   <app-pie-chart [hexId]="searchedHex"> </app-pie-chart>
 
+  </div>
+
+  <div *ngIf="showPoiData && poiPanel">
+    <app-poi-infotainment-panel [selectedHexId]="searchedHex"></app-poi-infotainment-panel>
   </div>
 
