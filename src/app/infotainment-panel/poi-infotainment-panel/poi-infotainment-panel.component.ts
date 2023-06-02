@@ -14,16 +14,5 @@ export class PoiInfotainmentPanelComponent {
   showInfotainmentPanel: boolean = false;
   @Input() selectedHexId: string = '';
 
-  pois: PointOfInterest[] = [];
-
-  constructor(private poiService: PoiService) {}
-
-  ngOnInit(): void {
-    this.fetchPois();
-  }
-
-  fetchPois(): void {
-    this.pois = this.poiService.getPoIsByHexId(this.selectedHexId)
-  }
 
 }
