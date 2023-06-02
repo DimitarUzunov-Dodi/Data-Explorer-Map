@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PointOfInterest } from 'src/app/Services/models/poi';
 import { PoiService } from 'src/app/Services/poi.service';
 
@@ -12,6 +12,8 @@ export class PoiInfotainmentPanelComponent {
   showInfotainmentPanel = false;
   @Input() selectedHexId = '';
   constructor(private poiService: PoiService) {}
+  @Output() backClicked: EventEmitter<void> = new EventEmitter<void>();
+
 
   ngOnInit(){
     this.fetchPois()
@@ -21,6 +23,10 @@ export class PoiInfotainmentPanelComponent {
 
   fetchPois(): void {
     this.pois = this.poiService.getPoIsByHexId(this.selectedHexId)
+  }
+
+  onBackClick(): void {
+    this.backClicked.emit();
   }
 
 }

@@ -1,13 +1,13 @@
-.pois-infotainment-panel {
+.infotainment-panel {
   position: fixed;
   top: 15%;
-  left: 700px; /* Adjust the left position as needed */
-  width: 350px; /* Adjust the width as needed */
-  height: 85%;
+  left: -350px;
+  width: 700px;
+  height: 85%; 
   background-color: #f1f1f1;
-  box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3); 
   overflow-y: scroll;
-  z-index: 1;
+  z-index: 2;
   transition: transform 0.3s ease-in-out;
 
   display: flex;
@@ -15,7 +15,22 @@
   align-items: flex-end;
 }
 
-.pois-infotainment-panel .field {
+.infotainment-panel .field {
   text-align: right;
-  padding: 20px;
+  padding: 15px; 
+}
+
+.infotainment-panel.show {
+  transform: translateX(350px); 
+}
+
+
+.back-button-container {
+  margin-top: 20px; 
+  margin-right: 250px; 
+}
+
+.back-button-container button {
+  padding: 10px 15px; 
+  font-size: 14px; 
 }

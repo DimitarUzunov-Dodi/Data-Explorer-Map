@@ -65,7 +65,11 @@
 
   </div>
 
-  <div *ngIf="showPoiData && poiPanel">
-    <app-poi-infotainment-panel [selectedHexId]="searchedHex"></app-poi-infotainment-panel>
+  <div *ngIf="showPoiData && poiPanel" >
+    <app-poi-infotainment-panel [selectedHexId]="searchedHex" (backClicked)="goBack()"></app-poi-infotainment-panel>
+  </div>
+
+  <div *ngIf="showPoiData && showUserInfotainment" >
+    <app-user-infotainment-panel (backClicked)="goBackUser()"> </app-user-infotainment-panel>
   </div>
 

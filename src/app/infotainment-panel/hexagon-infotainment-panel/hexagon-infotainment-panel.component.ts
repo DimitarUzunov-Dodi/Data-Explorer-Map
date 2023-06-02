@@ -137,13 +137,20 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   openPoiInfotainment() {
     this.poiPanel = true ;
   }
+  goBack(): void {
+    this.poiPanel = false;
+  }
 
   showUserInfotainment =false;
 
   openUserInfotainment(){
-    this.showUserInfotainment=!this.showUserInfotainment;
+    this.showUserInfotainment=true;
   }
-
+  
+  goBackUser(): void {
+    this.showUserInfotainment = false;
+  }
+  
   findClosestResolutionLevel(target: number): ResolutionLevel {
     let closestResolution: ResolutionLevel = ResolutionLevel.CountryLevel;
     let closestDifference: number = Math.abs(target - closestResolution);
