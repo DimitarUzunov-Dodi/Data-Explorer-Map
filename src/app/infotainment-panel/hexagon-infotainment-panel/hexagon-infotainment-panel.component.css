@@ -3,9 +3,9 @@
     top: 15%;
     left: -700px;
     width: 700px;
-    height: 85%; 
+    height: 85%;
     background-color: #f1f1f1;
-    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3); 
+    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3);
     overflow-y: scroll;
     z-index: 1;
     transition: transform 0.3s ease-in-out;
@@ -14,12 +14,28 @@
     flex-direction: column;
     align-items: flex-end;
   }
-  
+
   .infotainment-panel .field {
     text-align: right;
-    padding: 15px; 
+    padding: 15px;
   }
-  
+
   .infotainment-panel.show {
-    transform: translateX(350px); 
+    transform: translateX(350px);
+  }
+
+  table {
+    table-layout: fixed;
+    width: 250px;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f2f2f2;
   }

@@ -1,3 +1,10 @@
-<div class="chart-container">
+<select id="myDropdown">
+  <option value="option1">All</option>
+  <option value="year">Last Year</option>
+  <option value="month">Last Month</option>
+  <option value="week">Last Week</option>
+</select>
+<button id="getSelectedBtn">Get Selected Option</button>
+<div class="chart-container" *ngIf="display">
   <canvas  id="MyChart" >{{ chart }}</canvas>
 </div>

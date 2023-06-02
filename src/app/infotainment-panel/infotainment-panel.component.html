@@ -1,5 +1,5 @@
 <div class="top-bar">
-  <button id="toggle-panel-btn" (click)="togglePanel()">Infotainment Panel</button>  
+  <button id="toggle-panel-btn" (click)="togglePanel()">Infotainment Panel</button>
 </div>
 
 <app-hexagon-infotainment-panel *ngIf="chooseInfPanel === 'hex'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedHex]="searchedHex"  >
@@ -10,5 +10,6 @@
 
 <app-poi-infotainment-panel *ngIf="chooseInfPanel === 'poi'" [showInfotainmentPanel]="showInfotainmentPanel">
 </app-poi-infotainment-panel>
+
 
 

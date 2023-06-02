@@ -8,4 +8,5 @@ import { Component, Input } from '@angular/core';
 export class PoiInfotainmentPanelComponent {
   @Input()
   showInfotainmentPanel = false;
+  @Input() selectedHexId = '';
 }
