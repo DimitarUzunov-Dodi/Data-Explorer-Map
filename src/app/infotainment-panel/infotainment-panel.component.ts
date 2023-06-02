@@ -1,7 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { HexagonInfotainmentPanelComponent } from './hexagon-infotainment-panel/hexagon-infotainment-panel.component';
-import { PoiInfotainmentPanelComponent } from './poi-infotainment-panel/poi-infotainment-panel.component';
-import { PointOfInterest } from '../Services/models/poi';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-infotainment-panel',
@@ -11,7 +8,7 @@ import { PointOfInterest } from '../Services/models/poi';
 })
 export class InfotainmentPanelComponent {
   showInfotainmentPanel = false;
-  searchedHex: string = '';
+  searchedHex = '';
   chooseInfPanel = "";
   
   togglePanel(): void {

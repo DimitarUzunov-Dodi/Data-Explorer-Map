@@ -1,4 +1,4 @@
-import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output, Input, ElementRef } from '@angular/core';
+import {  Component, OnInit, ViewChild, AfterViewInit, Input, ElementRef } from '@angular/core';
 import * as h3 from 'h3-js';
 import {PoiService} from "src/app/Services/poi.service";
 import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
@@ -459,7 +459,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     const searchCommand = searchTouple[0];
     try {
       
-      var searchedHex: string = '';
+      let searchedHex = '';
       if(searchCommand == SearchFunction.SearchByHex){
         searchedHex = searchTouple[1].replace(/\s/g, "");
       } else if(searchCommand == SearchFunction.SearchByPoiId){

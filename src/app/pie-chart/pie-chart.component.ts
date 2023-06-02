@@ -8,7 +8,9 @@ import Chart from 'chart.js/auto';
 })
 export class PieChartComponent implements OnInit{
 
+  /* eslint-disable */
   public chart: any;
+  /* eslint-enable */
 
   ngOnInit(): void {
     this.createChart();

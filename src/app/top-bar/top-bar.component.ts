@@ -7,10 +7,10 @@ import { Component, Output, EventEmitter } from '@angular/core';
   
 })
 export class TopBarComponent {
-  searchText: string = '';
-  searchBar: string = 'Search by Hex';
+  searchText = '';
+  searchBar = 'Search by Hex';
   @Output() searchTriggered: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
-  @Output() clearSearchTriggered: EventEmitter<any> = new EventEmitter<any>();
+  @Output() clearSearchTriggered: EventEmitter<void> = new EventEmitter<void>();
   triggerSearch() { 
     if (this.searchBar == 'Search by Hex'){
       this.searchTriggered.emit(['hex',this.searchText]);

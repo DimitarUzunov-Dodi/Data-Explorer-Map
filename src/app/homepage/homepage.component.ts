@@ -1,10 +1,9 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MapComponent } from '../map/map.component';
 import { TopBarComponent } from '../top-bar/top-bar.component';
 import { InfotainmentPanelComponent } from '../infotainment-panel/infotainment-panel.component';
 import { FilterCheckbox } from '../filter/filter.component';
 import { RoadHazardType } from '../Services/models/poi';
-import { PointOfInterest } from '../Services/models/poi';
 
 @Component({
   selector: 'app-homepage',

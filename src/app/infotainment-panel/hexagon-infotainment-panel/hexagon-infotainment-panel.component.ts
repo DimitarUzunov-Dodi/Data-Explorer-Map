@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges,ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as h3 from 'h3-js';
 
@@ -8,17 +8,17 @@ import * as h3 from 'h3-js';
   styleUrls: ['./hexagon-infotainment-panel.component.css']
 })
 export class HexagonInfotainmentPanelComponent implements OnChanges{
-  @Input() showInfotainmentPanel: boolean = false;
-  @Input() searchedHex: string = '';
-  parentHexId: string = '';
-  area: number = 0;
+  @Input() showInfotainmentPanel = false;
+  @Input() searchedHex = '';
+  parentHexId = '';
+  area = 0;
   countries: string[] = [];
-  weatherIcon: string = '';
-  weatherDescription: string = '';
-  minTemp: string = "0";
-  maxTemp: string = "0";
-  feelsLikes: string = "0";
-  windspeed: string = "0";
+  weatherIcon = '';
+  weatherDescription = '';
+  minTemp = "0";
+  maxTemp = "0";
+  feelsLikes = "0";
+  windspeed = "0";
   rain: number | string = 0;
   constructor(private http: HttpClient) {}
 
@@ -88,6 +88,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     }
   }
 
+  /* eslint-disable */
   async getWeatherForecast(): Promise<any> {
     const coords = h3.cellToLatLng(this.searchedHex)
     const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&appid=61179205d75402bec9bf8541e2a2846b`;
@@ -117,6 +118,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
       throw new Error('Failed to fetch weather forecast');
     }
   }
+  /* eslint-enable */
 
   showPOIsInfotainment = false;
 

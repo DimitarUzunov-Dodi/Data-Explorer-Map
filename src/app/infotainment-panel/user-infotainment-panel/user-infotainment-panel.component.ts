@@ -7,5 +7,5 @@ import { Component, Input } from '@angular/core';
 })
 export class UserInfotainmentPanelComponent {
   @Input()
-  showInfotainmentPanel: boolean = false;
+  showInfotainmentPanel = false;
 }
