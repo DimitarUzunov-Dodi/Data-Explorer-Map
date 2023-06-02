@@ -7,7 +7,7 @@ import {PoiService} from "../Services/poi.service";
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent {
+export class PieChartComponent implements OnInit{
 
   /* eslint-disable */
   public chart: any;

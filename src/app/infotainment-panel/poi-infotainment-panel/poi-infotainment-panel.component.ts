@@ -7,6 +7,6 @@ import { Component, Input } from '@angular/core';
 })
 export class PoiInfotainmentPanelComponent {
   @Input()
-  showInfotainmentPanel: boolean = false;
-  @Input() selectedHexId: string = '';
+  showInfotainmentPanel = false;
+  @Input() selectedHexId = '';
 }

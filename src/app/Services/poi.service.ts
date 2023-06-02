@@ -10,7 +10,6 @@ import {ChartModel} from "./models/chartModel";
 
 export class PoiService {
 
-  constructor() { }
   poiArr: PointOfInterest[] = [];
 
   processJson(rawData: PointOfInterest[]): void {
