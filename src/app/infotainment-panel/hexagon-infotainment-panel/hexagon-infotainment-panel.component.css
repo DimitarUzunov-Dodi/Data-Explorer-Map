@@ -23,3 +23,19 @@
   .infotainment-panel.show {
     transform: translateX(350px);
   }
+
+  table {
+    table-layout: fixed;
+    width: 250px;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }

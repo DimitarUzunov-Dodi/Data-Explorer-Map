@@ -16,12 +16,7 @@ export class HomepageComponent {
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
-  @Input() poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>();
 
-  ngOnIt(){
-    this.poiPerHexPerResolution=this.mapComponent.poiPerHexPerResolution;
-    this.infotainmentPanelComponent.poiPerHexPerResolution = this.poiPerHexPerResolution
-  }
 
   title = 'Angular';
   async handleSearchTriggered(hexagonId: string){

@@ -2,6 +2,9 @@ import { Component, Input, OnChanges, SimpleChanges,ViewChild } from '@angular/c
 import { HttpClient } from '@angular/common/http';
 import * as h3 from 'h3-js';
 import { PoiInfotainmentPanelComponent } from '../poi-infotainment-panel/poi-infotainment-panel.component';
+import { PoiService } from 'src/app/Services/poi.service';
+import { PointOfInterest } from 'src/app/Services/models/poi';
+import { ResolutionLevel } from 'src/app/Services/models/mapModels';
 
 @Component({
   selector: 'app-hexagon-infotainment-panel',
@@ -22,7 +25,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   feelsLikes: string = "0";
   windspeed: string = "0";
   rain: number | string = 0;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private poiService: PoiService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['searchedHex'] && !changes['searchedHex'].firstChange) {
@@ -33,6 +36,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     try {
       this.calculateParentHexId();
       this.calculateArea();
+      this.fetchPois();
       const geocodingPromise = this.getCountries()
       const countries: string[] = await geocodingPromise;
       this.countries = [...new Set(countries)];
@@ -44,6 +48,9 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
 
   calculateParentHexId(): void {
     const resoulution = h3.getResolution(this.searchedHex);
+    if (resoulution==1){
+      this.parentHexId="The selected hex has no parent."
+    }
     if(resoulution!=-1){
        const res = this.findClosestResolutionLevel(resoulution-1)
       this.parentHexId=  h3.cellToParent(this.searchedHex,res);
@@ -120,13 +127,16 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     }
   }
 
-  showPOIsInfotainment = false;
+  showPoiData = false;
 
-  openPOIsInfotainment() {
-    
+  openPoiData() {
+    this.showPoiData =  !this.showPoiData ;
+  }
 
-    this.showPOIsInfotainment =  !this.showPOIsInfotainment ;
+  showUserInfotainment =false;
 
+  openUserInfotainment(){
+    this.showUserInfotainment=!this.showUserInfotainment;
   }
 
   findClosestResolutionLevel(target: number): ResolutionLevel {
@@ -151,14 +161,12 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   convertToCelcius(temp: number): string {
     return (temp - 273.15).toFixed(0) + " °C";
   }
+
+  pois: PointOfInterest[] = [];
+
+  fetchPois(): void {
+    this.pois = this.poiService.getPoIsByHexId(this.searchedHex)
+  }
   
-}
-enum ResolutionLevel {
-  CountryLevel = 1,
-  StateLevel = 3,
-  CityLevel = 5,
-  TownLevel = 7,
-  RoadLevel = 9,
-  RoadwayLevel = 11
 }
 

@@ -3,6 +3,7 @@ import { HexagonInfotainmentPanelComponent } from './hexagon-infotainment-panel/
 import { PoiInfotainmentPanelComponent } from './poi-infotainment-panel/poi-infotainment-panel.component';
 import { PointOfInterest } from '../Services/models/poi';
 import { PieChartComponent} from "../pie-chart/pie-chart.component";
+import { UserInfotainmentPanelComponent } from './user-infotainment-panel/user-infotainment-panel.component';
 
 @Component({
   selector: 'app-infotainment-panel',
@@ -23,7 +24,6 @@ export class InfotainmentPanelComponent {
 
   ngOnIt(): void{
     this.poiPan.selectedHexId = this.currentPanel.searchedHex
-    this.poiPan.poiPerHexPerResolution = this.poiPerHexPerResolution
   }
 
   togglePanel(): void {
