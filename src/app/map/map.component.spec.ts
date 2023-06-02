@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MapComponent } from './map.component';
-import * as h3 from 'h3-js';
 
 describe('MapComponent', () => {
   let component: MapComponent;

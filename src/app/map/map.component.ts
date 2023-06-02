@@ -1,8 +1,10 @@
-import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output, Input } from '@angular/core';
+import {  Component, OnInit, ViewChild, AfterViewInit, EventEmitter, Output, Input, ElementRef } from '@angular/core';
 import * as h3 from 'h3-js';
-import { GoogleMapsModule } from '@angular/google-maps';
 import {PoiService} from "src/app/Services/poi.service";
 import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
+/* eslint-disable */
+import { GoogleMapsModule } from '@angular/google-maps';
+/* eslint-enable */
 
 
 @Component({
@@ -11,7 +13,7 @@ import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
   styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements OnInit, AfterViewInit {
-  @ViewChild('map') mapElement: any;
+  @ViewChild('map') mapElement!: ElementRef;
   map!: google.maps.Map;
   center: google.maps.LatLngLiteral = { lat: 37.7749, lng: -122.4194 };
   zoom = 12;
@@ -290,7 +292,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     new Map<number, Map<string, PointOfInterest[]>>();
 
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
-  searchHexId: string = ''!;
+  searchHexId = '';
 
   constructor(private poiService: PoiService) {}
 
@@ -304,7 +306,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   setupPois(poiArr : PointOfInterest[]) {
-    let beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
+    const beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
     
     for (const x of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
       beginMapSetup.set(Number(x), new Map<string, PointOfInterest[]>);
@@ -313,14 +315,11 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.poiPerHexPerResolution = poiArr.reduce((map, poi) => {
         for(const res of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
           try {
-            let coords = h3.cellToLatLng(poi.hexId);
-            let poiForRes = h3.latLngToCell(coords[0], coords[1], Number(res));
-            let currResMap = map.get(Number(res))!;
-            if (currResMap.has(poiForRes)) {
-            currResMap.get(poiForRes)!.push(poi);
-          } else {
-            currResMap.set(poiForRes, [poi]);
-          }
+            const coords = h3.cellToLatLng(poi.hexId);
+            const poiForRes = h3.latLngToCell(coords[0], coords[1], Number(res));
+            const currResMap: Map<string, PointOfInterest[]> = map.get(Number(res)) as Map<string, PointOfInterest[]>;
+
+            currResMap.get(poiForRes)?.push(poi) ?? currResMap.set(poiForRes, [poi])
           } catch (error) {
             console.log("this ahi:" + res + " " + poi)
           }
@@ -379,7 +378,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         ];
 
         let resolutionLevel: ResolutionLevel;
-        const zoom = this.map.getZoom()!;
+        const zoom = this.map.getZoom() as number;
         if (zoom <= 6) {
           resolutionLevel = ResolutionLevel.CountryLevel;
         } else if (zoom <= 9) {
@@ -409,7 +408,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   filterHexagons(hexagons: Set<string>, targetResolution: number) {
     if(this.poiPerHexPerResolution.has(targetResolution)) {
-      this.displayHexagons(hexagons, targetResolution, this.poiPerHexPerResolution.get(targetResolution)!)
+      this.displayHexagons(hexagons, targetResolution, this.poiPerHexPerResolution.get(targetResolution) as Map<string, PointOfInterest[]>)
     } 
   }
 
@@ -429,7 +428,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         hexagonPolygon.setMap(this.map);
         this.displayedHexagons.set(hex, hexagonPolygon);
       } else {
-        let pois : PointOfInterest[] | undefined  = poisPerHex.get(hex);
+        const pois : PointOfInterest[] | undefined  = poisPerHex.get(hex);
         if (typeof pois !== "undefined" && pois.length > 0){
           if(pois.map(x => x.type).filter(y => this.searchedHazards.has(y)).length > 0) {
             const hexagonPolygon = new google.maps.Polygon({
@@ -445,7 +444,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           }
         }
       }  
-    };
+    }
   }
 
   updateHazards(neededHazards: Set<RoadHazardType>) {
