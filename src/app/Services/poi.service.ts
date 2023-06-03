@@ -44,7 +44,7 @@ export class PoiService {
 
     const poInt = this.getPoIsByHexId(hexId)
 
-    let daysFilter = 3650
+    let daysFilter = 18250
 
     if(history == "year"){
       daysFilter = 365
