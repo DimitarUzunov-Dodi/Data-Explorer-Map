@@ -15,8 +15,5 @@ export class InfotainmentPanelComponent {
   chooseInfPanel = "";
   togglePanel(): void {
     this.showInfotainmentPanel = !this.showInfotainmentPanel;
-    this.hexInfotainmentPanel.poiPanel=false;
-    this.hexInfotainmentPanel.showUserInfotainment=false;
-
   }
 }

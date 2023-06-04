@@ -4,6 +4,7 @@ import * as h3 from 'h3-js';
 import { PoiService } from 'src/app/Services/poi.service';
 import { PointOfInterest } from 'src/app/Services/models/poi';
 import { ResolutionLevel } from 'src/app/Services/models/mapModels';
+import { HomepageComponent } from 'src/app/homepage/homepage.component';
 
 @Component({
   selector: 'app-hexagon-infotainment-panel',
@@ -23,8 +24,10 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   feelsLikes = "0";
   windspeed = "0";
   rain: number | string = 0;
-  constructor(private http: HttpClient, private poiService: PoiService) {}
-
+  pois: PointOfInterest[] = [];
+  showPoiData = false;
+  constructor(private http: HttpClient, private poiService: PoiService, private homepage: HomepageComponent) {}
+  
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['searchedHex'] && !changes['searchedHex'].firstChange) {
       this.ngOnInit();
@@ -34,7 +37,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     try {
       this.calculateParentHexId();
       this.calculateArea();
-      this.fetchPois();
+      this.pois = this.poiService.getPoIsByHexId(this.searchedHex)
       const geocodingPromise = this.getCountries()
       const countries: string[] = await geocodingPromise;
       this.countries = [...new Set(countries)];
@@ -63,14 +66,18 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
 
   async getCountries(): Promise<string[]> {
     try {
-      const newHexagonIds = h3.cellToChildren(this.searchedHex, h3.getResolution(this.searchedHex) + 2);
+      console.log("enters")
+      const newHexagonIds = h3.cellToChildren(this.searchedHex, h3.getResolution(this.searchedHex) + 1);
+      console.log(newHexagonIds)
       const geocoder = new google.maps.Geocoder();
+      console.log(geocoder)
       const geocodingRequests = newHexagonIds.map(newHexId => {
         const hexagonCoords = h3.cellToBoundary(newHexId, true);
         return {
           location: new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0])
         };
       });
+      console.log(geocodingRequests)
       const geocodingPromises = geocodingRequests.map(request => {
         return new Promise<string[]>((resolve, reject) => {
           geocoder.geocode(request, (results, status) => {
@@ -87,8 +94,11 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
           });
         });
       });
+      console.log(geocodingPromises)
       const countryNamesArrays: string[][] = await Promise.all(geocodingPromises);
+      console.log(countryNamesArrays)
       const countryNames: string[] = countryNamesArrays.flat();
+      console.log(countryNames)
       return countryNames;
     } catch (error) {
       throw new Error('Hexagon not found');
@@ -127,24 +137,17 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   }
   /* eslint-enable */
 
-  showPoiData = false;
-
   openPoiData() {
-    this.showPoiData = true; ;
+    this.showPoiData = !this.showPoiData;
   }
   
-  poiPanel = false;
-  openPoiInfotainment() {
-    this.poiPanel = true;
+  openPoiInfotainment(poiId: string) {
+    this.homepage.handleSearchTriggered(["poi", poiId])
   } 
 
-
-  showUserInfotainment =false;
-
-  openUserInfotainment(){
-    this.showUserInfotainment=!this.showUserInfotainment;
+  openUserInfotainment(userId: string) {
+    this.homepage.handleSearchTriggered(["user", userId])
   }
-  
   
   findClosestResolutionLevel(target: number): ResolutionLevel {
     let closestResolution: ResolutionLevel = ResolutionLevel.CountryLevel;
@@ -168,12 +171,6 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   convertToCelcius(temp: number): string {
     return (temp - 273.15).toFixed(0) + " °C";
   }
-
-  pois: PointOfInterest[] = [];
-
-  fetchPois(): void {
-    this.pois = this.poiService.getPoIsByHexId(this.searchedHex)
-  }
-  
 }
+  
 

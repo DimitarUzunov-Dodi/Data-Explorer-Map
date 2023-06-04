@@ -21,8 +21,8 @@ export class HomepageComponent {
   title = 'Angular';
   async handleSearchTriggered(searchTouple: [string,string]){
     this.mapComponent.findHexagon(searchTouple)
-    const hexId = searchTouple[1].replace(/\s/g, "");
-    this.infotainmentPanelComponent.searchedHex = hexId
+    const id = searchTouple[1].replace(/\s/g, "");
+    this.infotainmentPanelComponent.searchedHex = id
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
     this.infotainmentPanelComponent.chooseInfPanel = searchTouple[0];
 
@@ -31,9 +31,6 @@ export class HomepageComponent {
     this.mapComponent.clearSearch();
     this.infotainmentPanelComponent.chooseInfPanel = ""
     this.infotainmentPanelComponent.showInfotainmentPanel = false;
-    this.hexInfotainmentPanel.showInfotainmentPanel =false;
-    this.hexInfotainmentPanel.poiPanel = false;
-    this.hexInfotainmentPanel.showUserInfotainment=false;
     this.topBarComponent.searchText = "" 
   }
 

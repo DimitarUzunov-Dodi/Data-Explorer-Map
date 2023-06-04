@@ -13,9 +13,7 @@
     </div>
 
     <div class="field">
-      <a href="javascript:void(0)" (click)="openPoiData()">
-        <h3>POIs</h3>
-      </a>
+      <button id="toggle-panel-btn" (click)="openPoiData()">List of POI's</button>
       <div *ngIf="showPoiData">
         <div *ngIf="pois.length > 0">
           <table>
@@ -25,9 +23,9 @@
               <th>userId</th>
             </tr>
             <tr *ngFor="let poi of pois">
-              <a href="javascript:void(0)" (click)="openPoiInfotainment()"> <td> {{ poi.id }} </td></a>
+              <td><a (click)="openPoiInfotainment(poi.id)">{{ poi.id }}</a></td>
               <td>{{ poi.type }}</td>
-              <td><a href="javascript:void(0)" (click)="openUserInfotainment()">{{ poi.userId }}</a></td>
+              <td><a (click)="openUserInfotainment(poi.userId)">{{ poi.userId }}</a></td>
             </tr>
           </table>
         </div>
@@ -63,13 +61,5 @@
 
   <app-pie-chart [hexId]="searchedHex"> </app-pie-chart>
 
-  </div>
-
-  <div *ngIf="showPoiData && poiPanel" >
-    <app-poi-infotainment-panel [selectedHexId]="searchedHex"></app-poi-infotainment-panel>
-  </div>
-
-  <div *ngIf="showPoiData && showUserInfotainment" >
-    <app-user-infotainment-panel> </app-user-infotainment-panel>
   </div>
 
