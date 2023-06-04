@@ -1,5 +1,5 @@
 
-import { Component, Input, ViewChild} from '@angular/core';
+import { Component, ViewChild} from '@angular/core';
 import { HexagonInfotainmentPanelComponent } from './hexagon-infotainment-panel/hexagon-infotainment-panel.component';
 
 @Component({

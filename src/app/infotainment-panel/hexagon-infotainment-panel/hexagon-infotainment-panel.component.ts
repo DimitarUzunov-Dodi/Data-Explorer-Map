@@ -130,7 +130,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   showPoiData = false;
 
   openPoiData() {
-    this.showPoiData = true; ;
+    this.showPoiData = true; 
   }
   
   poiPanel = false;

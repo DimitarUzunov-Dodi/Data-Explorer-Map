@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PointOfInterest } from 'src/app/Services/models/poi';
+import { Component,Input, } from '@angular/core';
 import { PoiService } from 'src/app/Services/poi.service';
 
 @Component({
