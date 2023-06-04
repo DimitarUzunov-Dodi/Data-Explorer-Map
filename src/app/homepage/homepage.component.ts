@@ -4,6 +4,7 @@ import { TopBarComponent } from '../top-bar/top-bar.component';
 import { InfotainmentPanelComponent } from '../infotainment-panel/infotainment-panel.component';
 import { FilterCheckbox } from '../filter/filter.component';
 import { RoadHazardType } from '../Services/models/poi';
+import { HexagonInfotainmentPanelComponent } from '../infotainment-panel/hexagon-infotainment-panel/hexagon-infotainment-panel.component';
 
 @Component({
   selector: 'app-homepage',
@@ -15,6 +16,7 @@ export class HomepageComponent {
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
+  @ViewChild(HexagonInfotainmentPanelComponent) hexInfotainmentPanel!: HexagonInfotainmentPanelComponent;
 
   title = 'Angular';
   async handleSearchTriggered(searchTouple: [string,string]){
@@ -29,6 +31,9 @@ export class HomepageComponent {
     this.mapComponent.clearSearch();
     this.infotainmentPanelComponent.chooseInfPanel = ""
     this.infotainmentPanelComponent.showInfotainmentPanel = false;
+    this.hexInfotainmentPanel.showInfotainmentPanel =false;
+    this.hexInfotainmentPanel.poiPanel = false;
+    this.hexInfotainmentPanel.showUserInfotainment=false;
     this.topBarComponent.searchText = "" 
   }
 
