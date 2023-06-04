@@ -5,6 +5,7 @@ import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
 import { ResolutionLevel } from '../Services/models/mapModels';
 import { GoogleMapsModule } from '@angular/google-maps';
 
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
