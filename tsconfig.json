@@ -23,7 +23,7 @@
       "ES2022",
       "dom"
     ],
-    "types": ["geojson"]
+    "types": ["geojson", "mocha", "jest"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

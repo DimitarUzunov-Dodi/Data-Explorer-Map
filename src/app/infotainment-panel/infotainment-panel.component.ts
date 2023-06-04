@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+
+import { Component} from '@angular/core';
 
 @Component({
   selector: 'app-infotainment-panel',
@@ -8,7 +9,8 @@ import { Component } from '@angular/core';
 })
 export class InfotainmentPanelComponent {
   showInfotainmentPanel = false;
-  
+  searchedHex = '';
+  chooseInfPanel = "";
   togglePanel(): void {
     this.showInfotainmentPanel = !this.showInfotainmentPanel;
   }
