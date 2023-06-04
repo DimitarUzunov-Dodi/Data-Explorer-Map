@@ -12,21 +12,6 @@ export class PoiInfotainmentPanelComponent {
   showInfotainmentPanel = false;
   @Input() selectedHexId = '';
   constructor(private poiService: PoiService) {}
-  @Output() backClicked: EventEmitter<void> = new EventEmitter<void>();
 
-
-  ngOnInit(){
-    this.fetchPois()
-  }
-
-  pois: PointOfInterest[] = [];
-
-  fetchPois(): void {
-    this.pois = this.poiService.getPoIsByHexId(this.selectedHexId)
-  }
-
-  onBackClick(): void {
-    this.backClicked.emit();
-  }
 
 }

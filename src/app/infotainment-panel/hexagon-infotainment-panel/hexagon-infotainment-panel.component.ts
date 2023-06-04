@@ -137,9 +137,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   openPoiInfotainment() {
     this.poiPanel = true ;
   }
-  goBack(): void {
-    this.poiPanel = false;
-  }
+
 
   showUserInfotainment =false;
 
@@ -147,9 +145,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     this.showUserInfotainment=true;
   }
   
-  goBackUser(): void {
-    this.showUserInfotainment = false;
-  }
+
   
   findClosestResolutionLevel(target: number): ResolutionLevel {
     let closestResolution: ResolutionLevel = ResolutionLevel.CountryLevel;

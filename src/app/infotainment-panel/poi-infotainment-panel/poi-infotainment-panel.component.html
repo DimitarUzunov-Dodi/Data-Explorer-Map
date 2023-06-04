@@ -1,25 +1,8 @@
 <div class="infotainment-panel" [class.show]="showInfotainmentPanel">
-  <div class="back-button-container">
-    <button (click)="onBackClick()">Back</button>
-  </div>
-  
   <div class="poi">
       <h3>POIs</h3>
     </div>
-  <div class="field" *ngIf="pois.length > 0">
-      <ul *ngFor="let poi of pois">
-        <p>Id: {{ poi.id }}</p>
-        <p>Type: {{ poi.type }}</p>
-        <p>Date created: {{ poi.createdAt }}</p>
-        <p>Hex id: {{ poi.hexId }}</p>
-        <p>Status: {{ poi.status }}</p>
-        <p>Note: {{ poi.note }}</p>
-        <p>User id: {{ poi.userId }}</p>
-      </ul>
-    </div>
-    <div class="field" *ngIf="pois.length === 0">
-      <h3>No POIs available for this hexagon.</h3>
-    </div>
+
   <div class="field">
     <h3>Other info: ...</h3>
   </div>

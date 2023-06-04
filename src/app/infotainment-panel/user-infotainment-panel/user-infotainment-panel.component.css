@@ -24,13 +24,3 @@
   transform: translateX(350px); 
 }
 
-
-.back-button-container {
-  margin-top: 20px; 
-  margin-right: 250px; 
-}
-
-.back-button-container button {
-  padding: 10px 15px; 
-  font-size: 14px; 
-}

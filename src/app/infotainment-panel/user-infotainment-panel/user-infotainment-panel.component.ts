@@ -8,10 +8,5 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class UserInfotainmentPanelComponent {
   @Input()
   showInfotainmentPanel = false;
-  @Output() backClicked: EventEmitter<void> = new EventEmitter<void>();
 
-
-  onBackClick(): void {
-    this.backClicked.emit();
-  }
 }

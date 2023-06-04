@@ -286,7 +286,6 @@ export class MapComponent implements OnInit, AfterViewInit {
   };
 
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
-  mapHexId: Map<google.maps.Polygon, string> = new Map<google.maps.Polygon, string >();
   @Input() poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = 
     new Map<number, Map<string, PointOfInterest[]>>();
 
@@ -426,7 +425,6 @@ export class MapComponent implements OnInit, AfterViewInit {
         });
         hexagonPolygon.setMap(this.map);
         this.displayedHexagons.set(hex, hexagonPolygon);
-        this.mapHexId.set(hexagonPolygon, hex);
       } else {
         const pois : PointOfInterest[] | undefined  = poisPerHex.get(hex);
         if (typeof pois !== "undefined" && pois.length > 0){
@@ -441,7 +439,6 @@ export class MapComponent implements OnInit, AfterViewInit {
             })
             hexagonPolygon.setMap(this.map);
             this.displayedHexagons.set(hex, hexagonPolygon);
-            this.mapHexId.set(hexagonPolygon, hex);
 
           }
         }
@@ -456,37 +453,8 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null){
-
      this.center = (event.latLng.toJSON());
-
-     const clickedHexagon = this.getClickedHexagon(event.latLng);
-    if (clickedHexagon) {
-      this.clickedHexId = clickedHexagon;
-      console.log("Clicked hexagon:", clickedHexagon);
-    }
   }
-}
-getClickedHexagon(latLng: google.maps.LatLng): string | null {
-  let resolutionLevel: ResolutionLevel;
-        const zoom = this.map.getZoom() as number;
-        if (zoom <= 6) {
-          resolutionLevel = ResolutionLevel.CountryLevel;
-        } else if (zoom <= 9) {
-          resolutionLevel = ResolutionLevel.StateLevel;
-        } else if (zoom <= 12) {
-          resolutionLevel = ResolutionLevel.CityLevel;
-        } else if (zoom <= 14) {
-          resolutionLevel = ResolutionLevel.TownLevel;
-        } else if (zoom <= 16) {
-          resolutionLevel = ResolutionLevel.HighWayLevel;
-        } else if (zoom <= 18) {
-          resolutionLevel = ResolutionLevel.RoadLevel;
-        } else {
-          resolutionLevel = ResolutionLevel.RoadwayLevel;
-        }
-  const clickedPoint = h3.latLngToCell(latLng.lat(), latLng.lng(), resolutionLevel);
-  const clickedHexagon = h3.cellToParent(clickedPoint, resolutionLevel);
-  return clickedHexagon;
 }
 
   findHexagon(searchTouple: [string,string]): void {
@@ -547,69 +515,6 @@ getClickedHexagon(latLng: google.maps.LatLng): string | null {
     this.searchHexId = "";
     this.visualizeMap();
   }
-  showInfotainmentPanel = false;
-  
-
-  openHexInfotainment(): void {
-    this.showInfotainmentPanel = true;
-   // this.clickedHexId = "here " + this.clickedHexId;
-    this.searchHexId = this.clickedHexId;
-    /*
-    const clickedHexagon = this.getHexagonFromEvent(event);
-  //  const v1 =this.displayedHexagons.get()
-        if (clickedHexagon) {
-      const hexagonId = this.mapHexId.get(clickedHexagon)
-      // Use the hexagonId as needed
-      console.log('Clicked hexagon ID:', hexagonId);
-    }
-    */
-  }
-  /*
-  getHexagonFromEvent(event: google.maps.MapMouseEvent): google.maps.Polygon | null {
-    for (const [hexId, hexagon] of this.displayedHexagons) {
-      if (google.maps.geometry.poly.containsLocation(event.latLng, hexagon)) {
-        return hexagon;
-      }
-    }
-    return null;
-  }
-  
-*/
- /*
-  openHexInfotainment(event: google.maps.MapMouseEvent): void {
-    this.showInfotainmentPanel = !this.showInfotainmentPanel;
-
-    const clickedHexagonId = this.getHexagonIdFromEvent(event);
-    if (clickedHexagonId) {
-      console.log('Clicked hexagon ID:', clickedHexagonId);
-    }
-  }
-  
-  getHexagonIdFromEvent(event: google.maps.MapMouseEvent): string | null {
-    for (const [hexId, hexagon] of this.displayedHexagons) {
-      const hexagonCenter = this.getPolygonCenter(hexagon);
-      if (event.latLng && google.maps.geometry.poly.containsLocation(event.latLng, hexagonCenter)) {
-        return hexId;
-      }
-    }
-    return null;
-  }
-  
-  getPolygonCenter(polygon: google.maps.Polygon): google.maps.LatLngLiteral {
-    const bounds = new google.maps.LatLngBounds();
-    polygon.getPath().forEach((latLng) => {
-      bounds.extend(latLng);
-    });
-    return bounds.getCenter().toJSON();
-  }
-  
-  
-  */
-  
-  
-  
-  
-  
   
 }
 
