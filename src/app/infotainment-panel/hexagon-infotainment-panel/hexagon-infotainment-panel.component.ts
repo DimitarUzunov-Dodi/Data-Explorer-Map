@@ -141,11 +141,11 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     this.showPoiData = !this.showPoiData;
   }
   openPoiInfotainment(poiId: string) {
-    this.homepage.handleSearchTriggered(["poi", poiId])
+    this.homepage.handleSearchTriggered(["poi", poiId], false)
   } 
 
   openUserInfotainment(userId: string) {
-    this.homepage.handleSearchTriggered(["user", userId])
+    this.homepage.handleSearchTriggered(["user", userId], false)
   }
   
   findClosestResolutionLevel(target: number): ResolutionLevel {

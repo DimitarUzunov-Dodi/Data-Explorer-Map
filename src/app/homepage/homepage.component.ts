@@ -19,8 +19,11 @@ export class HomepageComponent {
   @ViewChild(HexagonInfotainmentPanelComponent) hexInfotainmentPanel!: HexagonInfotainmentPanelComponent;
 
   title = 'Angular';
-  async handleSearchTriggered(searchTouple: [string,string]){
-    this.mapComponent.findHexagon(searchTouple)
+  async handleSearchTriggered(searchTouple: [string,string], needsSearching: boolean){
+    if (needsSearching){
+      console.log("issearched")
+      this.mapComponent.findHexagon(searchTouple)
+    }
     const id = searchTouple[1].replace(/\s/g, "");
     this.infotainmentPanelComponent.searchedHex = id
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
