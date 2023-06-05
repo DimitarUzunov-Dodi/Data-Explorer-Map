@@ -33,7 +33,9 @@ export class PieChartComponent implements OnInit, OnChanges{
 
   }
   ngOnChanges(): void {
-    this.ngOnInit();
+    if (this.chart != undefined){
+      this.chart.destroy();
+    }
   }
   createChart(hist: string){
 
