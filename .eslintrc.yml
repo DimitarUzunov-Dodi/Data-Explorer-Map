@@ -11,4 +11,20 @@ parserOptions:
   sourceType: module
 plugins:
   - '@typescript-eslint'
-rules: {}
+rules: {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "format": ["camelCase"],
+        "selector": ['variableLike'],
+        "custom": {"regex": "^[a-z][a-zA-Z0-9]*$", "match": true},
+      },
+      {
+        "format": ["PascalCase"],
+        "selector": ['typeLike'],
+      }
+    ],
+    }
