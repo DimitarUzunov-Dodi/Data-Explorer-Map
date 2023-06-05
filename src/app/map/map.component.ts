@@ -303,35 +303,11 @@ export class MapComponent implements OnInit, AfterViewInit {
     // Loads json files from file
     fetch('./assets/mock_data_explorer.json').then(async res => {
       this.poiService.processJson(await res.json())
-      this.setupPois(this.poiService.getPoiArr());
+      this.poiPerHexPerResolution = this.poiService.getPoiMap();
     });
 
   }
 
-  setupPois(poiArr : PointOfInterest[]) {
-    const beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
-    
-    for (const x of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
-      beginMapSetup.set(Number(x), new Map<string, PointOfInterest[]>);
-    }
-
-    this.poiPerHexPerResolution = poiArr.reduce((map, poi) => {
-        for(const res of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
-          try {
-            const coords = h3.cellToLatLng(poi.hexId);
-            const poiForRes = h3.latLngToCell(coords[0], coords[1], Number(res));
-            const currResMap: Map<string, PointOfInterest[]> = map.get(Number(res)) as Map<string, PointOfInterest[]>;
-
-            currResMap.get(poiForRes)?.push(poi) ?? currResMap.set(poiForRes, [poi])
-          } catch (error) {
-            console.log("this ahi:" + res + " " + poi)
-          }
-          
-        }
-
-      return map;
-    }, beginMapSetup);
-  }
 
   ngAfterViewInit(): void {
 
