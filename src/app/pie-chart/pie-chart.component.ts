@@ -18,7 +18,7 @@ export class PieChartComponent implements OnInit, OnChanges{
     if (this.chart != undefined){
       this.chart.destroy();
     }
-    
+
     console.log("PieChart Hex: " + this.hexId)
     const dropdown = document.getElementById('myDropdown') as HTMLSelectElement;
     const getSelectedBtn = document.getElementById('getSelectedBtn');
@@ -42,7 +42,7 @@ export class PieChartComponent implements OnInit, OnChanges{
     // console.log(tt)
     if(tt.incCount == 0 && tt.cameraCount == 0 &&
       tt.policeCount == 0 && tt.potCount == 0 && tt.aqCount == 0
-      && tt.fogCount == 0 && tt.trafficCount == 0 && tt.condCount == 0
+      && tt.fogCount == 0 && tt.trafficJamsCount == 0 && tt.condCount == 0
       && tt.icyCount == 0 && tt.emergCount == 0){
       window.alert("No Data Available for This Period")
 
@@ -52,10 +52,10 @@ export class PieChartComponent implements OnInit, OnChanges{
         type: 'pie', //this denotes tha type of chart
 
         data: {// values on X-Axis
-          labels: ['Potholes', 'Fog','Aquaplaning','Icy Roads','Traffic','Emergencies', 'Traffic Conditions', 'Police', 'Cameras/Radars', 'Incidents'],
+          labels: ['Potholes', 'Fog','Aquaplaning','Icy Roads','Traffic Jams','Emergencies', 'Road Conditions', 'Police', 'Cameras/Radars', 'Incidents'],
           datasets: [{
             label: 'Occurrences',
-            data: [tt.potCount, tt.fogCount, tt.aqCount, tt.icyCount, tt.trafficCount, tt.emergCount, tt.condCount, tt.policeCount, tt.cameraCount, tt.incCount],
+            data: [tt.potCount, tt.fogCount, tt.aqCount, tt.icyCount, tt.trafficJamsCount, tt.emergCount, tt.condCount, tt.policeCount, tt.cameraCount, tt.incCount],
             backgroundColor: [
               'red',
               'pink',
