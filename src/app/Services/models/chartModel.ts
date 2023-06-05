@@ -3,7 +3,7 @@ export class ChartModel {
   fogCount: number;
   aqCount: number;
   icyCount: number;
-  trafficCount: number;
+  trafficJamsCount: number;
   emergCount: number;
   condCount: number;
   policeCount: number;
@@ -13,14 +13,14 @@ export class ChartModel {
 
   constructor(potCount: number,
               fogCount: number, aqCount: number, icyCount: number,
-              trafficCount: number, emergCount: number, condCount: number,
+              trafficJamsCount: number, emergCount: number, condCount: number,
               policeCount: number, cameraCount: number, incCount: number) {
 
     this.potCount = potCount
     this.fogCount = fogCount;
     this.aqCount = aqCount;
     this.icyCount = icyCount;
-    this.trafficCount = trafficCount;
+    this.trafficJamsCount = trafficJamsCount;
     this.emergCount = emergCount;
     this.condCount = condCount;
     this.policeCount = policeCount;

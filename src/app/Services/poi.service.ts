@@ -14,7 +14,7 @@ import * as h3 from 'h3-js';
 export class PoiService {
 
   poiArr: PointOfInterest[] = [];
-  poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = 
+  poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> =
     new Map<number, Map<string, PointOfInterest[]>>();
 
   processJson(rawData: PointOfInterest[]): void {
@@ -36,7 +36,7 @@ export class PoiService {
 
   setupPois() {
     const beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
-    
+
     for (const x of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
       beginMapSetup.set(Number(x), new Map<string, PointOfInterest[]>);
     }
@@ -52,7 +52,7 @@ export class PoiService {
           } catch (error) {
             console.log("this ahi:" + res + " " + poi)
           }
-          
+
         }
 
       return map;
@@ -113,8 +113,8 @@ export class PoiService {
       else if(pointOfInterest.type == 'Icy Roads'){
         retModel.icyCount++
       }
-      else if(pointOfInterest.type == 'Traffic Jams'){
-        retModel.trafficCount++
+      else if(pointOfInterest.type == 'TrafficJams'){
+        retModel.trafficJamsCount++
       }
       else if(pointOfInterest.type == 'Road Emergencies'){
         retModel.emergCount++
