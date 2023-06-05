@@ -17,7 +17,8 @@ export class PieChartComponent implements OnInit{
   ngOnInit(): void {
     const dropdown = document.getElementById('myDropdown') as HTMLSelectElement;
     const getSelectedBtn = document.getElementById('getSelectedBtn');
-    this.createChart("")
+
+
 
     // @ts-ignore
     getSelectedBtn.addEventListener('click', () => {
@@ -39,6 +40,7 @@ export class PieChartComponent implements OnInit{
       && tt.fogCount == 0 && tt.trafficCount == 0 && tt.condCount == 0
       && tt.icyCount == 0 && tt.emergCount == 0){
       window.alert("No Data Available for This Period")
+
     }
     else{
       this.chart = new Chart("MyChart", {
