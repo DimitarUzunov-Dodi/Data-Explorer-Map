@@ -4,6 +4,8 @@ import {PoiService} from "src/app/Services/poi.service";
 import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
 import { ResolutionLevel } from '../Services/models/mapModels';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { HomepageComponent } from '../homepage/homepage.component';
+
 
 @Component({
   selector: 'app-map',
@@ -284,6 +286,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       strictBounds: true
     }
   };
+  
 
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   @Input() poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = 
@@ -291,8 +294,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
   searchHexId = '';
+  flag =false;
 
-  constructor(private poiService: PoiService) {}
+  constructor(private poiService: PoiService, private homepage: HomepageComponent) {}
 
   ngOnInit(): void {
     // Loads json files from file
@@ -409,12 +413,14 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.displayHexagons(hexagons, targetResolution, this.poiPerHexPerResolution.get(targetResolution) as Map<string, PointOfInterest[]>)
     } 
   }
+  polygonIds: string[] = [];
+  clickedHexId = '';
 
-  displayHexagons(hexagons: Set<string>, targetResolution: number, poisPerHex : Map<string, PointOfInterest[]>): void {
-    console.log(hexagons)
+  displayHexagons(hexagons: Set<string>, targetResolution: number, poisPerHex: Map<string, PointOfInterest[]>): void {
+    console.log(hexagons);
     for (const hex of hexagons) {
       const hexagonCoords = h3.cellToBoundary(hex, true);
-      if(hex == this.searchHexId){
+      if (hex == this.searchHexId) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
           strokeColor: '#FF0000',
@@ -423,12 +429,25 @@ export class MapComponent implements OnInit, AfterViewInit {
           fillColor: '#00FF00',
           fillOpacity: 0.35,
         });
+  
+        hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
+          
+          const polygonId = hex; 
+          this.searchHexId = polygonId;
+          console.log('Clicked polygon ID:', polygonId);
+          this.homepage.handleSearchTriggered(["hex",  this.searchHexId ])
+          this.flag=true;
+          console.log('Clicked polygon ID:', polygonId);
+          
+        });
+  
         hexagonPolygon.setMap(this.map);
         this.displayedHexagons.set(hex, hexagonPolygon);
+        this.polygonIds.push(hex); 
       } else {
-        const pois : PointOfInterest[] | undefined  = poisPerHex.get(hex);
-        if (typeof pois !== "undefined" && pois.length > 0){
-          if(pois.map(x => x.type).filter(y => this.searchedHazards.has(y)).length > 0) {
+        const pois: PointOfInterest[] | undefined = poisPerHex.get(hex);
+        if (typeof pois !== 'undefined' && pois.length > 0) {
+          if (pois.map((x) => x.type).filter((y) => this.searchedHazards.has(y)).length > 0) {
             const hexagonPolygon = new google.maps.Polygon({
               paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
               strokeColor: '#FF0000',
@@ -436,24 +455,44 @@ export class MapComponent implements OnInit, AfterViewInit {
               strokeWeight: 2,
               fillColor: '#FF0000',
               fillOpacity: 0.35,
-            })
+            });
+  
+            
+            hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
+              
+              const polygonId = hex; 
+              this.searchHexId = polygonId;
+              console.log('Clicked polygon ID:', polygonId);
+              this.homepage.handleSearchTriggered(["hex",  this.searchHexId ])
+              this.flag=true;
+
+            });
+  
             hexagonPolygon.setMap(this.map);
             this.displayedHexagons.set(hex, hexagonPolygon);
+            this.polygonIds.push(hex); 
           }
         }
-      }  
+      }
     }
   }
+  
 
   updateHazards(neededHazards: Set<RoadHazardType>) {
     this.searchedHazards = neededHazards;
   }
 
   moveMap(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null) this.center = (event.latLng.toJSON());
+    if (event.latLng != null) {
+      console.log ("smth " +event.latLng.toJSON())
+      this.center = (event.latLng.toJSON());
+      console.log ("center " + this.center)
+
+    }
   }
 
   findHexagon(searchTouple: [string,string]): void {
+    console.log("Size" + this.displayedHexagons.size)
     const searchCommand = searchTouple[0];
     try {
       
