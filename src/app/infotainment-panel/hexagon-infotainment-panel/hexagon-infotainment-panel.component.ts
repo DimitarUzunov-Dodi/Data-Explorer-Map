@@ -37,7 +37,9 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     try {
       this.calculateParentHexId();
       this.calculateArea();
+      console.log("Reseaved hex: " + this.searchedHex)
       this.pois = this.poiService.getPoIsByHexId(this.searchedHex)
+      console.log("Reseaved POIs: " + this.pois)
       const geocodingPromise = this.getCountries()
       const countries: string[] = await geocodingPromise;
       this.countries = [...new Set(countries)];
@@ -66,18 +68,14 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
 
   async getCountries(): Promise<string[]> {
     try {
-      console.log("enters")
       const newHexagonIds = h3.cellToChildren(this.searchedHex, h3.getResolution(this.searchedHex) + 1);
-      console.log(newHexagonIds)
       const geocoder = new google.maps.Geocoder();
-      console.log(geocoder)
       const geocodingRequests = newHexagonIds.map(newHexId => {
         const hexagonCoords = h3.cellToBoundary(newHexId, true);
         return {
           location: new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0])
         };
       });
-      console.log(geocodingRequests)
       const geocodingPromises = geocodingRequests.map(request => {
         return new Promise<string[]>((resolve, reject) => {
           geocoder.geocode(request, (results, status) => {
@@ -94,11 +92,8 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
           });
         });
       });
-      console.log(geocodingPromises)
       const countryNamesArrays: string[][] = await Promise.all(geocodingPromises);
-      console.log(countryNamesArrays)
       const countryNames: string[] = countryNamesArrays.flat();
-      console.log(countryNames)
       return countryNames;
     } catch (error) {
       throw new Error('Hexagon not found');
@@ -111,9 +106,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&appid=61179205d75402bec9bf8541e2a2846b`;
     try {
       const response = await this.http.get(apiUrl).toPromise();
-      console.log(response)
       if (response && response.hasOwnProperty('weather') && response.hasOwnProperty('main') && response.hasOwnProperty('wind')) {
-        console.log("enters")
         const weatherResponse = response as {
           weather: { icon: string; description: string }[];
           main: { temp_min: number; temp_max: number; feels_like: number };

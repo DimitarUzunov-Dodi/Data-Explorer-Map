@@ -31,6 +31,9 @@ export class PoiService {
     return this.poiArr;
   }
   getPoIsByHexId(hexId: string): PointOfInterest[] {
+    const fex = this.poiArr.map(poi => poi.hexId === hexId);
+    console.log("Method hexes:" + fex)
+    console.log("Target hexes:" + hexId)
     return this.poiArr.filter(poi => poi.hexId === hexId);
   }
 

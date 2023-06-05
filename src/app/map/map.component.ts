@@ -434,11 +434,9 @@ export class MapComponent implements OnInit, AfterViewInit {
         hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
           
           const polygonId = hex; 
-          this.searchHexId = polygonId;
           console.log('Clicked polygon ID:', polygonId);
-          this.homepage.handleSearchTriggered(["hex",  this.searchHexId ])
+          this.homepage.handleSearchTriggered(["hex",  polygonId ], true)
           this.flag=true;
-          console.log('Clicked polygon ID:', polygonId);
           
         });
   
@@ -462,9 +460,9 @@ export class MapComponent implements OnInit, AfterViewInit {
             hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
               
               const polygonId = hex; 
-              this.searchHexId = polygonId;
               console.log('Clicked polygon ID:', polygonId);
-              this.homepage.handleSearchTriggered(["hex",  this.searchHexId ])
+              console.log('Pois:', this.poiPerHexPerResolution.get(h3.getResolution(polygonId))?.get(polygonId));
+              this.homepage.handleSearchTriggered(["hex",  polygonId], true)
               this.flag=true;
 
             });
@@ -482,7 +480,6 @@ export class MapComponent implements OnInit, AfterViewInit {
   updateHazards(neededHazards: Set<RoadHazardType>) {
     this.searchedHazards = neededHazards;
   }
-  clickedHexId ="";
 
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null){
@@ -491,7 +488,6 @@ export class MapComponent implements OnInit, AfterViewInit {
 }
 
   findHexagon(searchTouple: [string,string]): void {
-    console.log("Size" + this.displayedHexagons.size)
     const searchCommand = searchTouple[0];
     try {
       

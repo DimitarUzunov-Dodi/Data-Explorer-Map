@@ -21,7 +21,6 @@ export class HomepageComponent {
   title = 'Angular';
   async handleSearchTriggered(searchTouple: [string,string], needsSearching: boolean){
     if (needsSearching){
-      console.log("issearched")
       this.mapComponent.findHexagon(searchTouple)
     }
     const id = searchTouple[1].replace(/\s/g, "");
@@ -41,10 +40,8 @@ export class HomepageComponent {
     try {
       if(status) {
         this.mapComponent.updateHazards(new Set(Object.values(RoadHazardType)));
-        console.log("Selected All");
       } else {
         this.mapComponent.updateHazards(new Set());
-        console.log("Deselected All");
       }
     } catch (error) {
       console.log(error);
