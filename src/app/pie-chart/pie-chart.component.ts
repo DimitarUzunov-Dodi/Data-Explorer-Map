@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import Chart from 'chart.js/auto';
 import {PoiService} from "../Services/poi.service";
 
@@ -7,7 +7,7 @@ import {PoiService} from "../Services/poi.service";
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent implements OnInit{
+export class PieChartComponent implements OnInit, OnChanges{
 
   /* eslint-disable */
   public chart: any;
@@ -15,10 +15,13 @@ export class PieChartComponent implements OnInit{
   display: boolean = true;
   constructor(private poiService: PoiService) { }
   ngOnInit(): void {
+    if (this.chart != undefined){
+      this.chart.destroy();
+    }
+    
+    console.log("PieChart Hex: " + this.hexId)
     const dropdown = document.getElementById('myDropdown') as HTMLSelectElement;
     const getSelectedBtn = document.getElementById('getSelectedBtn');
-
-
 
     // @ts-ignore
     getSelectedBtn.addEventListener('click', () => {
@@ -29,7 +32,9 @@ export class PieChartComponent implements OnInit{
     });
 
   }
-
+  ngOnChanges(): void {
+    this.ngOnInit();
+  }
   createChart(hist: string){
 
     // button needs to be added for time period
@@ -72,9 +77,6 @@ export class PieChartComponent implements OnInit{
       });
     }
 
-    }
-
-
-
-
+  }
 }
+

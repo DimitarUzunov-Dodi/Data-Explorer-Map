@@ -4,6 +4,7 @@ import * as h3 from 'h3-js';
 import { PoiService } from 'src/app/Services/poi.service';
 import { PointOfInterest } from 'src/app/Services/models/poi';
 import { ResolutionLevel } from 'src/app/Services/models/mapModels';
+import { HomepageComponent } from 'src/app/homepage/homepage.component';
 
 @Component({
   selector: 'app-hexagon-infotainment-panel',
@@ -23,8 +24,10 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   feelsLikes = "0";
   windspeed = "0";
   rain: number | string = 0;
-  constructor(private http: HttpClient, private poiService: PoiService) {}
-
+  pois: PointOfInterest[] = [];
+  showPoiData = false;
+  constructor(private http: HttpClient, private poiService: PoiService, private homepage: HomepageComponent) {}
+  
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['searchedHex'] && !changes['searchedHex'].firstChange) {
       this.ngOnInit();
@@ -34,7 +37,9 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     try {
       this.calculateParentHexId();
       this.calculateArea();
-      this.fetchPois();
+      console.log("Reseaved hex: " + this.searchedHex)
+      this.pois = this.poiService.getPoIsByHexId(this.searchedHex)
+      console.log("Reseaved POIs: " + this.pois)
       const geocodingPromise = this.getCountries()
       const countries: string[] = await geocodingPromise;
       this.countries = [...new Set(countries)];
@@ -63,7 +68,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
 
   async getCountries(): Promise<string[]> {
     try {
-      const newHexagonIds = h3.cellToChildren(this.searchedHex, h3.getResolution(this.searchedHex) + 2);
+      const newHexagonIds = h3.cellToChildren(this.searchedHex, h3.getResolution(this.searchedHex) + 1);
       const geocoder = new google.maps.Geocoder();
       const geocodingRequests = newHexagonIds.map(newHexId => {
         const hexagonCoords = h3.cellToBoundary(newHexId, true);
@@ -101,9 +106,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&appid=61179205d75402bec9bf8541e2a2846b`;
     try {
       const response = await this.http.get(apiUrl).toPromise();
-      console.log(response)
       if (response && response.hasOwnProperty('weather') && response.hasOwnProperty('main') && response.hasOwnProperty('wind')) {
-        console.log("enters")
         const weatherResponse = response as {
           weather: { icon: string; description: string }[];
           main: { temp_min: number; temp_max: number; feels_like: number };
@@ -127,18 +130,17 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   }
   /* eslint-enable */
 
-  showPoiData = false;
-
   openPoiData() {
-    this.showPoiData =  !this.showPoiData ;
+    this.showPoiData = !this.showPoiData;
   }
+  openPoiInfotainment(poiId: string) {
+    this.homepage.handleSearchTriggered(["poi", poiId], false)
+  } 
 
-  showUserInfotainment =false;
-
-  openUserInfotainment(){
-    this.showUserInfotainment=!this.showUserInfotainment;
+  openUserInfotainment(userId: string) {
+    this.homepage.handleSearchTriggered(["user", userId], false)
   }
-
+  
   findClosestResolutionLevel(target: number): ResolutionLevel {
     let closestResolution: ResolutionLevel = ResolutionLevel.CountryLevel;
     let closestDifference: number = Math.abs(target - closestResolution);
@@ -161,12 +163,6 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   convertToCelcius(temp: number): string {
     return (temp - 273.15).toFixed(0) + " °C";
   }
-
-  pois: PointOfInterest[] = [];
-
-  fetchPois(): void {
-    this.pois = this.poiService.getPoIsByHexId(this.searchedHex)
-  }
-  
 }
+  
 

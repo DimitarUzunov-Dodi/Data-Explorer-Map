@@ -7,6 +7,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { HomepageComponent } from '../homepage/homepage.component';
 
 
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -302,35 +303,11 @@ export class MapComponent implements OnInit, AfterViewInit {
     // Loads json files from file
     fetch('./assets/mock_data_explorer.json').then(async res => {
       this.poiService.processJson(await res.json())
-      this.setupPois(this.poiService.getPoiArr());
+      this.poiPerHexPerResolution = this.poiService.getPoiMap();
     });
 
   }
 
-  setupPois(poiArr : PointOfInterest[]) {
-    const beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
-    
-    for (const x of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
-      beginMapSetup.set(Number(x), new Map<string, PointOfInterest[]>);
-    }
-
-    this.poiPerHexPerResolution = poiArr.reduce((map, poi) => {
-        for(const res of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
-          try {
-            const coords = h3.cellToLatLng(poi.hexId);
-            const poiForRes = h3.latLngToCell(coords[0], coords[1], Number(res));
-            const currResMap: Map<string, PointOfInterest[]> = map.get(Number(res)) as Map<string, PointOfInterest[]>;
-
-            currResMap.get(poiForRes)?.push(poi) ?? currResMap.set(poiForRes, [poi])
-          } catch (error) {
-            console.log("this ahi:" + res + " " + poi)
-          }
-          
-        }
-
-      return map;
-    }, beginMapSetup);
-  }
 
   ngAfterViewInit(): void {
 
@@ -433,11 +410,9 @@ export class MapComponent implements OnInit, AfterViewInit {
         hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
           
           const polygonId = hex; 
-          this.searchHexId = polygonId;
           console.log('Clicked polygon ID:', polygonId);
-          this.homepage.handleSearchTriggered(["hex",  this.searchHexId ])
+          this.homepage.handleSearchTriggered(["hex",  polygonId ], true)
           this.flag=true;
-          console.log('Clicked polygon ID:', polygonId);
           
         });
   
@@ -461,9 +436,9 @@ export class MapComponent implements OnInit, AfterViewInit {
             hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
               
               const polygonId = hex; 
-              this.searchHexId = polygonId;
               console.log('Clicked polygon ID:', polygonId);
-              this.homepage.handleSearchTriggered(["hex",  this.searchHexId ])
+              console.log('Pois:', this.poiPerHexPerResolution.get(h3.getResolution(polygonId))?.get(polygonId));
+              this.homepage.handleSearchTriggered(["hex",  polygonId], true)
               this.flag=true;
 
             });
@@ -483,16 +458,12 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   moveMap(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null) {
-      console.log ("smth " +event.latLng.toJSON())
-      this.center = (event.latLng.toJSON());
-      console.log ("center " + this.center)
-
-    }
+    if (event.latLng != null){
+     this.center = (event.latLng.toJSON());
   }
+}
 
   findHexagon(searchTouple: [string,string]): void {
-    console.log("Size" + this.displayedHexagons.size)
     const searchCommand = searchTouple[0];
     try {
       
@@ -531,9 +502,6 @@ export class MapComponent implements OnInit, AfterViewInit {
         zoom = 20;  
       }
 
-
-
-
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
       this.map.setZoom(zoom-1);
@@ -553,6 +521,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.searchHexId = "";
     this.visualizeMap();
   }
+  
 }
 
 enum SearchFunction{

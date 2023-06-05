@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component,Input, } from '@angular/core';
+import { PoiService } from 'src/app/Services/poi.service';
 
 @Component({
   selector: 'app-poi-infotainment-panel',
@@ -9,4 +10,7 @@ export class PoiInfotainmentPanelComponent {
   @Input()
   showInfotainmentPanel = false;
   @Input() selectedHexId = '';
+  constructor(private poiService: PoiService) {}
+
+
 }

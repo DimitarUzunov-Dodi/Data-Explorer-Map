@@ -4,6 +4,7 @@ import { TopBarComponent } from '../top-bar/top-bar.component';
 import { InfotainmentPanelComponent } from '../infotainment-panel/infotainment-panel.component';
 import { FilterCheckbox } from '../filter/filter.component';
 import { RoadHazardType } from '../Services/models/poi';
+import { HexagonInfotainmentPanelComponent } from '../infotainment-panel/hexagon-infotainment-panel/hexagon-infotainment-panel.component';
 
 @Component({
   selector: 'app-homepage',
@@ -15,12 +16,15 @@ export class HomepageComponent {
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
+  @ViewChild(HexagonInfotainmentPanelComponent) hexInfotainmentPanel!: HexagonInfotainmentPanelComponent;
 
   title = 'Angular';
-  async handleSearchTriggered(searchTouple: [string,string]){
-    this.mapComponent.findHexagon(searchTouple)
-    const hexId = searchTouple[1].replace(/\s/g, "");
-    this.infotainmentPanelComponent.searchedHex = hexId
+  async handleSearchTriggered(searchTouple: [string,string], needsSearching: boolean){
+    if (needsSearching){
+      this.mapComponent.findHexagon(searchTouple)
+    }
+    const id = searchTouple[1].replace(/\s/g, "");
+    this.infotainmentPanelComponent.searchedHex = id
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
     this.infotainmentPanelComponent.chooseInfPanel = searchTouple[0];
 
@@ -36,10 +40,8 @@ export class HomepageComponent {
     try {
       if(status) {
         this.mapComponent.updateHazards(new Set(Object.values(RoadHazardType)));
-        console.log("Selected All");
       } else {
         this.mapComponent.updateHazards(new Set());
-        console.log("Deselected All");
       }
     } catch (error) {
       console.log(error);
