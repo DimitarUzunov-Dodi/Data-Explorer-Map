@@ -69,31 +69,31 @@ export class PoiService {
       if(pointOfInterest.type == 'Potholes'){
         retModel.potCount++
       }
-      if(pointOfInterest.type == 'Fog'){
+      else if(pointOfInterest.type == 'Fog'){
         retModel.fogCount++
       }
-      if(pointOfInterest.type == 'Aquaplaning'){
+      else if(pointOfInterest.type == 'Aquaplaning'){
         retModel.aqCount++
       }
-      if(pointOfInterest.type == 'Icy Roads'){
+      else if(pointOfInterest.type == 'Icy Roads'){
         retModel.icyCount++
       }
-      if(pointOfInterest.type == 'Traffic Jams'){
+      else if(pointOfInterest.type == 'Traffic Jams'){
         retModel.trafficCount++
       }
-      if(pointOfInterest.type == 'Road Emergencies'){
+      else if(pointOfInterest.type == 'Road Emergencies'){
         retModel.emergCount++
       }
-      if(pointOfInterest.type == 'Road Conditions'){
+      else if(pointOfInterest.type == 'Road Conditions'){
         retModel.condCount++
       }
-      if(pointOfInterest.type == 'Police'){
+      else if(pointOfInterest.type == 'Police'){
         retModel.policeCount++
       }
-      if(pointOfInterest.type == 'Cameras And Radars'){
+      else if(pointOfInterest.type == 'Cameras And Radars'){
         retModel.cameraCount++
       }
-      else{
+      else if(pointOfInterest.type == 'Incidents'){
         retModel.incCount++
       }
 
