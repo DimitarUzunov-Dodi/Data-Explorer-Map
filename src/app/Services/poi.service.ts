@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import {PointOfInterest} from "./models/poi";
 import {ChartModel} from "./models/chartModel";
+import { ResolutionLevel } from './models/mapModels';
+import * as h3 from 'h3-js';
+
 
 
 
@@ -11,6 +14,8 @@ import {ChartModel} from "./models/chartModel";
 export class PoiService {
 
   poiArr: PointOfInterest[] = [];
+  poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = 
+    new Map<number, Map<string, PointOfInterest[]>>();
 
   processJson(rawData: PointOfInterest[]): void {
     console.log("type is" + (typeof rawData));
@@ -25,16 +30,46 @@ export class PoiService {
     ));
 
     console.log(this.poiArr);
+    this.setupPois();
 
   }
+
+  setupPois() {
+    const beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
+    
+    for (const x of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
+      beginMapSetup.set(Number(x), new Map<string, PointOfInterest[]>);
+    }
+
+    this.poiPerHexPerResolution = this.poiArr.reduce((map, poi) => {
+        for(const res of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
+          try {
+            const coords = h3.cellToLatLng(poi.hexId);
+            const poiForRes = h3.latLngToCell(coords[0], coords[1], Number(res));
+            const currResMap: Map<string, PointOfInterest[]> = map.get(Number(res)) as Map<string, PointOfInterest[]>;
+
+            currResMap.get(poiForRes)?.push(poi) ?? currResMap.set(poiForRes, [poi])
+          } catch (error) {
+            console.log("this ahi:" + res + " " + poi)
+          }
+          
+        }
+
+      return map;
+    }, beginMapSetup);
+  }
+
+  getPoiMap() {
+    return this.poiPerHexPerResolution;
+  }
+
   getPoiArr() : PointOfInterest[] {
     return this.poiArr;
   }
   getPoIsByHexId(hexId: string): PointOfInterest[] {
-    const fex = this.poiArr.map(poi => poi.hexId === hexId);
-    console.log("Method hexes:" + fex)
-    console.log("Target hexes:" + hexId)
-    return this.poiArr.filter(poi => poi.hexId === hexId);
+    const fex = this.poiPerHexPerResolution.get(h3.getResolution(hexId))?.get(hexId) ?? [];
+    console.log(fex);
+    return fex;
   }
 
   loadData(hexId: string, history: string) {
