@@ -1,1 +1,1 @@
-export const resolutionLevel : number = 8;
+export const resolutionLevel = 8;
