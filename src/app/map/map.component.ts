@@ -276,7 +276,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     ],
     disableDefaultUI: true,
     maxZoom: 20,
-    minZoom: 4,
+    minZoom: 1,
     restriction: {
       latLngBounds: {
         north: 85,
@@ -350,24 +350,28 @@ export class MapComponent implements OnInit, AfterViewInit {
 
         const coords = [minLat, maxLat, minLng, maxLng];
 
-        let resolutionLevel: number;
+        let resolutionLevel: ResolutionLevel;
         const zoom = this.map.getZoom() as number;
-        // if (zoom <= 6) {
-        //   resolutionLevel = ResolutionLevel.CountryLevel;
-        // } else if (zoom <= 9) {
-        //   resolutionLevel = ResolutionLevel.StateLevel;
-        // } else if (zoom <= 12) {
-        //   resolutionLevel = ResolutionLevel.CityLevel;
-        // } else if (zoom <= 14) {
-        //   resolutionLevel = ResolutionLevel.TownLevel;
-        // } else if (zoom <= 16) {
-        //   resolutionLevel = ResolutionLevel.HighWayLevel;
-        // } else if (zoom <= 18) {
-        //   resolutionLevel = ResolutionLevel.RoadLevel;
-        // } else {
-        //   resolutionLevel = ResolutionLevel.RoadwayLevel;
-        // }
-        resolutionLevel = 13;
+        if (zoom <= 5) {
+          resolutionLevel = ResolutionLevel.CountryLevel;
+        }
+        else if (zoom <= 8){
+          resolutionLevel = ResolutionLevel.CityLevel;
+        }
+        else if (zoom <= 10){
+          resolutionLevel = ResolutionLevel.TownLevel;
+        }
+        else if (zoom <= 12){
+          resolutionLevel = ResolutionLevel.HighWayLevel;
+        }
+        else if (zoom <= 15){
+          resolutionLevel = ResolutionLevel.RoadLevel;
+        }
+        else{
+          resolutionLevel = ResolutionLevel.RoadwayLevel;
+        }
+        console.log(zoom)
+        console.log(resolutionLevel)
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
@@ -388,6 +392,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
     }
   }
+
   filterInBounds(hexagons: Set<string>, bounds: number[]): Set<string> {
     const res = new Set<string>;
     for (const hex of hexagons){
@@ -400,12 +405,15 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
     return res;
   }
+
   filterHexagons(hexagons: Set<string>, targetResolution: number) {
     if(this.poiPerHexPerResolution.has(targetResolution)) {
       this.displayHexagons(hexagons, targetResolution, this.poiPerHexPerResolution.get(targetResolution) as Map<string, PointOfInterest[]>)
     } 
   }
+
   polygonIds: string[] = [];
+
   clickedHexId = '';
 
   displayHexagons(hexagons: Set<string>, targetResolution: number, poisPerHex: Map<string, PointOfInterest[]>): void {
@@ -466,7 +474,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
     }
   }
-  
 
   updateHazards(neededHazards: Set<RoadHazardType>) {
     this.searchedHazards = neededHazards;
