@@ -23,3 +23,48 @@
 .infotainment-panel.show {
   transform: translateX(350px);
 }
+
+/* Infotainment Panel Styling */
+.infotainment-panel {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Field Styling */
+.infotainment-panel .field {
+  margin-bottom: 20px;
+}
+
+/* Heading Styling */
+.infotainment-panel h3 {
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* Table Styling */
+.infotainment-panel tr {
+  border-bottom: 1px solid #ccc;
+}
+
+.infotainment-panel tr:last-child {
+  border-bottom: none;
+}
+
+.infotainment-panel td {
+  padding: 10px 0;
+}
+
+/* Link Styling */
+.infotainment-panel a {
+  color: #007BFF;
+  text-decoration: none;
+}
+
+.infotainment-panel a:hover {
+  text-decoration: underline;
+}
