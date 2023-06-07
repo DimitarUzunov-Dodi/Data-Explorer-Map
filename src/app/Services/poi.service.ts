@@ -35,6 +35,7 @@ export class PoiService {
   }
 
   setupPois() {
+    console.log("begin setup");
     const beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
 
     for (const x of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
@@ -42,21 +43,29 @@ export class PoiService {
     }
 
     this.poiPerHexPerResolution = this.poiArr.reduce((map, poi) => {
+        const poiResolution = h3.getResolution(poi.hexId);
         for(const res of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
           try {
-            const coords = h3.cellToLatLng(poi.hexId);
-            const poiForRes = h3.latLngToCell(coords[0], coords[1], Number(res));
-            const currResMap: Map<string, PointOfInterest[]> = map.get(Number(res)) as Map<string, PointOfInterest[]>;
-
-            currResMap.get(poiForRes)?.push(poi) ?? currResMap.set(poiForRes, [poi])
+            if (Number(res) < poiResolution) {
+              const parentHexId = h3.cellToParent(poi.hexId, Number(res));
+              const currResMap: Map<string, PointOfInterest[]> = map.get(Number(res)) as Map<string, PointOfInterest[]>;
+              currResMap.get(parentHexId)?.push(poi) ?? currResMap.set(parentHexId, [poi]);
+            } else if(Number(res) > poiResolution) {
+              const childrenHexIds = h3.cellToChildren(poi.hexId, Number(res));
+              const currResMap: Map<string, PointOfInterest[]> = map.get(Number(res)) as Map<string, PointOfInterest[]>;
+              childrenHexIds.forEach(h => currResMap.get(h)?.push(poi) ?? currResMap.set(h, [poi]));
+            } else {
+              const currResMap: Map<string, PointOfInterest[]> = map.get(Number(res)) as Map<string, PointOfInterest[]>;
+              currResMap.get(poi.hexId)?.push(poi) ?? currResMap.set(poi.hexId, [poi]);
+            }
           } catch (error) {
             console.log("this ahi:" + res + " " + poi)
           }
-
         }
-
       return map;
     }, beginMapSetup);
+    console.log("setup compete: ");
+    console.log(this.poiPerHexPerResolution)
   }
 
   getPoiMap() {
