@@ -287,7 +287,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       strictBounds: true
     }
   };
-  
 
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   @Input() poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = 
@@ -296,7 +295,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
   searchHexId = '';
   flag =false;
-
+  hexagonsOnLevel: Set<string> = new Set<string>;
   constructor(private poiService: PoiService, private homepage: HomepageComponent) {}
 
   ngOnInit(): void {
@@ -356,31 +355,40 @@ export class MapComponent implements OnInit, AfterViewInit {
           [minLat, maxLng],
         ];
 
-        let resolutionLevel: ResolutionLevel;
+        let resolutionLevel: number;
         const zoom = this.map.getZoom() as number;
-        if (zoom <= 6) {
-          resolutionLevel = ResolutionLevel.CountryLevel;
-        } else if (zoom <= 9) {
-          resolutionLevel = ResolutionLevel.StateLevel;
-        } else if (zoom <= 12) {
-          resolutionLevel = ResolutionLevel.CityLevel;
-        } else if (zoom <= 14) {
-          resolutionLevel = ResolutionLevel.TownLevel;
-        } else if (zoom <= 16) {
-          resolutionLevel = ResolutionLevel.HighWayLevel;
-        } else if (zoom <= 18) {
-          resolutionLevel = ResolutionLevel.RoadLevel;
-        } else {
-          resolutionLevel = ResolutionLevel.RoadwayLevel;
-        }
+        // if (zoom <= 6) {
+        //   resolutionLevel = ResolutionLevel.CountryLevel;
+        // } else if (zoom <= 9) {
+        //   resolutionLevel = ResolutionLevel.StateLevel;
+        // } else if (zoom <= 12) {
+        //   resolutionLevel = ResolutionLevel.CityLevel;
+        // } else if (zoom <= 14) {
+        //   resolutionLevel = ResolutionLevel.TownLevel;
+        // } else if (zoom <= 16) {
+        //   resolutionLevel = ResolutionLevel.HighWayLevel;
+        // } else if (zoom <= 18) {
+        //   resolutionLevel = ResolutionLevel.RoadLevel;
+        // } else {
+        //   resolutionLevel = ResolutionLevel.RoadwayLevel;
+        // }
+        resolutionLevel = 15;
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
         this.displayedHexagons = new Map<string, google.maps.Polygon>();
-        const newHexagonChildIds : string[] = h3.polygonToCells(coords, resolutionLevel + 1, false);
-        const newHexIds : Set<string> = new Set(newHexagonChildIds.map(x => h3.cellToParent(x, resolutionLevel)))
-
-        this.filterHexagons(newHexIds, resolutionLevel);
+        this.hexagonsOnLevel.clear();
+        const getMap = this.poiPerHexPerResolution.get(resolutionLevel);
+        const getHex = getMap?.keys();
+        if (getHex != undefined){
+          for (const h of getHex) {
+            this.hexagonsOnLevel.add(h);
+          }
+        }
+        else {
+          this.hexagonsOnLevel = new Set();
+        }
+        this.filterHexagons(this.hexagonsOnLevel, resolutionLevel);
       }
     }
   }
