@@ -137,4 +137,12 @@ export class PoiService {
     return retModel
 
   }
+
+  getUserPOIs(userId: string){
+
+    return this.poiArr.filter(x => x.userId == userId)
+  }
+
+
+
 }

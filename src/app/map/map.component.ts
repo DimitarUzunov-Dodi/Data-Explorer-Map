@@ -400,10 +400,10 @@ export class MapComponent implements OnInit, AfterViewInit {
       if (hex == this.searchHexId) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-          strokeColor: '#FF0000',
+          strokeColor: '#1E313A',
           strokeOpacity: 0.8,
           strokeWeight: 2,
-          fillColor: '#00FF00',
+          fillColor: '#1E313A',
           fillOpacity: 0.35,
         });
 
