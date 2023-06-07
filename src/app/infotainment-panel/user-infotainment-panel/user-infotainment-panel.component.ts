@@ -13,7 +13,7 @@ import {PointOfInterest} from "../../Services/models/poi";
 export class UserInfotainmentPanelComponent implements OnInit {
   @Input()
   showInfotainmentPanel = false;
-  @Input() userId: string = '';
+  @Input() userId = '';
   pois: PointOfInterest[] = []
 
   constructor(private poiService: PoiService,private homepage: HomepageComponent) {}
