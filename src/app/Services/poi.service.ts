@@ -137,4 +137,20 @@ export class PoiService {
     return retModel
 
   }
+
+  getHexagonsByPoiId(poiId: string): { hexId: string, resolution: number }[] {
+    const hexagons: { hexId: string, resolution: number }[] = [];
+  
+    for (const [resolution, map] of this.poiPerHexPerResolution.entries()) {
+      for (const [hexId, pois] of map.entries()) {
+        const matchingPois = pois.filter(poi => poi.id === poiId);
+  
+        if (matchingPois.length > 0) {
+          hexagons.push({ hexId, resolution });
+        }
+      }
+    }
+  
+    return hexagons;
+  }
 }
