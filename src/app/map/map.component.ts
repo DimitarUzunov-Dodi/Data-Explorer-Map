@@ -348,12 +348,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         const minLng = sw.lng();
         const maxLng = ne.lng();
 
-        const coords = [
-          [minLat, minLng],
-          [maxLat, minLng],
-          [maxLat, maxLng],
-          [minLat, maxLng],
-        ];
+        const coords = [minLat, maxLat, minLng, maxLng];
 
         let resolutionLevel: number;
         const zoom = this.map.getZoom() as number;
@@ -372,7 +367,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         // } else {
         //   resolutionLevel = ResolutionLevel.RoadwayLevel;
         // }
-        resolutionLevel = 15;
+        resolutionLevel = 13;
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
@@ -388,11 +383,23 @@ export class MapComponent implements OnInit, AfterViewInit {
         else {
           this.hexagonsOnLevel = new Set();
         }
-        this.filterHexagons(this.hexagonsOnLevel, resolutionLevel);
+        const hexInBounds = this.filterInBounds(this.hexagonsOnLevel, coords);
+        this.filterHexagons(hexInBounds, resolutionLevel);
       }
     }
   }
-
+  filterInBounds(hexagons: Set<string>, bounds: number[]): Set<string> {
+    const res = new Set<string>;
+    for (const hex of hexagons){
+      const coords = h3.cellToLatLng(hex);
+      const hexLat = coords[0];
+      const hexLng = coords[1];
+      if (hexLat >= bounds[0] && hexLat <= bounds[1] && hexLng >= bounds[2] && hexLng <= bounds[3]){
+        res.add(hex);
+      }
+    }
+    return res;
+  }
   filterHexagons(hexagons: Set<string>, targetResolution: number) {
     if(this.poiPerHexPerResolution.has(targetResolution)) {
       this.displayHexagons(hexagons, targetResolution, this.poiPerHexPerResolution.get(targetResolution) as Map<string, PointOfInterest[]>)
