@@ -331,7 +331,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.initializeMap();
     }
   }
-   
+
   initializeMap(): void {
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
       center: this.center,
@@ -340,7 +340,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
     // Initialize the map and create hexagons for the initial bounds
     google.maps.event.addListener(this.map, 'bounds_changed', () => this.visualizeMap());
-    
+
   }
 
   visualizeMap(): void {
@@ -398,46 +398,46 @@ export class MapComponent implements OnInit, AfterViewInit {
           fillColor: '#00FF00',
           fillOpacity: 0.35,
         });
-  
+
         hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-          
-          const polygonId = hex; 
+
+          const polygonId = hex;
           console.log('Clicked polygon ID:', polygonId);
           this.homepage.handleSearchTriggered(["hex",  polygonId ], true)
           this.flag=true;
-          
+
         });
-  
+
         hexagonPolygon.setMap(this.map);
         this.displayedHexagons.set(hex, hexagonPolygon);
-        this.polygonIds.push(hex); 
+        this.polygonIds.push(hex);
       } else {
         const pois: PointOfInterest[] | undefined = poisPerHex.get(hex);
         if (typeof pois !== 'undefined' && pois.length > 0) {
           if (pois.map((x) => x.type).filter((y) => this.searchedHazards.has(y)).length > 0) {
             const hexagonPolygon = new google.maps.Polygon({
               paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-              strokeColor: '#FF0000',
+              strokeColor: '#577D86',
               strokeOpacity: 0.8,
               strokeWeight: 2,
-              fillColor: '#FF0000',
+              fillColor: '#577D86',
               fillOpacity: 0.35,
             });
-  
-            
+
+
             hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-              
-              const polygonId = hex; 
+
+              const polygonId = hex;
               console.log('Clicked polygon ID:', polygonId);
               console.log('Pois:', this.poiPerHex.get(polygonId));
               this.homepage.handleSearchTriggered(["hex",  polygonId], true)
               this.flag=true;
 
             });
-  
+
             hexagonPolygon.setMap(this.map);
             this.displayedHexagons.set(hex, hexagonPolygon);
-            this.polygonIds.push(hex); 
+            this.polygonIds.push(hex);
           }
         }
       }
@@ -457,7 +457,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   findHexagon(searchTouple: [string,string]): void {
     const searchCommand = searchTouple[0];
     try {
-      
+
       let searchedHex = '';
       if(searchCommand == SearchFunction.SearchByHex){
         searchedHex = searchTouple[1].replace(/\s/g, "");
@@ -466,11 +466,10 @@ export class MapComponent implements OnInit, AfterViewInit {
                                       .filter(x => x.id === searchTouple[1].replace(/\s/g, ""))
                                       .map(x => x.hexId)[0];
       }
-      console.log(searchedHex)
-      console.log(h3.getResolution(searchedHex))
+
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
       const resoulution = h3.getResolution(searchedHex);
-      if(resoulution == -1 && searchCommand == SearchFunction.SearchByHex){ 
+      if(resoulution == -1 && searchCommand == SearchFunction.SearchByHex){
         throw new Error("Hexagon not found");
       } else if(resoulution == -1 && searchCommand == SearchFunction.SearchByPoiId){
         throw new Error("Point of Interest not found");
@@ -482,21 +481,21 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.setZoom(10);
 
     } catch(error) {
-      if( searchCommand === SearchFunction.SearchByHex){ 
+      if( searchCommand === SearchFunction.SearchByHex){
         alert("Hexagon not found");
         throw new Error("Hexagon not found");
       } else if ( searchCommand === SearchFunction.SearchByPoiId){
         alert("Point of Interest not found");
         throw new Error("Point of Interest not found");
-      }      
+      }
     }
-  
+
   }
   clearSearch(){
     this.searchHexId = "";
     this.visualizeMap();
   }
-  
+
 }
 
 enum SearchFunction{
