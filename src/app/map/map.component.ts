@@ -301,16 +301,19 @@ export class MapComponent implements OnInit, AfterViewInit {
     fetch('./assets/mock_data_explorer.json').then(async res => {
       this.poiService.processJson(await res.json())
       this.poiPerHex = this.poiService.getPoiMap();
-    });
-    const getHex = this.poiPerHex?.keys();
-    if (getHex != undefined){
-      for (const h of getHex) {
-        this.hexagonIds.add(h);
+      const getHex = this.poiPerHex?.keys();
+      if (getHex != undefined){
+        for (const h of getHex) {
+          this.hexagonIds.add(h);
+        }
       }
-    }
-    else {
-      this.hexagonIds = new Set();
-    }
+      else {
+        this.hexagonIds = new Set();
+      }
+      console.log(getHex)
+      console.log(this.hexagonIds)
+    });
+
   }
 
 
