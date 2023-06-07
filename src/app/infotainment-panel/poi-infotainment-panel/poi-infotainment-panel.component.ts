@@ -20,7 +20,7 @@ export class PoiInfotainmentPanelComponent {
     this.getHexagons();
   }
 
-  hexIdMaxRes: string = '';
+  hexIdMaxRes = '';
 
   getHexagons():void{
    const v = this.poiService.getHexagonsByPoiId(this.selectedPoiId).sort((a, b) => b.resolution - a.resolution);

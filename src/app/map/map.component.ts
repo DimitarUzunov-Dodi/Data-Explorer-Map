@@ -407,7 +407,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           fillOpacity: 0.35,
         });
   
-        hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
+        hexagonPolygon.addListener('click', () => {
           
           const polygonId = hex; 
           console.log('Clicked polygon ID:', polygonId);
@@ -433,7 +433,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             });
   
             
-            hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
+            hexagonPolygon.addListener('click', () => {
               
               const polygonId = hex; 
               console.log('Clicked polygon ID:', polygonId);
