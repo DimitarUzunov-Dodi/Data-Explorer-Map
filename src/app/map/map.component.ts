@@ -3,8 +3,10 @@ import * as h3 from 'h3-js';
 import {PoiService} from "src/app/Services/poi.service";
 import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
 import { ResolutionLevel } from '../Services/models/mapModels';
+import { SearchFunction } from '../Services/models/searchModels'
 import { GoogleMapsModule } from '@angular/google-maps';
 import { HomepageComponent } from '../homepage/homepage.component';
+
 
 
 
@@ -524,8 +526,3 @@ export class MapComponent implements OnInit, AfterViewInit {
   
 }
 
-enum SearchFunction{
-  SearchByHex = 'hex',
-  SearchByPoiId = 'poi',
-  SearchByUser = 'user'
-}

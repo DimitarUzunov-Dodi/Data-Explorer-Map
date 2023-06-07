@@ -59,16 +59,16 @@ export class PieChartComponent implements OnInit, OnChanges{
             label: 'Occurrences',
             data: [tt.potCount, tt.fogCount, tt.aqCount, tt.icyCount, tt.trafficJamsCount, tt.emergCount, tt.condCount, tt.policeCount, tt.cameraCount, tt.incCount],
             backgroundColor: [
-              'red',
-              'pink',
-              'green',
-              'yellow',
-              'orange',
-              'blue',
-              'black',
-              'brown',
-              'violet',
-              'purple'
+              '#1E313A',
+              '#577D86',
+              '#4C6361',
+              '#7DA19D',
+              '#658C77',
+              '#A8CDBB',
+              '#5E6769',
+              '#A3B2AD',
+              '#909D95',
+              '#B2A89C'
             ],
             hoverOffset: 4
           }],

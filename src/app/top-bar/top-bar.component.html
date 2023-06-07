@@ -1,9 +1,18 @@
 <div class="top-search-bar">
     <input type="text" [placeholder]="searchBar" [(ngModel)]="searchText">
     <button type="button" (click)="triggerSearch()">Search</button>
-    <button type="button" (click)="switchSearch()">Switch</button>
-    <button type="button" (click)="triggerClearSearch()">Clear</button> 
-    <div class="app-name">Data Map Explorer</div>
-</div>
   
- 
+    <div class="dropdown-container">
+      <button class="switch-button" (click)="toggleDropdown()" *ngIf="isSelectSearchOpen">Select Search</button>
+  
+      <div class="dropdown-menu" *ngIf="isDropdownOpen">
+        <button (click)="selectOption('hex')">Hex</button>
+        <button (click)="selectOption('user')">User</button>
+        <button (click)="selectOption('poi')">POI</button>
+      </div>
+    </div>
+  
+    <button type="button" (click)="triggerClearSearch()">Clear</button>
+    <div class="app-name">Data Map Explorer</div>
+  </div>
+  
