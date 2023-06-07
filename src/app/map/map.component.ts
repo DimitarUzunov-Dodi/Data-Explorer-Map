@@ -392,6 +392,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.displayHexagons(hexagons, targetResolution, this.poiPerHexPerResolution.get(targetResolution) as Map<string, PointOfInterest[]>)
     } 
   }
+
+  // why is this here?
   polygonIds: string[] = [];
   clickedHexId = '';
 
@@ -462,28 +464,26 @@ export class MapComponent implements OnInit, AfterViewInit {
   moveMap(event: google.maps.MapMouseEvent) {
     if (event.latLng != null){
      this.center = (event.latLng.toJSON());
+    }
   }
-}
 
-  findHexagon(searchTouple: [string,string]): void {
-    const searchCommand = searchTouple[0];
-    try {
-      
-      let searchedHex = '';
-      if(searchCommand == SearchFunction.SearchByHex){
-        searchedHex = searchTouple[1].replace(/\s/g, "");
-      } else if(searchCommand == SearchFunction.SearchByPoiId){
-        searchedHex  = this.poiService.getPoiArr()
-                                      .filter(x => x.id === searchTouple[1].replace(/\s/g, ""))
-                                      .map(x => x.hexId)[0];
-      }
-       
+  search(searchTouple: [string,string]): void {
+    if(searchTouple[0] === SearchFunction.SearchByHex){
+      this.findHexagon(searchTouple[1]);
+    }else if(searchTouple[0] === SearchFunction.SearchByPoiId){
+      this.findPoi(searchTouple[1]);
+    }else if(searchTouple[0] === SearchFunction.SearchByUser){
+      this.findUser(searchTouple[1])
+    }
+  }
+
+  findHexagon(hexId: string): void {
+    try{
+      let searchedHex = hexId.replace(/\s/g, "");
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
       const resoulution = h3.getResolution(searchedHex);
-      if(resoulution == -1 && searchCommand == SearchFunction.SearchByHex){ 
+      if(resoulution == -1 ){ 
         throw new Error("Hexagon not found");
-      } else if(resoulution == -1 && searchCommand == SearchFunction.SearchByPoiId){
-        throw new Error("Point of Interest not found");
       }
       this.searchHexId = searchedHex;
       let zoom = 11;
@@ -509,16 +509,58 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.setZoom(zoom-1);
 
     } catch(error) {
-      if( searchCommand === SearchFunction.SearchByHex){ 
-        alert("Hexagon not found");
-        throw new Error("Hexagon not found");
-      } else if ( searchCommand === SearchFunction.SearchByPoiId){
-        alert("Point of Interest not found");
-        throw new Error("Point of Interest not found");
-      }      
+      alert("Hexagon not found");    
     }
-  
+    
+    
+    
+    
   }
+
+  findPoi(poiId: string): void {
+    try{
+      let searchedHex = this.poiService.getPoiArr()
+                                       .filter(x => x.id === poiId.replace(/\s/g, ""))
+                                       .map(x => x.hexId)[0];
+      const hexagonCoords = h3.cellToBoundary(searchedHex, true);
+      const resoulution = h3.getResolution(searchedHex);
+      if(resoulution == -1 ){ 
+        throw new Error("Hexagon not found");
+      }
+      this.searchHexId = searchedHex;
+      let zoom = 11;
+
+      if (resoulution <= ResolutionLevel.CountryLevel) {
+        zoom = 6;
+      } else if (resoulution <= ResolutionLevel.StateLevel) {
+        zoom = 9;
+      } else if (resoulution <= ResolutionLevel.CityLevel) {
+        zoom = 12;
+      } else if (resoulution <= ResolutionLevel.TownLevel) {
+        zoom = 14;
+      } else if (resoulution <= ResolutionLevel.HighWayLevel) {
+        zoom = 16;
+      } else if (resoulution <= ResolutionLevel.RoadLevel) {
+        zoom = 18;
+      } else {
+        zoom = 20;  
+      }
+
+      const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
+      this.map.panTo(newLocation);
+      this.map.setZoom(zoom-1);
+                                 
+    } catch(error) {
+        alert("Point of Interest not found");
+    }      
+  }
+
+  
+
+  findUser(userId: string): void {
+
+  }
+
   clearSearch(){
     this.searchHexId = "";
     this.visualizeMap();

@@ -19,9 +19,9 @@ export class TopBarComponent {
   triggerSearch() { 
     if (this.searchBar === 'Search by Hex'){
       this.searchTriggered.emit([SearchFunction.SearchByHex,this.searchText]);
-    }else if(this.searchBar === 'Search by Poi'){
+    }else if(this.searchBar === 'Search by POI'){
       this.searchTriggered.emit([SearchFunction.SearchByPoiId,this.searchText]);
-    }else if(this.searchBar === 'Search by User'){
+    }else if(this.searchBar === 'Search by User ID'){
       this.searchTriggered.emit([SearchFunction.SearchByUser,this.searchText]);
     }
       
@@ -42,7 +42,7 @@ export class TopBarComponent {
     }else if(this.selectedOption === SearchFunction.SearchByPoiId){
       this.searchBar = 'Search by POI';
     }else if(this.selectedOption === SearchFunction.SearchByUser){
-      this.searchBar = 'Search by User';
+      this.searchBar = 'Search by User ID';
     }
   }
 

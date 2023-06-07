@@ -12,6 +12,8 @@ export class InfotainmentPanelComponent {
   @ViewChild(HexagonInfotainmentPanelComponent) hexInfotainmentPanel!: HexagonInfotainmentPanelComponent;
   showInfotainmentPanel = false;
   searchedHex = '';
+  searchedPoi = '';
+  searchedUser = '';
   chooseInfPanel = "";
   togglePanel(): void {
     this.showInfotainmentPanel = !this.showInfotainmentPanel;

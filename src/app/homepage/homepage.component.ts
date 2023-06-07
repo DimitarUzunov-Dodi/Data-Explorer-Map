@@ -5,6 +5,7 @@ import { InfotainmentPanelComponent } from '../infotainment-panel/infotainment-p
 import { FilterCheckbox } from '../filter/filter.component';
 import { RoadHazardType } from '../Services/models/poi';
 import { HexagonInfotainmentPanelComponent } from '../infotainment-panel/hexagon-infotainment-panel/hexagon-infotainment-panel.component';
+import { SearchFunction } from '../Services/models/searchModels';
 
 @Component({
   selector: 'app-homepage',
@@ -21,12 +22,19 @@ export class HomepageComponent {
   title = 'Angular';
   async handleSearchTriggered(searchTouple: [string,string], needsSearching: boolean){
     if (needsSearching){
-      this.mapComponent.findHexagon(searchTouple)
+      this.mapComponent.search(searchTouple)
     }
     const id = searchTouple[1].replace(/\s/g, "");
-    this.infotainmentPanelComponent.searchedHex = id
+    if(searchTouple[0] === SearchFunction.SearchByHex){
+      this.infotainmentPanelComponent.searchedHex = id;
+    }else if(searchTouple[0] === SearchFunction.SearchByPoiId){
+      this.infotainmentPanelComponent.searchedPoi = id;
+    }else if(searchTouple[0] === SearchFunction.SearchByUser){
+      this.infotainmentPanelComponent.searchedUser = id;
+    }
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
     this.infotainmentPanelComponent.chooseInfPanel = searchTouple[0];
+
 
   }
   handleClearSearchTriggered(){
