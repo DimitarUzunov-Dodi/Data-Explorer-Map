@@ -310,8 +310,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       else {
         this.hexagonIds = new Set();
       }
-      console.log(getHex)
-      console.log(this.hexagonIds)
     });
 
   }
@@ -468,7 +466,8 @@ export class MapComponent implements OnInit, AfterViewInit {
                                       .filter(x => x.id === searchTouple[1].replace(/\s/g, ""))
                                       .map(x => x.hexId)[0];
       }
-       
+      console.log(searchedHex)
+      console.log(h3.getResolution(searchedHex))
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
       const resoulution = h3.getResolution(searchedHex);
       if(resoulution == -1 && searchCommand == SearchFunction.SearchByHex){ 
