@@ -476,10 +476,10 @@ export class MapComponent implements OnInit, AfterViewInit {
         throw new Error("Point of Interest not found");
       }
       this.searchHexId = searchedHex;
-      let zoom = 11;
+      //let zoom = 11;
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
-      this.map.setZoom(zoom-1);
+      this.map.setZoom(10;
 
     } catch(error) {
       if( searchCommand === SearchFunction.SearchByHex){ 
