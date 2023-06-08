@@ -1,18 +1,19 @@
 .top-panel {
   position: fixed;
-  top: 20px;
-  left: 400px;
-  right: 400px;
+  top: 2%;
+  left: 25%;
+  right: 25%;
   
   background-color: rgba(94, 103, 105, 0.5); /* Semi-transparent white background */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 10px 20px;
   z-index: 2;
   border-radius: 10px; /* Round edges */
   backdrop-filter: blur(5px); /* Apply a blur effect */
   height: 45px;
+  min-width: 300px; /* Set a minimum width */
 }
 
 .search-container {
@@ -21,7 +22,8 @@
 }
 
 .search-container input[type="text"] {
-  width: 300px; /* Update the width value as per your requirement */
+  /* width: 300px; Update the width value as per your requirement */
+  width: 100%; /* Fill the available width */
   padding: 6px 10px;
   border-radius: 10px;
   border: 1px solid #ccc;
@@ -38,17 +40,7 @@
   cursor: pointer;
   font-size: 14px;
 }
-#serachpng{
-  width: 14px;
-  height: 14px;
-}
-
-#switchpng{
-  width: 14px;
-  height: 14px;
-}
-
-#clearpng{
+#png{
   width: 14px;
   height: 14px;
 }
