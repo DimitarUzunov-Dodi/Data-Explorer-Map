@@ -566,7 +566,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   clearSearch(){
-    this.searchHexId = "";
+    this.searchHexIds.clear;
     this.visualizeMap();
   }
   
