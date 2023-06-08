@@ -1,11 +1,10 @@
 <div class="top-panel">
     <div class="search-container">
-      <input type="text" placeholder="Search..." />
-      <button class="search-button">Search</button>
-    </div>
-    <div class="button-container">
-      <button class="top-button">Button 1</button>
-      <button class="top-button">Button 2</button>
-      <button class="top-button">Button 3</button>
+      <input (keypress)="onSearchKeyPress($event)" class = "search-field" type="text" placeholder="Search..." />
+      <button class="search-button" (click)="triggerSearch()">
+        <img id="serachpng" src="https://cdn-icons-png.flaticon.com/128/2989/2989907.png" alt="buttonpng" />
+      </button>
+      <button class="search-button" (click)="switchSearch()">Switch</button>
+      <button class="search-button" (click)="triggerClearSearch()">Clear</button>
     </div>
   </div>

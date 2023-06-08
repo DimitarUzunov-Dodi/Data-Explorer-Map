@@ -11,6 +11,13 @@ export class TopBarComponent {
   searchBar = 'Search by Hex';
   @Output() searchTriggered: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
   @Output() clearSearchTriggered: EventEmitter<void> = new EventEmitter<void>();
+  onSearchKeyPress(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.triggerSearch();
+      event.preventDefault();
+    }
+  }
+
   triggerSearch() { 
     if (this.searchBar == 'Search by Hex'){
       this.searchTriggered.emit(['hex',this.searchText]);

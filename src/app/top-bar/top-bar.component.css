@@ -1,8 +1,8 @@
 .top-panel {
   position: fixed;
   top: 20px;
-  left: 80px;
-  right: 80px;
+  left: 400px;
+  right: 400px;
   background-color: rgba(87, 125, 134, 0.5); /* Semi-transparent white background */
   display: flex;
   justify-content: space-between;
@@ -10,7 +10,8 @@
   padding: 10px;
   z-index: 2;
   border-radius: 10px; /* Round edges */
-  height: 60px;
+  backdrop-filter: blur(5px); /* Apply a blur effect */
+  height: 45px;
 }
 
 .search-container {
@@ -19,6 +20,7 @@
 }
 
 .search-container input[type="text"] {
+  width: 300px; /* Update the width value as per your requirement */
   padding: 6px 10px;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -29,24 +31,13 @@
   margin-left: 10px;
   padding: 6px 10px;
   border-radius: 4px;
-  background-color: #4caf50;
+  background-color: #658C77;
   color: white;
   border: none;
   cursor: pointer;
   font-size: 14px;
 }
-
-.button-container {
-  display: flex;
-}
-
-.button-container .top-button {
-  margin-left: 10px;
-  padding: 6px 10px;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
+#serachpng{
+  width: 14px;
+  height: 14px;
 }
