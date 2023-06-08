@@ -3,7 +3,8 @@
   top: 20px;
   left: 400px;
   right: 400px;
-  background-color: rgba(87, 125, 134, 0.5); /* Semi-transparent white background */
+  
+  background-color: rgba(94, 103, 105, 0.5); /* Semi-transparent white background */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -22,7 +23,7 @@
 .search-container input[type="text"] {
   width: 300px; /* Update the width value as per your requirement */
   padding: 6px 10px;
-  border-radius: 4px;
+  border-radius: 10px;
   border: 1px solid #ccc;
   font-size: 14px;
 }
@@ -30,8 +31,8 @@
 .search-container .search-button {
   margin-left: 10px;
   padding: 6px 10px;
-  border-radius: 4px;
-  background-color: #658C77;
+  border-radius: 10px;
+  background-color: #577d86;
   color: white;
   border: none;
   cursor: pointer;
