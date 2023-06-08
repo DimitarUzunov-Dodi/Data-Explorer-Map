@@ -1,17 +1,23 @@
-<div class = "filter" [class.show]="isShown">
-    <div class = "buttonHolder">
-        <button id="minimizeBtn" (click)="changeState()">Close Hazard List</button> 
-    </div>
+<div class = "buttonHolder">
+    <button id="minimizeBtn" (click)="changeState()">Open Hazard List</button> 
+</div>
+<div class = "filter" [class.show]="isShown" [class.hide]="!isShown">
     <div class = "hazards">
         <p>Which types of hazards would you like to be shown on the map?</p> 
         
         <button id="selectAll" (click)="selectAll(true)">Select All</button>
         <button id="deselectAll" (click)="selectAll(false)">Clear Selections</button>
+        <br>
+            
+        <div id="checkBoxForm" class="grid">
+            <div class="checkbox-container" *ngFor="let hazard of hazards; let i = index">
+                <label class="slider">
+                <input type="checkbox" [(ngModel)]="hazard.checked" (change)="handleCheckboxChange(hazard.value, hazard.checked)" name="boxcheck">
+                <span class="slider-round"></span>
+                </label>
+                <span class="slider-label">{{ hazard.value }}</span>
+            </div>
+        </div>
 
-        <form action="" method="" id="checkBoxForm">
-            
-            <!-- On page load checkboxes are added by initializeCheckBox() -->
-            
-        </form>
     </div>
 </div>
