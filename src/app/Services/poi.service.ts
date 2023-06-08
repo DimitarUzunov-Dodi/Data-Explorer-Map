@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {PointOfInterest} from "./models/poi";
+import {PointOfInterest, RoadHazardType} from "./models/poi";
 import {ChartModel} from "./models/chartModel";
 import { resolutionLevel } from './models/mapModels';
 import * as h3 from 'h3-js';
@@ -154,4 +154,52 @@ export class PoiService {
   
     return hexagons;
   }
+  expDate= new Date();
+  getExpDate(p: PointOfInterest): Date{
+    switch (p.type){
+      case RoadHazardType.Potholes:
+        this.expDate = new Date(p.createdAt);
+        this.expDate.setMonth(this.expDate.getMonth() + 6);
+        return this.expDate;
+      case RoadHazardType.Fog: 
+        this.expDate = new Date(p.createdAt);
+        this.expDate.setMonth(this.expDate.getDate() + 1);
+        return this.expDate;
+      case RoadHazardType.Aquaplaning:
+        this.expDate = new Date(p.createdAt);
+        this.expDate.setMonth(this.expDate.getDate() + 1);
+        return this.expDate;  
+      case RoadHazardType.IcyRoads:  
+        this.expDate = new Date(p.createdAt);
+        this.expDate.setMonth(this.expDate.getDate() + 2);
+        return this.expDate;
+      case RoadHazardType.TrafficJams: 
+        this.expDate = new Date(p.createdAt);
+        this.expDate.setMonth(this.expDate.getDate() + 1);
+        return this.expDate;
+      case RoadHazardType.RoadEmergencies:  
+        this.expDate = new Date(p.createdAt);
+        this.expDate.setMonth(this.expDate.getDate() + 1);
+        return this.expDate;
+      case RoadHazardType.RoadConditions:  
+      this.expDate = new Date(p.createdAt);
+      this.expDate.setMonth(this.expDate.getDate() + 1);
+      return this.expDate;
+      case RoadHazardType.Police:
+        this.expDate = new Date(p.createdAt);
+        this.expDate.setMonth(this.expDate.getDate() + 1);
+        return this.expDate;  
+      case RoadHazardType.CamerasAndRadars: 
+        this.expDate = new Date(p.createdAt);
+        this.expDate.setMonth(this.expDate.getMonth() + 6);
+        return this.expDate;
+      
+      case RoadHazardType.Incidents:  
+      this.expDate = new Date(p.createdAt);
+      this.expDate.setMonth(this.expDate.getDate() + 1);
+      return this.expDate;
+
+    }
+  }
 }
+

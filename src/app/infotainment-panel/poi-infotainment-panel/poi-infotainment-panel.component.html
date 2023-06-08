@@ -6,8 +6,8 @@
       <ul >
         <p>Id: {{ poi.id }}</p>
         <p>Date of creation: {{ poi.createdAt | date:'dd/MM/yyyy' }}</p>
-        <p>Expiration date: ... </p>
-        <p>Status: {{ poi.status }}</p>
+        <p>Expiration date: {{expDate | date:'dd/MM/yyyy'}} </p>
+        <p>Status: {{ stat }}</p>
         <p>Type: {{ poi.type }}</p>
         <p>Hex id (max resolution): <a (click)="openHexInfotainment(hexIdMaxRes)">{{hexIdMaxRes}} </a>  </p>
         <p>User id: <a (click)="openUserInfotainment(poi.userId)">{{ poi.userId }}</a></p>
