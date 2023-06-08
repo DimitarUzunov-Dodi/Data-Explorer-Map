@@ -2,7 +2,7 @@ import {  Component, OnInit, ViewChild, AfterViewInit, Input, ElementRef } from 
 import * as h3 from 'h3-js';
 import {PoiService} from "src/app/Services/poi.service";
 import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
-import { ResolutionLevel } from '../Services/models/mapModels';
+//import { ResolutionLevel } from '../Services/models/mapModels';
 import { SearchFunction } from '../Services/models/searchModels'
 import { GoogleMapsModule } from '@angular/google-maps';
 import { HomepageComponent } from '../homepage/homepage.component';
@@ -278,7 +278,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     ],
     disableDefaultUI: true,
     maxZoom: 20,
-    minZoom: 4,
+    minZoom: 1,
     restriction: {
       latLngBounds: {
         north: 85,
@@ -289,22 +289,30 @@ export class MapComponent implements OnInit, AfterViewInit {
       strictBounds: true
     }
   };
-  
 
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
-  @Input() poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = 
-    new Map<number, Map<string, PointOfInterest[]>>();
+  @Input() poiPerHex: Map<string, PointOfInterest[]> = new Map<string, PointOfInterest[]>;
+
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
   searchHexIds: Set<string> = new Set<string>();
   flag =false;
-
+  hexagonIds: Set<string> = new Set<string>;
   constructor(private poiService: PoiService, private homepage: HomepageComponent) {}
 
   ngOnInit(): void {
     // Loads json files from file
     fetch('./assets/mock_data_explorer.json').then(async res => {
       this.poiService.processJson(await res.json())
-      this.poiPerHexPerResolution = this.poiService.getPoiMap();
+      this.poiPerHex = this.poiService.getPoiMap();
+      const getHex = this.poiPerHex?.keys();
+      if (getHex != undefined){
+        for (const h of getHex) {
+          this.hexagonIds.add(h);
+        }
+      }
+      else {
+        this.hexagonIds = new Set();
+      }
     });
 
   }
@@ -326,7 +334,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.initializeMap();
     }
   }
-   
+
   initializeMap(): void {
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
       center: this.center,
@@ -335,7 +343,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
     // Initialize the map and create hexagons for the initial bounds
     google.maps.event.addListener(this.map, 'bounds_changed', () => this.visualizeMap());
-    
+
   }
 
   visualizeMap(): void {
@@ -350,53 +358,37 @@ export class MapComponent implements OnInit, AfterViewInit {
         const minLng = sw.lng();
         const maxLng = ne.lng();
 
-        const coords = [
-          [minLat, minLng],
-          [maxLat, minLng],
-          [maxLat, maxLng],
-          [minLat, maxLng],
-        ];
-
-        let resolutionLevel: ResolutionLevel;
-        const zoom = this.map.getZoom() as number;
-        if (zoom <= 6) {
-          resolutionLevel = ResolutionLevel.CountryLevel;
-        } else if (zoom <= 9) {
-          resolutionLevel = ResolutionLevel.StateLevel;
-        } else if (zoom <= 12) {
-          resolutionLevel = ResolutionLevel.CityLevel;
-        } else if (zoom <= 14) {
-          resolutionLevel = ResolutionLevel.TownLevel;
-        } else if (zoom <= 16) {
-          resolutionLevel = ResolutionLevel.HighWayLevel;
-        } else if (zoom <= 18) {
-          resolutionLevel = ResolutionLevel.RoadLevel;
-        } else {
-          resolutionLevel = ResolutionLevel.RoadwayLevel;
-        }
+        const coords = [minLat, maxLat, minLng, maxLng];
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
         this.displayedHexagons = new Map<string, google.maps.Polygon>();
-        const newHexagonChildIds : string[] = h3.polygonToCells(coords, resolutionLevel + 1, false);
-        const newHexIds : Set<string> = new Set(newHexagonChildIds.map(x => h3.cellToParent(x, resolutionLevel)))
 
-        this.filterHexagons(newHexIds, resolutionLevel);
+        const hexInBounds = this.filterInBounds(this.hexagonIds, coords);
+        this.displayHexagons(hexInBounds, this.poiPerHex)
       }
     }
   }
 
-  filterHexagons(hexagons: Set<string>, targetResolution: number) {
-    if(this.poiPerHexPerResolution.has(targetResolution)) {
-      this.displayHexagons(hexagons, targetResolution, this.poiPerHexPerResolution.get(targetResolution) as Map<string, PointOfInterest[]>)
-    } 
+  filterInBounds(hexagons: Set<string>, bounds: number[]): Set<string> {
+    const res = new Set<string>;
+    for (const hex of hexagons){
+      const coords = h3.cellToLatLng(hex);
+      const hexLat = coords[0];
+      const hexLng = coords[1];
+      if (hexLat >= bounds[0] && hexLat <= bounds[1] && hexLng >= bounds[2] && hexLng <= bounds[3]){
+        res.add(hex);
+      }
+    }
+    return res;
   }
 
   // why is this here?????????
   polygonIds: string[] = [];
+
   clickedHexId = '';
 
-  displayHexagons(hexagons: Set<string>, targetResolution: number, poisPerHex: Map<string, PointOfInterest[]>): void {
+  displayHexagons(hexagons: Set<string>, poisPerHex: Map<string, PointOfInterest[]>): void {
     console.log(hexagons);
     for (const hex of hexagons) {
       const hexagonCoords = h3.cellToBoundary(hex, true);
@@ -409,52 +401,51 @@ export class MapComponent implements OnInit, AfterViewInit {
           fillColor: '#00FF00',
           fillOpacity: 0.35,
         });
-  
+
         hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-          
-          const polygonId = hex; 
+
+          const polygonId = hex;
           console.log('Clicked polygon ID:', polygonId);
           this.homepage.handleSearchTriggered(["hex",  polygonId ], true)
           this.flag=true;
-          
+
         });
-  
+
         hexagonPolygon.setMap(this.map);
         this.displayedHexagons.set(hex, hexagonPolygon);
-        this.polygonIds.push(hex); 
+        this.polygonIds.push(hex);
       } else {
         const pois: PointOfInterest[] | undefined = poisPerHex.get(hex);
         if (typeof pois !== 'undefined' && pois.length > 0) {
           if (pois.map((x) => x.type).filter((y) => this.searchedHazards.has(y)).length > 0) {
             const hexagonPolygon = new google.maps.Polygon({
               paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-              strokeColor: '#FF0000',
+              strokeColor: '#577D86',
               strokeOpacity: 0.8,
               strokeWeight: 2,
-              fillColor: '#FF0000',
+              fillColor: '#577D86',
               fillOpacity: 0.35,
             });
-  
-            
+
+
             hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-              
-              const polygonId = hex; 
+
+              const polygonId = hex;
               console.log('Clicked polygon ID:', polygonId);
-              console.log('Pois:', this.poiPerHexPerResolution.get(h3.getResolution(polygonId))?.get(polygonId));
+              console.log('Pois:', this.poiPerHex.get(polygonId));
               this.homepage.handleSearchTriggered(["hex",  polygonId], true)
               this.flag=true;
 
             });
-  
+
             hexagonPolygon.setMap(this.map);
             this.displayedHexagons.set(hex, hexagonPolygon);
-            this.polygonIds.push(hex); 
+            this.polygonIds.push(hex);
           }
         }
       }
     }
   }
-  
 
   updateHazards(neededHazards: Set<RoadHazardType>) {
     this.searchedHazards = neededHazards;
@@ -486,27 +477,10 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
       this.searchHexIds.clear();
       this.searchHexIds.add(searchedHex);
-      let zoom = 11;
-
-      if (resolution <= ResolutionLevel.CountryLevel) {
-        zoom = 6;
-      } else if (resolution <= ResolutionLevel.StateLevel) {
-        zoom = 9;
-      } else if (resolution <= ResolutionLevel.CityLevel) {
-        zoom = 12;
-      } else if (resolution <= ResolutionLevel.TownLevel) {
-        zoom = 14;
-      } else if (resolution <= ResolutionLevel.HighWayLevel) {
-        zoom = 16;
-      } else if (resolution <= ResolutionLevel.RoadLevel) {
-        zoom = 18;
-      } else {
-        zoom = 20;  
-      }
 
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
-      this.map.setZoom(zoom-1);
+      this.map.setZoom(10);
 
     } catch(error) {
       alert("Hexagon not found");    
@@ -518,34 +492,18 @@ export class MapComponent implements OnInit, AfterViewInit {
       let searchedHex = this.poiService.getPoiArr()
                                        .filter(x => x.id === poiId.replace(/\s/g, ""))
                                        .map(x => x.hexId)[0];
+      
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
       const resolution = h3.getResolution(searchedHex);
       if(resolution == -1 ){ 
-        throw new Error("Hexagon not found");
+        throw new Error("POI not found");
       }
       this.searchHexIds.clear();
       this.searchHexIds.add(searchedHex);
-      let zoom = 11;
-
-      if (resolution <= ResolutionLevel.CountryLevel) {
-        zoom = 6;
-      } else if (resolution <= ResolutionLevel.StateLevel) {
-        zoom = 9;
-      } else if (resolution <= ResolutionLevel.CityLevel) {
-        zoom = 12;
-      } else if (resolution <= ResolutionLevel.TownLevel) {
-        zoom = 14;
-      } else if (resolution <= ResolutionLevel.HighWayLevel) {
-        zoom = 16;
-      } else if (resolution <= ResolutionLevel.RoadLevel) {
-        zoom = 18;
-      } else {
-        zoom = 20;  
-      }
 
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
-      this.map.setZoom(zoom-1);
+      this.map.setZoom(10);
                                  
     } catch(error) {
         alert("Point of Interest not found");
@@ -566,9 +524,9 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   clearSearch(){
-    this.searchHexIds.clear;
+    this.searchHexIds.clear();
     this.visualizeMap();
   }
-  
+
 }
 
