@@ -405,6 +405,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           strokeWeight: 2,
           fillColor: '#1E313A',
           fillOpacity: 0.35,
+          zIndex: 2
         });
 
         hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
@@ -430,6 +431,7 @@ export class MapComponent implements OnInit, AfterViewInit {
               strokeWeight: 2,
               fillColor: '#577D86',
               fillOpacity: 0.35,
+              zIndex: 1
             });
 
 
