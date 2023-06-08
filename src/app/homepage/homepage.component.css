@@ -5,12 +5,16 @@
 }
 
 .map {
-  height: calc(100% - 140px); /* Set a fixed height for the map component, subtracting the heights of inf and top-bar */
+  height: 100%; /* Set a fixed height for the map component, subtracting the heights of inf and top-bar */
   width: 100%;
+  z-index: 1;
 }
 
 .top-bar {
   height: 20px; /* Set a fixed height for the top-bar component */
   width: 100%;
+  z-index: 2;
+  position: fixed;
+  top: 0;
 }
 
