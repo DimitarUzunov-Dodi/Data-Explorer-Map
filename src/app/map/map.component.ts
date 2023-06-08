@@ -294,9 +294,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   @Input() poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> = 
     new Map<number, Map<string, PointOfInterest[]>>();
-
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
-  searchHexId = '';
+  searchHexIds: Set<string> = new Set<string>();
   flag =false;
 
   constructor(private poiService: PoiService, private homepage: HomepageComponent) {}
@@ -393,7 +392,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     } 
   }
 
-  // why is this here?
+  // why is this here?????????
   polygonIds: string[] = [];
   clickedHexId = '';
 
@@ -401,7 +400,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     console.log(hexagons);
     for (const hex of hexagons) {
       const hexagonCoords = h3.cellToBoundary(hex, true);
-      if (hex == this.searchHexId) {
+      if (this.searchHexIds.has(hex)) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
           strokeColor: '#FF0000',
@@ -467,13 +466,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
   }
 
-  search(searchTouple: [string,string]): void {
-    if(searchTouple[0] === SearchFunction.SearchByHex){
-      this.findHexagon(searchTouple[1]);
-    }else if(searchTouple[0] === SearchFunction.SearchByPoiId){
-      this.findPoi(searchTouple[1]);
-    }else if(searchTouple[0] === SearchFunction.SearchByUser){
-      this.findUser(searchTouple[1])
+  search(searchTuple: [string,string]): void {
+    if(searchTuple[0] === SearchFunction.SearchByHex){
+      this.findHexagon(searchTuple[1]);
+    }else if(searchTuple[0] === SearchFunction.SearchByPoiId){
+      this.findPoi(searchTuple[1]);
+    }else if(searchTuple[0] === SearchFunction.SearchByUser){
+      this.findUser(searchTuple[1])
     }
   }
 
@@ -481,24 +480,25 @@ export class MapComponent implements OnInit, AfterViewInit {
     try{
       let searchedHex = hexId.replace(/\s/g, "");
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
-      const resoulution = h3.getResolution(searchedHex);
-      if(resoulution == -1 ){ 
+      const resolution = h3.getResolution(searchedHex);
+      if(resolution == -1 ){ 
         throw new Error("Hexagon not found");
       }
-      this.searchHexId = searchedHex;
+      this.searchHexIds.clear();
+      this.searchHexIds.add(searchedHex);
       let zoom = 11;
 
-      if (resoulution <= ResolutionLevel.CountryLevel) {
+      if (resolution <= ResolutionLevel.CountryLevel) {
         zoom = 6;
-      } else if (resoulution <= ResolutionLevel.StateLevel) {
+      } else if (resolution <= ResolutionLevel.StateLevel) {
         zoom = 9;
-      } else if (resoulution <= ResolutionLevel.CityLevel) {
+      } else if (resolution <= ResolutionLevel.CityLevel) {
         zoom = 12;
-      } else if (resoulution <= ResolutionLevel.TownLevel) {
+      } else if (resolution <= ResolutionLevel.TownLevel) {
         zoom = 14;
-      } else if (resoulution <= ResolutionLevel.HighWayLevel) {
+      } else if (resolution <= ResolutionLevel.HighWayLevel) {
         zoom = 16;
-      } else if (resoulution <= ResolutionLevel.RoadLevel) {
+      } else if (resolution <= ResolutionLevel.RoadLevel) {
         zoom = 18;
       } else {
         zoom = 20;  
@@ -510,11 +510,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     } catch(error) {
       alert("Hexagon not found");    
-    }
-    
-    
-    
-    
+    } 
   }
 
   findPoi(poiId: string): void {
@@ -523,24 +519,25 @@ export class MapComponent implements OnInit, AfterViewInit {
                                        .filter(x => x.id === poiId.replace(/\s/g, ""))
                                        .map(x => x.hexId)[0];
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
-      const resoulution = h3.getResolution(searchedHex);
-      if(resoulution == -1 ){ 
+      const resolution = h3.getResolution(searchedHex);
+      if(resolution == -1 ){ 
         throw new Error("Hexagon not found");
       }
-      this.searchHexId = searchedHex;
+      this.searchHexIds.clear();
+      this.searchHexIds.add(searchedHex);
       let zoom = 11;
 
-      if (resoulution <= ResolutionLevel.CountryLevel) {
+      if (resolution <= ResolutionLevel.CountryLevel) {
         zoom = 6;
-      } else if (resoulution <= ResolutionLevel.StateLevel) {
+      } else if (resolution <= ResolutionLevel.StateLevel) {
         zoom = 9;
-      } else if (resoulution <= ResolutionLevel.CityLevel) {
+      } else if (resolution <= ResolutionLevel.CityLevel) {
         zoom = 12;
-      } else if (resoulution <= ResolutionLevel.TownLevel) {
+      } else if (resolution <= ResolutionLevel.TownLevel) {
         zoom = 14;
-      } else if (resoulution <= ResolutionLevel.HighWayLevel) {
+      } else if (resolution <= ResolutionLevel.HighWayLevel) {
         zoom = 16;
-      } else if (resoulution <= ResolutionLevel.RoadLevel) {
+      } else if (resolution <= ResolutionLevel.RoadLevel) {
         zoom = 18;
       } else {
         zoom = 20;  
@@ -558,6 +555,13 @@ export class MapComponent implements OnInit, AfterViewInit {
   
 
   findUser(userId: string): void {
+    try{
+      
+
+
+    } catch(error) {
+      alert("User ID not found");
+    }
 
   }
 
