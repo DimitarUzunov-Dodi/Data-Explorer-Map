@@ -5,7 +5,7 @@
     <div class="field" *ngIf="poi">
       <ul >
         <p>Id: {{ poi.id }}</p>
-        <p>Date of creation: {{ poi.createdAt }}</p>
+        <p>Date of creation: {{ poi.createdAt | date:'dd/MM/yyyy' }}</p>
         <p>Expiration date: ... </p>
         <p>Status: {{ poi.status }}</p>
         <p>Type: {{ poi.type }}</p>
