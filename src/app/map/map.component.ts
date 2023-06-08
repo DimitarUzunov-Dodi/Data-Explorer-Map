@@ -2,7 +2,7 @@ import {  Component, OnInit, ViewChild, AfterViewInit, Input, ElementRef } from 
 import * as h3 from 'h3-js';
 import {PoiService} from "src/app/Services/poi.service";
 import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
-//import { ResolutionLevel } from '../Services/models/mapModels';
+import { resolutionLevel } from '../Services/models/mapModels';
 import { SearchFunction } from '../Services/models/searchModels'
 import { GoogleMapsModule } from '@angular/google-maps';
 import { HomepageComponent } from '../homepage/homepage.component';
@@ -294,7 +294,9 @@ export class MapComponent implements OnInit, AfterViewInit {
   @Input() poiPerHex: Map<string, PointOfInterest[]> = new Map<string, PointOfInterest[]>;
 
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
+
   searchHexIds: Set<string> = new Set<string>();
+  searchUserHexIds:Set<string> = new Set<string>();
   flag =false;
   hexagonIds: Set<string> = new Set<string>;
   constructor(private poiService: PoiService, private homepage: HomepageComponent) {}
@@ -392,7 +394,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     console.log(hexagons);
     for (const hex of hexagons) {
       const hexagonCoords = h3.cellToBoundary(hex, true);
-      if (this.searchHexIds.has(hex)) {
+      if (this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
           strokeColor: '#FF0000',
@@ -458,6 +460,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   search(searchTuple: [string,string]): void {
+    this.clearSearch();
     if(searchTuple[0] === SearchFunction.SearchByHex){
       this.findHexagon(searchTuple[1]);
     }else if(searchTuple[0] === SearchFunction.SearchByPoiId){
@@ -503,7 +506,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
-      this.map.setZoom(10);
+      this.map.setZoom(8);
                                  
     } catch(error) {
         alert("Point of Interest not found");
@@ -514,8 +517,47 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   findUser(userId: string): void {
     try{
-      
+      let maxLan = -Infinity;
+      let minLan = Infinity;
+      let maxLng = -Infinity;
+      let minLng = Infinity;
+      let searchedHexes = this.poiService.getPoiArr()
+                                         .filter(x => x.userId === userId)
+                                         .map(x => x.hexId);
+      for(const hex of searchedHexes){
+        
+        console.log(hex)
+        this.searchUserHexIds.add(hex);
+        const hexagonCoords = h3.cellToBoundary(hex, true);
 
+        //this.map.panTo(new google.maps.LatLng(hexagonCoords[0][0],hexagonCoords[0][1]));
+        maxLan = Math.max(maxLan, hexagonCoords[0][0]);
+        minLan = Math.min(minLan, hexagonCoords[0][0]);
+        maxLng = Math.max(maxLng, hexagonCoords[0][1]);
+        minLng = Math.min(minLng, hexagonCoords[0][1]); 
+      
+      }  
+      
+      const center = {
+        Lan: (maxLan + minLan) / 2,
+        Lng: (maxLng + minLng) / 2
+      };
+      
+      const newLocation = new google.maps.LatLng(center.Lng,center.Lan);
+      this.map.panTo(newLocation);
+
+      let zoom = 20;
+      this.map.setZoom(zoom);
+
+      while(!this.checkIfAllHexagonsDisplayed( this.searchUserHexIds)){
+        this.visualizeMap();
+        zoom--;
+        console.log(zoom);
+        this.map.setZoom(zoom);
+        if (zoom === 0) {
+          break;
+        }
+      }
 
     } catch(error) {
       alert("User ID not found");
@@ -523,8 +565,42 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   }
 
+  checkIfAllHexagonsDisplayed( searchUserHexIds: Set<string>): boolean {
+    console.log(this.displayedHexagons)
+    for (const hexId of searchUserHexIds) {
+      if (!this.displayedHexagons.has(hexId)) {
+        console.log(hexId)
+        return false;
+      }
+    }
+    // for ( const hexId of searchUserHexIds)  {
+    //   const hexResolution = h3.getResolution(hexId);
+    //   if (resolutionLevel < hexResolution) {
+    //     const parentHexId = h3.cellToParent(hexId, resolutionLevel);
+    //     map.get(parentHexId)?.push(poi) ?? map.set(parentHexId, [poi]);
+    //   }
+    // }
+    
+    // if (resolutionLevel < poiResolution) {
+    //   const parentHexId = h3.cellToParent(poi.hexId, resolutionLevel);
+    //   map.get(parentHexId)?.push(poi) ?? map.set(parentHexId, [poi]);
+    // } else if(resolutionLevel > poiResolution) {
+    //   const childrenHexIds = h3.cellToChildren(poi.hexId, resolutionLevel);
+    //   childrenHexIds.forEach(h => map.get(h)?.push(poi) ?? map.set(h, [poi]));
+    // } else {
+    //   map.get(poi.hexId)?.push(poi) ?? map.set(poi.hexId, [poi]);
+    // }
+
+
+
+
+    
+    return true;
+  }
+
   clearSearch(){
     this.searchHexIds.clear();
+    this.searchUserHexIds.clear();
     this.visualizeMap();
   }
 
