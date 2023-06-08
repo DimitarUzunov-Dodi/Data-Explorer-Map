@@ -548,54 +548,56 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       let zoom = 20;
       this.map.setZoom(zoom);
-
+      this.searchUserHexIds = this.transformHexagonsToLevel(this.searchUserHexIds);
+      this.visualizeMap();
       while(!this.checkIfAllHexagonsDisplayed( this.searchUserHexIds)){
         this.visualizeMap();
         zoom--;
-        console.log(zoom);
         this.map.setZoom(zoom);
         if (zoom === 0) {
           break;
         }
       }
-
+      
+      this.map.setZoom(zoom + 1);
     } catch(error) {
       alert("User ID not found");
     }
 
   }
 
-  checkIfAllHexagonsDisplayed( searchUserHexIds: Set<string>): boolean {
-    console.log(this.displayedHexagons)
+  checkIfAllHexagonsDisplayed(searchUserHexIds: Set<string>): boolean {
     for (const hexId of searchUserHexIds) {
       if (!this.displayedHexagons.has(hexId)) {
         console.log(hexId)
         return false;
       }
     }
-    // for ( const hexId of searchUserHexIds)  {
-    //   const hexResolution = h3.getResolution(hexId);
-    //   if (resolutionLevel < hexResolution) {
-    //     const parentHexId = h3.cellToParent(hexId, resolutionLevel);
-    //     map.get(parentHexId)?.push(poi) ?? map.set(parentHexId, [poi]);
-    //   }
-    // }
-    
-    // if (resolutionLevel < poiResolution) {
-    //   const parentHexId = h3.cellToParent(poi.hexId, resolutionLevel);
-    //   map.get(parentHexId)?.push(poi) ?? map.set(parentHexId, [poi]);
-    // } else if(resolutionLevel > poiResolution) {
-    //   const childrenHexIds = h3.cellToChildren(poi.hexId, resolutionLevel);
-    //   childrenHexIds.forEach(h => map.get(h)?.push(poi) ?? map.set(h, [poi]));
-    // } else {
-    //   map.get(poi.hexId)?.push(poi) ?? map.set(poi.hexId, [poi]);
-    // }
-
-
-
-
-    
     return true;
+  }
+
+
+
+  transformHexagonsToLevel(searchUserHexIds: Set<string>): Set<string>{
+
+    let returnHexes: Set<string> = new Set<string>();
+    for ( const hexId of searchUserHexIds)  {
+      const hexResolution = h3.getResolution(hexId);
+      if(resolutionLevel < hexResolution){
+        const parentHexId = h3.cellToParent(hexId, resolutionLevel);
+        returnHexes.add(parentHexId);
+
+      } else if(resolutionLevel > hexResolution) {
+        const childrenHexIds = h3.cellToChildren(hexId, resolutionLevel);
+        
+        for(const child of childrenHexIds){
+          searchUserHexIds.add(child);
+        }
+      } else{
+        returnHexes.add(hexId)
+      } 
+    }
+    return returnHexes;
   }
 
   clearSearch(){
