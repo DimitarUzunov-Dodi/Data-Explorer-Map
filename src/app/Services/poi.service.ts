@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {PointOfInterest} from "./models/poi";
 import {ChartModel} from "./models/chartModel";
-import { ResolutionLevel } from './models/mapModels';
+import { resolutionLevel } from './models/mapModels';
 import * as h3 from 'h3-js';
 
 
@@ -14,8 +14,8 @@ import * as h3 from 'h3-js';
 export class PoiService {
 
   poiArr: PointOfInterest[] = [];
-  poiPerHexPerResolution: Map<number, Map<string, PointOfInterest[]>> =
-    new Map<number, Map<string, PointOfInterest[]>>();
+  poiPerHex: Map<string, PointOfInterest[]> =
+    new Map<string, PointOfInterest[]>();
 
   processJson(rawData: PointOfInterest[]): void {
     console.log("type is" + (typeof rawData));
@@ -35,39 +35,39 @@ export class PoiService {
   }
 
   setupPois() {
-    const beginMapSetup : Map<number, Map<string, PointOfInterest[]>> = new Map<number, Map<string, PointOfInterest[]>>;
+    console.log("begin setup");
+    const beginMapSetup : Map<string, PointOfInterest[]> = new Map<string, PointOfInterest[]>;
 
-    for (const x of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
-      beginMapSetup.set(Number(x), new Map<string, PointOfInterest[]>);
-    }
-
-    this.poiPerHexPerResolution = this.poiArr.reduce((map, poi) => {
-        for(const res of Object.values(ResolutionLevel).filter((v) => !isNaN(Number(v)))) {
-          try {
-            const coords = h3.cellToLatLng(poi.hexId);
-            const poiForRes = h3.latLngToCell(coords[0], coords[1], Number(res));
-            const currResMap: Map<string, PointOfInterest[]> = map.get(Number(res)) as Map<string, PointOfInterest[]>;
-
-            currResMap.get(poiForRes)?.push(poi) ?? currResMap.set(poiForRes, [poi])
-          } catch (error) {
-            console.log("this ahi:" + res + " " + poi)
-          }
-
+    this.poiPerHex = this.poiArr.reduce((map, poi) => {
+      try {
+      const poiResolution = h3.getResolution(poi.hexId);
+        if (resolutionLevel < poiResolution) {
+          const parentHexId = h3.cellToParent(poi.hexId, resolutionLevel);
+          map.get(parentHexId)?.push(poi) ?? map.set(parentHexId, [poi]);
+        } else if(resolutionLevel > poiResolution) {
+          const childrenHexIds = h3.cellToChildren(poi.hexId, resolutionLevel);
+          childrenHexIds.forEach(h => map.get(h)?.push(poi) ?? map.set(h, [poi]));
+        } else {
+          map.get(poi.hexId)?.push(poi) ?? map.set(poi.hexId, [poi]);
         }
-
+      } catch (error) {
+        console.log("this ahi:" + resolutionLevel + " " + poi)
+      }
       return map;
     }, beginMapSetup);
+    console.log("setup compete: ");
+    console.log(this.poiPerHex)
   }
 
   getPoiMap() {
-    return this.poiPerHexPerResolution;
+    return this.poiPerHex;
   }
 
   getPoiArr() : PointOfInterest[] {
     return this.poiArr;
   }
   getPoIsByHexId(hexId: string): PointOfInterest[] {
-    const fex = this.poiPerHexPerResolution.get(h3.getResolution(hexId))?.get(hexId) ?? [];
+    const fex = this.poiPerHex.get(hexId) ?? [];
     console.log(fex);
     return fex;
   }
@@ -141,14 +141,15 @@ export class PoiService {
   getHexagonsByPoiId(poiId: string): { hexId: string, resolution: number }[] {
     const hexagons: { hexId: string, resolution: number }[] = [];
   
-    for (const [resolution, map] of this.poiPerHexPerResolution.entries()) {
-      for (const [hexId, pois] of map.entries()) {
+   
+      for (const [hexId, pois] of this.poiPerHex.entries()) {
         const matchingPois = pois.filter(poi => poi.id === poiId);
   
         if (matchingPois.length > 0) {
-          hexagons.push({ hexId, resolution });
+          const resolution =  h3.getResolution(hexId);
+          hexagons.push({ hexId, resolution});
         }
-      }
+      
     }
   
     return hexagons;

@@ -15,7 +15,6 @@ export class PoiInfotainmentPanelComponent {
   constructor(private poiService: PoiService, private homepage: HomepageComponent) {}
   poi: PointOfInterest | null = null;
   ngOnInit(){
-   // this.fetchPois();
     this.poi = this.poiService.getPoiArr().find((poi) => poi.id === this.selectedPoiId) ?? null;
     this.getHexagons();
   }
@@ -24,6 +23,7 @@ export class PoiInfotainmentPanelComponent {
 
   getHexagons():void{
    const v = this.poiService.getHexagonsByPoiId(this.selectedPoiId).sort((a, b) => b.resolution - a.resolution);
+
    if(v[0]){
     this.hexIdMaxRes = v[0].hexId;
    }
