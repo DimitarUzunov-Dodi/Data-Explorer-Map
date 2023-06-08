@@ -1,7 +1,15 @@
 .inf {
-  height: 70px; /* Set a fixed height for the inf component */
+  /* height: 70px;
   width: 100%;
   margin-top: 50px;
+  z-index: 2;
+  position: fixed; */
+
+  height: 20px; /* Set a fixed height for the top-bar component */
+  width: 100%;
+  z-index: 2;
+  position: fixed;
+  top: 0;
 }
 
 .map {
