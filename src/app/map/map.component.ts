@@ -575,8 +575,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     return returnHexes;
   }
 
-  triggerInfoPanel(InfoTuple: [string,string]) { 
-    this.showInfotainmentPanel.emit(InfoTuple);
+  triggerInfoPanel(infoTuple: [string,string]) { 
+    this.showInfotainmentPanel.emit(infoTuple);
   }
 
   clearSearch(){
