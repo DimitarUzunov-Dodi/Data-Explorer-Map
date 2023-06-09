@@ -9,7 +9,11 @@ describe('UserInfotainmentPanelComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserInfotainmentPanelComponent,HomepageComponent ]
+      declarations: [ UserInfotainmentPanelComponent,HomepageComponent ],
+      imports: [
+        HomepageComponent,
+        UserInfotainmentPanelComponent
+      ],
     })
     .compileComponents();
 
