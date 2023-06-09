@@ -391,10 +391,11 @@ export class MapComponent implements OnInit, AfterViewInit {
   clickedHexId = '';
 
   displayHexagons(hexagons: Set<string>, poisPerHex: Map<string, PointOfInterest[]>): void {
-    console.log(hexagons);
+    console.log(this.zoom,hexagons)
     for (const hex of hexagons) {
+      const poisInHex = this.poiService.getPoIsByHexId(hex).filter(x => this.searchedHazards.has(x.type))
       const hexagonCoords = h3.cellToBoundary(hex, true);
-      if (this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) {
+      if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && poisInHex.length>0 ) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
           strokeColor: '#FF0000',
@@ -408,7 +409,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
           const polygonId = hex;
           console.log('Clicked polygon ID:', polygonId);
-          this.homepage.handleSearchTriggered(["hex",  polygonId ], true)
+          this.homepage.handleSearchTriggered([SearchFunction.SearchByHex,  polygonId], true)
           this.flag=true;
 
         });
@@ -472,7 +473,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   findHexagon(hexId: string): void {
     try{
-      let searchedHex = hexId.replace(/\s/g, "");
+      const searchedHex = hexId.replace(/\s/g, "");
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
       const resolution = h3.getResolution(searchedHex);
       if(resolution == -1 ){ 
@@ -492,7 +493,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   findPoi(poiId: string): void {
     try{
-      let searchedHex = this.poiService.getPoiArr()
+      const searchedHex = this.poiService.getPoiArr()
                                        .filter(x => x.id === poiId.replace(/\s/g, ""))
                                        .map(x => x.hexId)[0];
       
@@ -521,12 +522,11 @@ export class MapComponent implements OnInit, AfterViewInit {
       let minLan = Infinity;
       let maxLng = -Infinity;
       let minLng = Infinity;
-      let searchedHexes = this.poiService.getPoiArr()
+      const searchedHexes = this.poiService.getPoiArr()
                                          .filter(x => x.userId === userId)
+                                         .filter(x => this.searchedHazards.has(x.type))
                                          .map(x => x.hexId);
       for(const hex of searchedHexes){
-        
-        console.log(hex)
         this.searchUserHexIds.add(hex);
         const hexagonCoords = h3.cellToBoundary(hex, true);
 
@@ -546,20 +546,20 @@ export class MapComponent implements OnInit, AfterViewInit {
       const newLocation = new google.maps.LatLng(center.Lng,center.Lan);
       this.map.panTo(newLocation);
 
-      let zoom = 20;
-      this.map.setZoom(zoom);
+      this.zoom = 20;
+      this.map.setZoom(this.zoom);
       this.searchUserHexIds = this.transformHexagonsToLevel(this.searchUserHexIds);
       this.visualizeMap();
       while(!this.checkIfAllHexagonsDisplayed( this.searchUserHexIds)){
         this.visualizeMap();
-        zoom--;
-        this.map.setZoom(zoom);
-        if (zoom === 0) {
+        this.zoom--;
+        this.map.setZoom(this.zoom);
+        if (this.zoom === 0) {
           break;
         }
       }
       
-      this.map.setZoom(zoom + 1);
+      this.map.setZoom(++this.zoom);
     } catch(error) {
       alert("User ID not found");
     }
@@ -569,7 +569,6 @@ export class MapComponent implements OnInit, AfterViewInit {
   checkIfAllHexagonsDisplayed(searchUserHexIds: Set<string>): boolean {
     for (const hexId of searchUserHexIds) {
       if (!this.displayedHexagons.has(hexId)) {
-        console.log(hexId)
         return false;
       }
     }
@@ -580,7 +579,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   transformHexagonsToLevel(searchUserHexIds: Set<string>): Set<string>{
 
-    let returnHexes: Set<string> = new Set<string>();
+    const returnHexes: Set<string> = new Set<string>();
     for ( const hexId of searchUserHexIds)  {
       const hexResolution = h3.getResolution(hexId);
       if(resolutionLevel < hexResolution){

@@ -13,7 +13,7 @@ export class TopBarComponent {
   searchBar = 'Search by Hex';
   isDropdownOpen = false;
   isSelectSearchOpen = true;
-  selectedOption: string = '';
+  selectedOption = '';
   @Output() searchTriggered: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
   @Output() clearSearchTriggered: EventEmitter<void> = new EventEmitter<void>();
   triggerSearch() { 
