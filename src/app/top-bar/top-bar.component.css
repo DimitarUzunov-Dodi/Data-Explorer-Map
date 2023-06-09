@@ -3,7 +3,7 @@
   top: 2%;
   left: 25%;
   right: 25%;
-  
+
   background-color: rgba(94, 103, 105, 0.5); /* Semi-transparent white background */
   display: flex;
   justify-content: space-between;
@@ -43,4 +43,9 @@
 #png{
   width: 14px;
   height: 14px;
+}
+
+#logo{
+  width: 500px;
+  height: 50px;
 }
