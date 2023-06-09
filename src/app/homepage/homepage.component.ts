@@ -16,7 +16,6 @@ export class HomepageComponent {
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
-  @ViewChild(HexagonInfotainmentPanelComponent) hexInfotainmentPanel!: HexagonInfotainmentPanelComponent;
 
   title = 'Angular';
   async handleSearchTriggered(searchTouple: [string,string], needsSearching: boolean){
@@ -24,7 +23,7 @@ export class HomepageComponent {
       this.mapComponent.findHexagon(searchTouple)
     }
     const id = searchTouple[1].replace(/\s/g, "");
-    this.infotainmentPanelComponent.searchedHex = id
+    this.infotainmentPanelComponent.searchedId = id
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
     this.infotainmentPanelComponent.chooseInfPanel = searchTouple[0];
 

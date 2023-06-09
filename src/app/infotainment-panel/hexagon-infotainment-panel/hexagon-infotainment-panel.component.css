@@ -52,4 +52,14 @@
     font-size: 20px;
   }
   
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
   
+  .back-button,
+  .forward-button {
+    width: 100px; /* Adjust the width as per your requirement */
+    height: 30px;
+  }
