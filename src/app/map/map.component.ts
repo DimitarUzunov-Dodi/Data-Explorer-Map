@@ -1,4 +1,4 @@
-import {  Component, OnInit, ViewChild, AfterViewInit, Input, ElementRef } from '@angular/core';
+import {  Component, OnInit, ViewChild, AfterViewInit, Input, ElementRef, EventEmitter, Output } from '@angular/core';
 import * as h3 from 'h3-js';
 import {PoiService} from "src/app/Services/poi.service";
 import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
@@ -292,6 +292,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   @Input() poiPerHex: Map<string, PointOfInterest[]> = new Map<string, PointOfInterest[]>;
+  @Output() showInfotainmentPanel: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
 
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
 
@@ -454,12 +455,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.searchedHazards = neededHazards;
   }
 
-  moveMap(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null){
-     this.center = (event.latLng.toJSON());
-    }
-  }
-
   search(searchTuple: [string,string]): void {
     this.clearSearch()
     switch (searchTuple[0]) {
@@ -473,6 +468,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.findUser(searchTuple[1]);
         break;
     }
+    
   }
 
   findHexagon(hexId: string): void {
@@ -489,6 +485,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
       this.map.setZoom(10);
+      this.triggerInfoPanel([SearchFunction.SearchByHex, hexId]); 
 
     } catch(error) {
       alert("Hexagon not found");    
@@ -511,8 +508,8 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
-      this.map.setZoom(8);
-                                 
+      this.map.setZoom(8);       
+      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);                     
     } catch(error) {
         alert("Point of Interest not found");
     }      
@@ -529,12 +526,16 @@ export class MapComponent implements OnInit, AfterViewInit {
       const searchedHexes = this.poiService.getPoiArr()
                                          .filter(x => x.userId === userId)
                                          .map(x => x.hexId);
+
+      if(!(searchedHexes.length > 0)){ 
+        throw new Error("User not found");
+      }
       for(const hex of searchedHexes){
 
         this.searchUserHexIds.add(hex);
         const hexagonCoords = h3.cellToBoundary(hex, true);
 
-        maxLan = Math.max(maxLan, hexagonCoords[0][0]);
+        maxLan = Math.max(maxLan, hexagonCoords[0][0]); 
         minLan = Math.min(minLan, hexagonCoords[0][0]);
         maxLng = Math.max(maxLng, hexagonCoords[0][1]);
         minLng = Math.min(minLng, hexagonCoords[0][1]); 
@@ -545,6 +546,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));
       this.searchUserHexIds = this.transformHexagonsToLevel(this.searchUserHexIds);
       this.visualizeMap();
+      this.triggerInfoPanel([SearchFunction.SearchByUser, userId]); 
     } catch(error) {
       alert("User ID not found");
     }
@@ -571,6 +573,10 @@ export class MapComponent implements OnInit, AfterViewInit {
       } 
     }
     return returnHexes;
+  }
+
+  triggerInfoPanel(infoTuple: [string,string]) { 
+    this.showInfotainmentPanel.emit(infoTuple);
   }
 
   clearSearch(){
