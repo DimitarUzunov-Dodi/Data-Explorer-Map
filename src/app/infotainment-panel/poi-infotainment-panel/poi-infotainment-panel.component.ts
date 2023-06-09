@@ -1,5 +1,7 @@
 import { Component,Input, } from '@angular/core';
+import { PointOfInterest } from 'src/app/Services/models/poi';
 import { PoiService } from 'src/app/Services/poi.service';
+import { HomepageComponent } from 'src/app/homepage/homepage.component';
 
 @Component({
   selector: 'app-poi-infotainment-panel',
@@ -9,8 +11,46 @@ import { PoiService } from 'src/app/Services/poi.service';
 export class PoiInfotainmentPanelComponent {
   @Input()
   showInfotainmentPanel = false;
-  @Input() selectedHexId = '';
-  constructor(private poiService: PoiService) {}
+  @Input() selectedPoiId = '';
+  constructor(private poiService: PoiService, private homepage: HomepageComponent) {}
+  poi: PointOfInterest | null = null;
+  expDate = new Date();
+  stat = ''; 
+  ngOnInit(){
+    this.poi = this.poiService.getPoiArr().find((poi) => poi.id === this.selectedPoiId) ?? null;
+    if(this.poi){
+      this.expDate = this.poiService.getExpDate(this.poi)
+    }
+    this.getStatus();
+    this.getHexagons();
+  }
+
+  hexIdMaxRes = '';
+
+  getHexagons():void{
+   const v = this.poiService.getHexagonsByPoiId(this.selectedPoiId).sort((a, b) => b.resolution - a.resolution);
+   if(v[0]){
+    this.hexIdMaxRes = v[0].hexId;
+   }
+  
+  }
+
+  openHexInfotainment(hexId: string){
+    this.homepage.handleSearchTriggered(["hex", hexId], true)
+  }
+
+  openUserInfotainment(userId :string){
+    this.homepage.handleSearchTriggered(["user", userId], false)
+  }
+
+  getStatus():void {
+    const currTime = new Date();
+    if (this.expDate< currTime){
+      this.stat="Expired";
+    }else{
+      this.stat = "Active"
+    }
+  }
 
 
 }

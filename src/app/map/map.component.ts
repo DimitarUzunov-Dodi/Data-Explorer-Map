@@ -398,10 +398,10 @@ export class MapComponent implements OnInit, AfterViewInit {
           fillColor: '#00FF00',
           fillOpacity: 0.35,
         });
-
-        hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-
-          const polygonId = hex;
+  
+        hexagonPolygon.addListener('click', () => {
+          
+          const polygonId = hex; 
           console.log('Clicked polygon ID:', polygonId);
           this.homepage.handleSearchTriggered(["hex",  polygonId ], true)
           this.flag=true;
@@ -423,11 +423,11 @@ export class MapComponent implements OnInit, AfterViewInit {
               fillColor: '#577D86',
               fillOpacity: 0.35,
             });
-
-
-            hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-
-              const polygonId = hex;
+  
+            
+            hexagonPolygon.addListener('click', () => {
+              
+              const polygonId = hex; 
               console.log('Clicked polygon ID:', polygonId);
               console.log('Pois:', this.poiPerHex.get(polygonId));
               this.homepage.handleSearchTriggered(["hex",  polygonId], true)

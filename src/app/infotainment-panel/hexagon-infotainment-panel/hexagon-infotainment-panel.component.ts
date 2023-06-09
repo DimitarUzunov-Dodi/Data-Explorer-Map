@@ -132,7 +132,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     this.showPoiData = !this.showPoiData;
   }
   openPoiInfotainment(poiId: string) {
-    this.homepage.handleSearchTriggered(["poi", poiId], true)
+    this.homepage.handleSearchTriggered(["poi", poiId], false)
   } 
 
   openUserInfotainment(userId: string) {
