@@ -1,5 +1,6 @@
-<div class="infotainment-panel" [class.show]="showInfotainmentPanel">
-    <div class="Hexagon">
+<link href='https://fonts.googleapis.com/css?family=Inria Sans' rel='stylesheet'>
+<div style="font-family: Arial,serif" class="infotainment-panel" [class.show]="showInfotainmentPanel">
+    <div style="font-family: Arial,serif"class="Hexagon">
         <h3>Hexagon</h3>
       </div>
     <div class="field">
@@ -12,7 +13,7 @@
       <h3>Area: {{area}} km^2</h3>
     </div>
 
-    <div class="field">
+    <div style="text-align: center" class="field">
       <button id="toggle-panel-btn" (click)="openPoiData()">List of POI's</button>
       <div *ngIf="showPoiData">
         <div *ngIf="pois.length > 0">
@@ -29,7 +30,7 @@
             </tr>
           </table>
         </div>
-      
+
       <div class="field" *ngIf="pois.length === 0">
         <h3>No POIs available for this hexagon.</h3>
       </div>
@@ -58,6 +59,15 @@
       <p>{{ windspeed }}</p>
       <p>Rain: {{ rain }}</p>
     </div>
+
+  <select id="myDropdown">
+    <option value="all">All</option>
+    <option value="year">Last Year</option>
+    <option value="month">Last Month</option>
+    <option value="week">Last Week</option>
+  </select>
+  <button id="getSelectedBtn">Generate Chart</button>
+
 
   <app-pie-chart [hexId]="searchedHex"> </app-pie-chart>
 
