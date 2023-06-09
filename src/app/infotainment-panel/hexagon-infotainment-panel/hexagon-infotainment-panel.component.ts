@@ -132,11 +132,12 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     this.showPoiData = !this.showPoiData;
   }
   openPoiInfotainment(poiId: string) {
-    this.homepage.handleSearchTriggered(["poi", poiId], true)
+    this.homepage.handleSearchTriggered(["poi", poiId])
   } 
 
   openUserInfotainment(userId: string) {
-    this.homepage.handleSearchTriggered(["user", userId], false)
+    console.log("Call user: " + userId)
+    this.homepage.handleSearchTriggered(["user", userId])
   }
   
   convertToCelcius(temp: number): string {

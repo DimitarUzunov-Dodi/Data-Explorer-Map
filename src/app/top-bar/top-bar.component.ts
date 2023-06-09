@@ -11,8 +11,6 @@ import { SearchFunction } from '../Services/models/searchModels'
 export class TopBarComponent {
   searchText = '';
   searchBar = 'Search by Hex';
-  isDropdownOpen = false;
-  isSelectSearchOpen = true;
   selectedOption = '';
   type:SearchFunction = SearchFunction.SearchByHex;
   @Output() searchTriggered: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();

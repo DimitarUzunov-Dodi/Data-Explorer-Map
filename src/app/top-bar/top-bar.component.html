@@ -1,6 +1,6 @@
 <div class="top-panel">
     <div class="search-container">
-      <input (keypress)="onSearchKeyPress($event)" class = "search-field" type="text" placeholder="Search..." />
+      <input (keypress)="onSearchKeyPress($event)" class = "search-field" type="text" [placeholder] ="searchBar" [(ngModel)] = "searchText"/>
       <button class="search-button" (click)="triggerSearch()">
         <img id="png" src="https://cdn-icons-png.flaticon.com/128/2989/2989907.png" alt="Search" />
       </button>
@@ -10,7 +10,6 @@
       <button class="search-button" (click)="triggerClearSearch()">
           <img id="png" src="https://cdn-icons-png.flaticon.com/128/10522/10522140.png" alt="Clear" />
       </button>
-
       <img id="logo" src="./assets/logoimg-removebg-preview.png" alt="logo" />
 
     </div>

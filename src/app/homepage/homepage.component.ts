@@ -17,13 +17,25 @@ export class HomepageComponent {
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
+  past: [string,string][] = [];
+  future: [string,string][] = [];
+  title = 'RoadSense';
 
-  title = 'Angular';
-  async handleSearchTriggered(searchTouple: [string,string], needsSearching: boolean){
-    if (needsSearching){
-      this.mapComponent.search(searchTouple)
+  async handleSearchTriggered(searchTuple: [string,string]){
+    this.mapComponent.clearSearch()
+    switch (searchTuple[0]) {
+      case SearchFunction.SearchByHex:
+        this.mapComponent.findHexagon(searchTuple[1]);
+        break;
+      case SearchFunction.SearchByPoiId:
+        this.mapComponent.findPoi(searchTuple[1]);
+        break;
+      case SearchFunction.SearchByUser:
+        this.mapComponent.findUser(searchTuple[1]);
+        break;
     }
-
+    console.log(this.past)
+    console.log(this.future)
   }
 
   async handleInfoPanelTriggered(searchTouple: [string,string]){
@@ -69,5 +81,17 @@ export class HomepageComponent {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  enqueue(element: [string, string], stack: [string, string][]): void {
+    stack.push(element);
+  }
+  pop(stack: [string, string][]): any {
+    if (!this.isEmpty(stack)) {
+      return stack.pop();
+    }
+  }
+  isEmpty(stack: [string, string][]): boolean {
+    return stack.length === 0;
   }
 }
