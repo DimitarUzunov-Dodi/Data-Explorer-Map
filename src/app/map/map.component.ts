@@ -461,13 +461,17 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   search(searchTuple: [string,string]): void {
-    this.clearSearch();
-    if(searchTuple[0] === SearchFunction.SearchByHex){
-      this.findHexagon(searchTuple[1]);
-    }else if(searchTuple[0] === SearchFunction.SearchByPoiId){
-      this.findPoi(searchTuple[1]);
-    }else if(searchTuple[0] === SearchFunction.SearchByUser){
-      this.findUser(searchTuple[1])
+    this.clearSearch()
+    switch (searchTuple[0]) {
+      case SearchFunction.SearchByHex:
+        this.findHexagon(searchTuple[1]);
+        break;
+      case SearchFunction.SearchByPoiId:
+        this.findPoi(searchTuple[1]);
+        break;
+      case SearchFunction.SearchByUser:
+        this.findUser(searchTuple[1]);
+        break;
     }
   }
 
@@ -522,59 +526,29 @@ export class MapComponent implements OnInit, AfterViewInit {
       let minLan = Infinity;
       let maxLng = -Infinity;
       let minLng = Infinity;
-      const searchedHexes = this.poiService.getPoiArr()
+      let searchedHexes = this.poiService.getPoiArr()
                                          .filter(x => x.userId === userId)
-                                         .filter(x => this.searchedHazards.has(x.type))
                                          .map(x => x.hexId);
       for(const hex of searchedHexes){
+
         this.searchUserHexIds.add(hex);
         const hexagonCoords = h3.cellToBoundary(hex, true);
 
-        //this.map.panTo(new google.maps.LatLng(hexagonCoords[0][0],hexagonCoords[0][1]));
         maxLan = Math.max(maxLan, hexagonCoords[0][0]);
         minLan = Math.min(minLan, hexagonCoords[0][0]);
         maxLng = Math.max(maxLng, hexagonCoords[0][1]);
         minLng = Math.min(minLng, hexagonCoords[0][1]); 
-      
-      }  
-      
-      const center = {
-        Lan: (maxLan + minLan) / 2,
-        Lng: (maxLng + minLng) / 2
-      };
-      
-      const newLocation = new google.maps.LatLng(center.Lng,center.Lan);
-      this.map.panTo(newLocation);
 
-      this.zoom = 20;
-      this.map.setZoom(this.zoom);
+      }
+      const bottomLeft = new google.maps.LatLng(minLng, minLan);
+      const topRight = new google.maps.LatLng(maxLng, maxLan);
+      this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));
       this.searchUserHexIds = this.transformHexagonsToLevel(this.searchUserHexIds);
       this.visualizeMap();
-      while(!this.checkIfAllHexagonsDisplayed( this.searchUserHexIds)){
-        this.visualizeMap();
-        this.zoom--;
-        this.map.setZoom(this.zoom);
-        if (this.zoom === 0) {
-          break;
-        }
-      }
-      
-      this.map.setZoom(++this.zoom);
     } catch(error) {
       alert("User ID not found");
     }
-
   }
-
-  checkIfAllHexagonsDisplayed(searchUserHexIds: Set<string>): boolean {
-    for (const hexId of searchUserHexIds) {
-      if (!this.displayedHexagons.has(hexId)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
 
 
   transformHexagonsToLevel(searchUserHexIds: Set<string>): Set<string>{
