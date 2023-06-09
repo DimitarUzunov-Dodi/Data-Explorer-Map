@@ -4,6 +4,7 @@
 
 
 .chart-container {
+  font-family: InriaSans, serif;
   width: 300px; /* Adjust width as needed */
   height: 300px; /* Adjust height as needed */
   position: relative;
