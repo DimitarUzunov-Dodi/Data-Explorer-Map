@@ -358,7 +358,6 @@ export class MapComponent implements OnInit, AfterViewInit {
   clickedHexId = '';
 
   displayHexagons(hexagons: Set<string>, poisPerHex: Map<string, PointOfInterest[]>): void {
-    console.log(this.zoom,hexagons)
     for (const hex of hexagons) {
       const poisInHex = this.poiService.getPoIsByHexId(hex).filter(x => this.searchedHazards.has(x.type))
       const hexagonCoords = h3.cellToBoundary(hex, true);
@@ -371,15 +370,6 @@ export class MapComponent implements OnInit, AfterViewInit {
           fillColor: '#A8CDBB',
           fillOpacity: 0.6,
           zIndex: 2,
-        });
-
-        hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-
-          const polygonId = hex;
-          console.log('Clicked polygon ID:', polygonId);
-          this.homepage.handleSearchTriggered([SearchFunction.SearchByHex,  polygonId])
-          this.flag=true;
-
         });
 
         hexagonPolygon.setMap(this.map);
@@ -401,13 +391,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
 
             hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-
-              const polygonId = hex;
-              console.log('Clicked polygon ID:', polygonId);
-              console.log('Pois:', this.poiPerHex.get(polygonId));
-              this.homepage.handleSearchTriggered(["hex",  polygonId])
+              this.homepage.enqueue(['hex', hex], this.homepage.past);
+              this.homepage.handleSearchTriggered(["hex",  hex])
               this.flag=true;
-
             });
 
             hexagonPolygon.setMap(this.map);
@@ -438,7 +424,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.panTo(newLocation);
       this.map.setZoom(10);
       this.triggerInfoPanel([SearchFunction.SearchByHex, hexId]); 
-      this.homepage.enqueue(['hex', hexId], this.homepage.past);
     } catch(error) {
       alert("Hexagon not found");    
     } 
@@ -461,8 +446,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
       this.map.setZoom(8);       
-      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);     
-      this.homepage.enqueue(['poi', poiId], this.homepage.past);;                
+      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);                    
     } catch(error) {
         alert("Point of Interest not found");
     }      
@@ -500,7 +484,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.searchUserHexIds = this.transformHexagonsToLevel(this.searchUserHexIds);
       this.visualizeMap();
       this.triggerInfoPanel([SearchFunction.SearchByUser, userId]); 
-      this.homepage.enqueue(['user', userId], this.homepage.past);
     } catch(error) {
       alert("User ID not found");
     }

@@ -17,6 +17,7 @@ export class HomepageComponent {
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
+  current: [string, string] | undefined = undefined;
   past: [string,string][] = [];
   future: [string,string][] = [];
   title = 'RoadSense';
@@ -34,8 +35,6 @@ export class HomepageComponent {
         this.mapComponent.findUser(searchTuple[1]);
         break;
     }
-    console.log(this.past)
-    console.log(this.future)
   }
 
   async handleInfoPanelTriggered(searchTouple: [string,string]){
@@ -84,12 +83,25 @@ export class HomepageComponent {
   }
 
   enqueue(element: [string, string], stack: [string, string][]): void {
-    stack.push(element);
+    if (this.isEmpty(stack) && this.current == undefined){
+      this.current = element;
+    }
+    else if (this.current != undefined){
+      stack.push(this.current);
+      this.current = element;
+    }
+    this.future = [];
   }
   pop(stack: [string, string][]): any {
-    if (!this.isEmpty(stack)) {
-      return stack.pop();
+    if (this.isEmpty(stack)) {
+      throw new Error("Stack is empty")
     }
+    else {
+      const res = this.current
+      this.current = stack.pop();
+      return res;
+    }
+
   }
   isEmpty(stack: [string, string][]): boolean {
     return stack.length === 0;

@@ -18,11 +18,10 @@ export class InfotainmentPanelComponent {
   }
   constructor(private homepage: HomepageComponent){}
   backButton():void {
-    if (!this.homepage.isEmpty(this.homepage.past)){
+    if (!this.homepage.isEmpty(this.homepage.past) && this.homepage.current != undefined){
       const cur = this.homepage.pop(this.homepage.past)
-      this.homepage.enqueue(cur, this.homepage.future)
-      this.homepage.handleSearchTriggered(cur)
-      this.homepage.pop(this.homepage.past)
+      this.homepage.future.push(cur)
+      this.homepage.handleSearchTriggered(this.homepage.current)
     }
     else {
       throw new Error("Greshen button brat")
@@ -30,11 +29,10 @@ export class InfotainmentPanelComponent {
   }
 
   forwardButton():void {
-    if (!this.homepage.isEmpty(this.homepage.future)){
+    if (!this.homepage.isEmpty(this.homepage.future) && this.homepage.current != undefined){
       const cur = this.homepage.pop(this.homepage.future)
-      this.homepage.enqueue(cur, this.homepage.past)
-      this.homepage.handleSearchTriggered(cur)
-      this.homepage.pop(this.homepage.future)
+      this.homepage.past.push(cur)
+      this.homepage.handleSearchTriggered(this.homepage.current)
     }
     else {
       throw new Error("Greshen button brat")
