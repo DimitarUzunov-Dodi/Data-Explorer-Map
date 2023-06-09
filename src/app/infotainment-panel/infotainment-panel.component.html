@@ -8,7 +8,7 @@
 <app-user-infotainment-panel *ngIf="chooseInfPanel === 'user'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedUser] ="searchedId">
 </app-user-infotainment-panel>
 
-<app-poi-infotainment-panel *ngIf="chooseInfPanel === 'poi'" [showInfotainmentPanel]="showInfotainmentPanel" >
+<app-poi-infotainment-panel *ngIf="chooseInfPanel === 'poi'" [showInfotainmentPanel]="showInfotainmentPanel" [selectedPoiId]="searchedId">
 </app-poi-infotainment-panel>
 
 <div class="button-container">
