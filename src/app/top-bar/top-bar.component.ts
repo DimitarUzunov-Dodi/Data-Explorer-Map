@@ -1,4 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { SearchFunction } from '../Services/models/searchModels'
+
 
 @Component({
   selector: 'app-top-bar',
@@ -9,6 +11,10 @@ import { Component, Output, EventEmitter } from '@angular/core';
 export class TopBarComponent {
   searchText = '';
   searchBar = 'Search by Hex';
+  isDropdownOpen = false;
+  isSelectSearchOpen = true;
+  selectedOption = '';
+  type:SearchFunction = SearchFunction.SearchByHex;
   @Output() searchTriggered: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
   @Output() clearSearchTriggered: EventEmitter<void> = new EventEmitter<void>();
   onSearchKeyPress(event: KeyboardEvent) {
@@ -19,23 +25,28 @@ export class TopBarComponent {
   }
 
   triggerSearch() { 
-    if (this.searchBar == 'Search by Hex'){
-      this.searchTriggered.emit(['hex',this.searchText]);
-    } else if(this.searchBar == 'Search by POI'){
-      this.searchTriggered.emit(['poi',this.searchText]);
-    }
+    this.searchTriggered.emit([this.type,this.searchText]); 
       
   }
+
+
   switchSearch() {
     this.searchText = ''
     if(this.searchBar === 'Search by Hex'){
       this.searchBar = 'Search by POI';
-    }else{
+      this.type = SearchFunction.SearchByPoiId
+    }else if(this.searchBar === 'Search by POI'){
+      this.searchBar = 'Search by User ID';
+      this.type = SearchFunction.SearchByUser
+    }else if(this.searchBar === 'Search by User ID'){
       this.searchBar = 'Search by Hex';
+      this.type = SearchFunction.SearchByHex
     }
   }
+
+
+
   triggerClearSearch() {
     this.clearSearchTriggered.emit(); 
   }
-
 }

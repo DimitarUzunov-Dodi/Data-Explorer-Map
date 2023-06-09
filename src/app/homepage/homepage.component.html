@@ -1,7 +1,3 @@
-<div class="map">
-<app-map ></app-map>
-</div>
-
 <div class="top-bar">
   <app-top-bar (searchTriggered)="handleSearchTriggered($event, true)" (clearSearchTriggered)="handleClearSearchTriggered()"></app-top-bar>
 </div>
@@ -10,6 +6,9 @@
   <app-infotainment-panel></app-infotainment-panel>
 </div>
 
+<div class="map">
+<app-map (showInfotainmentPanel)="handleInfoPanelTriggered($event)"></app-map>
+</div>
 
 <div>
   <filter-checkbox (shouldSelectAll)="allHazardsSelection($event)" (hazardChecked)="handleHazardCheckboxChange($event)"></filter-checkbox>
