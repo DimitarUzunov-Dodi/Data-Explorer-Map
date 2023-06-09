@@ -163,31 +163,31 @@ export class PoiService {
         return this.expDate;
       case RoadHazardType.Fog: 
         this.expDate = new Date(p.createdAt);
-        this.expDate.setMonth(this.expDate.getDate() + 1);
+        this.expDate.setDate(this.expDate.getDate() + 1);
         return this.expDate;
       case RoadHazardType.Aquaplaning:
         this.expDate = new Date(p.createdAt);
-        this.expDate.setMonth(this.expDate.getDate() + 1);
+        this.expDate.setDate(this.expDate.getDate() + 1);
         return this.expDate;  
       case RoadHazardType.IcyRoads:  
         this.expDate = new Date(p.createdAt);
-        this.expDate.setMonth(this.expDate.getDate() + 2);
+        this.expDate.setDate(this.expDate.getDate() + 2);
         return this.expDate;
       case RoadHazardType.TrafficJams: 
         this.expDate = new Date(p.createdAt);
-        this.expDate.setMonth(this.expDate.getDate() + 1);
+        this.expDate.setDate(this.expDate.getDate() + 1);
         return this.expDate;
       case RoadHazardType.RoadEmergencies:  
         this.expDate = new Date(p.createdAt);
-        this.expDate.setMonth(this.expDate.getDate() + 1);
+        this.expDate.setDate(this.expDate.getDate() + 1);
         return this.expDate;
       case RoadHazardType.RoadConditions:  
       this.expDate = new Date(p.createdAt);
-      this.expDate.setMonth(this.expDate.getDate() + 1);
+      this.expDate.setDate(this.expDate.getDate() + 1);
       return this.expDate;
       case RoadHazardType.Police:
         this.expDate = new Date(p.createdAt);
-        this.expDate.setMonth(this.expDate.getDate() + 1);
+        this.expDate.setDate(this.expDate.getDate() + 1);
         return this.expDate;  
       case RoadHazardType.CamerasAndRadars: 
         this.expDate = new Date(p.createdAt);
@@ -196,7 +196,7 @@ export class PoiService {
       
       case RoadHazardType.Incidents:  
       this.expDate = new Date(p.createdAt);
-      this.expDate.setMonth(this.expDate.getDate() + 1);
+      this.expDate.setDate(this.expDate.getDate() + 1);
       return this.expDate;
 
     }
