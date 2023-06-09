@@ -24,6 +24,11 @@ export class HomepageComponent {
     if (needsSearching){
       this.mapComponent.search(searchTouple)
     }
+
+  }
+
+  async handleInfoPanelTriggered(searchTouple: [string,string]){
+    
     const id = searchTouple[1].replace(/\s/g, "");
     if(searchTouple[0] === SearchFunction.SearchByHex){
       this.infotainmentPanelComponent.searchedHex = id;
@@ -37,6 +42,7 @@ export class HomepageComponent {
 
 
   }
+
   handleClearSearchTriggered(){
     this.mapComponent.clearSearch();
     this.infotainmentPanelComponent.chooseInfPanel = ""

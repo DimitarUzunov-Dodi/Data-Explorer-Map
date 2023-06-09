@@ -14,37 +14,30 @@ export class TopBarComponent {
   isDropdownOpen = false;
   isSelectSearchOpen = true;
   selectedOption = '';
+  type:SearchFunction = SearchFunction.SearchByHex;
   @Output() searchTriggered: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
   @Output() clearSearchTriggered: EventEmitter<void> = new EventEmitter<void>();
   triggerSearch() { 
-    if (this.searchBar === 'Search by Hex'){
-      this.searchTriggered.emit([SearchFunction.SearchByHex,this.searchText]);
-    }else if(this.searchBar === 'Search by POI'){
-      this.searchTriggered.emit([SearchFunction.SearchByPoiId,this.searchText]);
-    }else if(this.searchBar === 'Search by User ID'){
-      this.searchTriggered.emit([SearchFunction.SearchByUser,this.searchText]);
-    }
+    this.searchTriggered.emit([this.type,this.searchText]); 
       
   }
 
-  toggleDropdown() {
-    this.isSelectSearchOpen = !this.isSelectSearchOpen;
-    this.isDropdownOpen = !this.isDropdownOpen;
-  }
 
-  selectOption(option: string) {
-    this.selectedOption = option;
-    this.isDropdownOpen = false;
-    this.isSelectSearchOpen = !this.isSelectSearchOpen;
+  switchSearch() {
     this.searchText = ''
-    if(this.selectedOption === SearchFunction.SearchByHex){
-      this.searchBar = 'Search by Hex';
-    }else if(this.selectedOption === SearchFunction.SearchByPoiId){
+    if(this.searchBar === 'Search by Hex'){
       this.searchBar = 'Search by POI';
-    }else if(this.selectedOption === SearchFunction.SearchByUser){
+      this.type = SearchFunction.SearchByPoiId
+    }else if(this.searchBar === 'Search by POI'){
       this.searchBar = 'Search by User ID';
+      this.type = SearchFunction.SearchByUser
+    }else if(this.searchBar === 'Search by User ID'){
+      this.searchBar = 'Search by Hex';
+      this.type = SearchFunction.SearchByHex
     }
   }
+
+
 
   triggerClearSearch() {
     this.clearSearchTriggered.emit(); 
