@@ -36,11 +36,13 @@ export class PoiInfotainmentPanelComponent {
   }
 
   openHexInfotainment(hexId: string){
-    this.homepage.handleSearchTriggered(["hex", hexId], true)
+    this.homepage.handleSearchTriggered(["hex", hexId])
+    this.homepage.handleSearchTriggered(["hex", hexId])
   }
 
   openUserInfotainment(userId :string){
-    this.homepage.handleSearchTriggered(["user", userId], false)
+    this.homepage.handleSearchTriggered(["user", userId])
+    this.homepage.handleSearchTriggered(["user", userId])
   }
 
   getStatus():void {
