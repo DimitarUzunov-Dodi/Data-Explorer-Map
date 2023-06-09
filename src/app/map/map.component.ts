@@ -526,7 +526,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       let minLan = Infinity;
       let maxLng = -Infinity;
       let minLng = Infinity;
-      let searchedHexes = this.poiService.getPoiArr()
+      const searchedHexes = this.poiService.getPoiArr()
                                          .filter(x => x.userId === userId)
                                          .map(x => x.hexId);
       for(const hex of searchedHexes){
