@@ -454,12 +454,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.searchedHazards = neededHazards;
   }
 
-  moveMap(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null){
-     this.center = (event.latLng.toJSON());
-    }
-  }
-
   search(searchTuple: [string,string]): void {
     this.clearSearch()
     switch (searchTuple[0]) {
