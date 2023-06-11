@@ -1,5 +1,6 @@
 export enum SearchFunction{
     SearchByHex = 'hex',
     SearchByPoiId = 'poi',
-    SearchByUser = 'user'
+    SearchByUser = 'user',
+    SearchByRegion = 'region'
   }

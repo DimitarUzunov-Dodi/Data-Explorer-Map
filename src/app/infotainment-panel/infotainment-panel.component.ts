@@ -24,7 +24,7 @@ export class InfotainmentPanelComponent {
       this.homepage.handleSearchTriggered(this.homepage.current)
     }
     else {
-      throw new Error("Greshen button brat")
+      throw new Error("")
     }
   }
 
@@ -35,7 +35,7 @@ export class InfotainmentPanelComponent {
       this.homepage.handleSearchTriggered(this.homepage.current)
     }
     else {
-      throw new Error("Greshen button brat")
+      throw new Error("")
     }
   }
 }

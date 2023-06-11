@@ -327,25 +327,25 @@ export class MapComponent implements OnInit, AfterViewInit {
         const minLng = sw.lng();
         const maxLng = ne.lng();
 
-        const coords = [minLat, maxLat, minLng, maxLng];
+        const coords = new google.maps.LatLngBounds(new google.maps.LatLng(minLat, minLng), new google.maps.LatLng(maxLat, maxLng));
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
         this.displayedHexagons = new Map<string, google.maps.Polygon>();
 
-        const hexInBounds = this.filterInBounds(this.hexagonIds, coords);
+        const hexInBounds = this.filterInBounds(coords);
         this.displayHexagons(hexInBounds, this.poiPerHex)
       }
     }
   }
 
-  filterInBounds(hexagons: Set<string>, bounds: number[]): Set<string> {
+  filterInBounds(bounds: google.maps.LatLngBounds): Set<string> {
     const res = new Set<string>;
-    for (const hex of hexagons){
+    for (const hex of this.hexagonIds){
       const coords = h3.cellToLatLng(hex);
       const hexLat = coords[0];
       const hexLng = coords[1];
-      if (hexLat >= bounds[0] && hexLat <= bounds[1] && hexLng >= bounds[2] && hexLng <= bounds[3]){
+      if (bounds.contains(new google.maps.LatLng(hexLat, hexLng))){
         res.add(hex);
       }
     }
@@ -452,8 +452,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     }      
   }
 
-  
-
   findUser(userId: string): void {
     try{
       let maxLan = -Infinity;
@@ -489,7 +487,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
   }
 
-
   transformHexagonsToLevel(searchUserHexIds: Set<string>): Set<string>{
 
     const returnHexes: Set<string> = new Set<string>();
@@ -522,5 +519,32 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.visualizeMap();
   }
 
+  findRegion(region: string): void {
+    try {
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ address: region }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          if (results == null){
+            console.error('Geocode was not successful for the following reason:', status);
+            throw new Error("Wrong region")
+          }
+          const result = results[0];
+          const geometry = result.geometry;
+          const bounds = new google.maps.LatLngBounds(geometry.bounds);
+          this.map.fitBounds(bounds);
+          this.searchHexIds = this.filterInBounds(bounds);
+          console.log('Hex IDs:', this.searchHexIds);
+        } else {
+          console.error('Geocode was not successful for the following reason:', status);
+          throw new Error('Geocoding failed');
+        }
+      })
+    }
+    catch {
+      console.error("Region could not be not found");
+      alert("Region could not be not found");
+      throw new Error("Region could not be not found");
+    }
+  }
 }
 

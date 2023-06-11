@@ -34,6 +34,9 @@ export class HomepageComponent {
       case SearchFunction.SearchByUser:
         this.mapComponent.findUser(searchTuple[1]);
         break;
+      case SearchFunction.SearchByRegion:
+          this.mapComponent.findRegion(searchTuple[1]);
+          break;
     }
   }
 

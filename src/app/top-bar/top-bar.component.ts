@@ -39,12 +39,14 @@ export class TopBarComponent {
       this.searchBar = 'Search by User ID';
       this.type = SearchFunction.SearchByUser
     }else if(this.searchBar === 'Search by User ID'){
+      this.searchBar = 'Search by Region';
+      this.type = SearchFunction.SearchByRegion
+    }
+    else if(this.searchBar === 'Search by Region'){
       this.searchBar = 'Search by Hex';
       this.type = SearchFunction.SearchByHex
     }
   }
-
-
 
   triggerClearSearch() {
     this.clearSearchTriggered.emit(); 
