@@ -1,6 +1,8 @@
 
 
-<button id="toggle-panel-btn" (click)="togglePanel()">Infotainment Panel</button>
+<button id="toggle-panel-btn" (click)="togglePanel()">
+  <img id="infotainment-icon" src="https://static.thenounproject.com/png/3765295-200.png" alt="Infotainment Panel" />
+</button>
 <div class="infotainment-panel" [class.show]="showInfotainmentPanel">
 <app-hexagon-infotainment-panel *ngIf="chooseInfPanel === 'hex'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedHex]="searchedId">
 </app-hexagon-infotainment-panel>
@@ -12,7 +14,11 @@
 </app-poi-infotainment-panel>
 
 <div class="button-container">
-    <button id="move" class="back-button" (click)="backButton()">Back</button>
-    <button id="move" class="forward-button" (click)="forwardButton()">Forward</button>
+    <button id="move" class="back-button" (click)="backButton()">
+      <img id="back-icon" src="https://cdn-icons-png.flaticon.com/512/93/93634.png" alt="Back button" />
+    </button>
+    <button id="move" class="forward-button" (click)="forwardButton()">
+      <img id="back-icon" src="https://cdn-icons-png.flaticon.com/512/93/93634.png" alt="Forward button" />
+    </button>
   </div>
 </div>

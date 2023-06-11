@@ -13,14 +13,25 @@
   th {
     background-color: #f2f2f2;
   }
+  .field {
+    text-align: left;
+    margin-left: 35px;
+    margin-bottom: 10px; /* Adjust the margin-bottom value as needed */
+    line-height: 1.2; /* Adjust the line-height value as needed */
+    font-family: "Times New Roman", Times, serif; /* Set the desired font family */
+
+  }
   
   #toggle-panel-btn  {
     padding: 10px 20px;
     margin-left: 10px;
     border-radius: 5px;
     border: none;
-    background-color: #4CAF50;
-    color: white;
+    background-color: #577d86;
+    color: black;
     cursor: pointer;
     font-size: 20px;
+    font-family: "Times New Roman", Times, serif; /* Set the desired font family */
+    margin-bottom: 10px; /* Add margin-bottom for space between the button and the table */
+
   }
