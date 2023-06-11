@@ -14,7 +14,9 @@ export class InfotainmentPanelComponent {
   searchedId = '';
   chooseInfPanel = "";
   togglePanel(): void {
-    this.showInfotainmentPanel = !this.showInfotainmentPanel;
+    if (this.chooseInfPanel != ""){
+      this.showInfotainmentPanel = !this.showInfotainmentPanel;
+    }
   }
   constructor(private homepage: HomepageComponent){}
   backButton():void {
