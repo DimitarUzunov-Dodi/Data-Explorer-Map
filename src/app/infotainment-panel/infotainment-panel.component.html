@@ -1,16 +1,15 @@
 
-
-<button id="toggle-panel-btn" (click)="togglePanel()">
+<button id="toggle-panel-btn" (click)="togglePanel()" [class.show]="showInfotainmentPanel">
   <img id="infotainment-icon" src="https://static.thenounproject.com/png/3765295-200.png" alt="Infotainment Panel" />
 </button>
 <div class="infotainment-panel" [class.show]="showInfotainmentPanel">
-<app-hexagon-infotainment-panel *ngIf="chooseInfPanel === 'hex'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedHex]="searchedId">
+<app-hexagon-infotainment-panel class="panel" *ngIf="chooseInfPanel === 'hex'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedHex]="searchedId">
 </app-hexagon-infotainment-panel>
 
-<app-user-infotainment-panel *ngIf="chooseInfPanel === 'user'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedUser] ="searchedId">
+<app-user-infotainment-panel class="panel" *ngIf="chooseInfPanel === 'user'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedUser] ="searchedId">
 </app-user-infotainment-panel>
 
-<app-poi-infotainment-panel *ngIf="chooseInfPanel === 'poi'" [showInfotainmentPanel]="showInfotainmentPanel" [selectedPoiId]="searchedId">
+<app-poi-infotainment-panel class="panel" *ngIf="chooseInfPanel === 'poi'" [showInfotainmentPanel]="showInfotainmentPanel" [selectedPoiId]="searchedId">
 </app-poi-infotainment-panel>
 
 <div class="button-container">
