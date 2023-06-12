@@ -19,20 +19,10 @@ export class InfotainmentPanelComponent {
   }
   constructor(private homepage: HomepageComponent){}
   backButton():void {
-    console.log("Does it work")
     if (!this.homepage.isEmpty(this.homepage.past) && this.homepage.current != undefined){
-      console.log("Before")
-      console.log(this.homepage.past)
-      console.log(this.homepage.current)
-      console.log(this.homepage.future)
       const cur = this.homepage.pop(this.homepage.past)
-      console.log("Current " + cur)
       this.homepage.future.push(cur)
       this.homepage.handleSearchTriggered(this.homepage.current)
-      console.log("After")
-      console.log(this.homepage.past)
-      console.log(this.homepage.current)
-      console.log(this.homepage.future)
     }
     else {
       throw new Error("")

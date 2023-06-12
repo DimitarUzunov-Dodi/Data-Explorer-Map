@@ -525,39 +525,32 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.visualizeMap();
   }
 
-  findRegion(region: string): boolean {
-    try {
+  findRegion(region: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
       const geocoder = new google.maps.Geocoder();
       geocoder.geocode({ address: region }, (results, status) => {
         if (status === google.maps.GeocoderStatus.OK) {
-          if (results == null){
-            console.error('Geocode was not successful for the following reason:', status);
-            alert("Region could not be not found");
-            return false;
-          }
-          else {
+          if (results && results.length > 0) {
             const result = results[0];
             const geometry = result.geometry;
             const bounds = new google.maps.LatLngBounds(geometry.bounds);
             this.map.fitBounds(bounds);
             this.searchHexIds = this.filterInBounds(bounds);
-            this.triggerInfoPanel([SearchFunction.SearchByRegion, result.formatted_address]); 
+            this.triggerInfoPanel([SearchFunction.SearchByRegion, result.formatted_address]);
             this.homepage.hexagons = this.searchHexIds;
-            return true;
+            resolve(true);
+          } else {
+            console.error('Geocode was not successful for the following reason:', status);
+            alert("Region could not be found");
+            resolve(false);
           }
         } else {
           console.error('Geocode was not successful for the following reason:', status);
-          alert("Region could not be not found");
-          return false;
+          alert("Region could not be found");
+          resolve(false);
         }
-      })
-      return true;
-    }
-    catch {
-      console.error("Region could not be not found");
-      alert("Region could not be not found");
-      return false;
-    }
+      });
+    });
   }
 }
 
