@@ -441,7 +441,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       const resolution = h3.getResolution(searchedHex);
       if(resolution == -1 ){ 
         throw new Error("POI not found");
-        return false;
       }
       this.searchHexIds.clear();
       this.searchHexIds.add(searchedHex);
@@ -469,7 +468,6 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       if(!(searchedHexes.length > 0)){ 
         throw new Error("User not found");
-        return false;
       }
       for(const hex of searchedHexes){
 
@@ -518,7 +516,6 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   triggerInfoPanel(infoTuple: [string,string]) { 
-    console.log(infoTuple)
     this.showInfotainmentPanel.emit(infoTuple);
   }
 
@@ -544,7 +541,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             const bounds = new google.maps.LatLngBounds(geometry.bounds);
             this.map.fitBounds(bounds);
             this.searchHexIds = this.filterInBounds(bounds);
-            this.triggerInfoPanel([SearchFunction.SearchByRegion, region]); 
+            this.triggerInfoPanel([SearchFunction.SearchByRegion, result.formatted_address]); 
             return true;
           }
         } else {
@@ -553,7 +550,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           return false;
         }
       })
-      return false;
+      return true;
     }
     catch {
       console.error("Region could not be not found");

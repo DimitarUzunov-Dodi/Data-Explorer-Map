@@ -41,7 +41,9 @@ export class HomepageComponent {
       case SearchFunction.SearchByUser:
         return this.mapComponent.findUser(searchTuple[1]);
       case SearchFunction.SearchByRegion:
-        return this.mapComponent.findRegion(searchTuple[1]);
+        const res = this.mapComponent.findRegion(searchTuple[1]);
+        console.log(res)
+        return res;
     }
     return false;
   }
