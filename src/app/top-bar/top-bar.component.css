@@ -1,38 +1,51 @@
-  .top-search-bar {
-    display: flex;
-    align-items: center;
-    height: 80px;
-    background-color: #f1f1f1;
-    padding: 10px;
-  }
+.top-panel {
+  position: fixed;
+  top: 2%;
+  left: 25%;
+  right: 25%;
 
-  .top-search-bar input[type="text"] {
-    padding: 10px; 
-    border-radius: 5px;
-    border: none;
-    width: 400px;
-    font-size: 20px; 
-  }
+  background-color: rgba(94, 103, 105, 0.5); /* Semi-transparent white background */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  z-index: 2;
+  border-radius: 10px; /* Round edges */
+  backdrop-filter: blur(5px); /* Apply a blur effect */
+  height: 45px;
+  min-width: 300px; /* Set a minimum width */
+}
 
-  .top-search-bar button {
-    padding: 10px 20px;
-    margin-left: 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    font-size: 20px;
-  }
+.search-container {
+  display: flex;
+  align-items: center;
+}
 
-  .app-name {
-    margin-left: auto;
-    font-size: 18px;
-    font-weight: bold;
-    color: black;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    display: flex;
-    align-items: center;
-    font-family: 'Roboto', sans-serif;
-  }
+.search-container input[type="text"] {
+  /* width: 300px; Update the width value as per your requirement */
+  width: 100%; /* Fill the available width */
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.search-container .search-button {
+  margin-left: 10px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background-color: #577d86;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+#png{
+  width: 14px;
+  height: 14px;
+}
+
+#logo{
+  width: 500px;
+  height: 50px;
+}

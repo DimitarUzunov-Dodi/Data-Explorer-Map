@@ -22,6 +22,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   zoom = 12;
   mapOptions: google.maps.MapOptions = {
     mapTypeId: 'roadmap',
+    backgroundColor: '#212121',
     styles: [
       {
         featureType: 'poi',
@@ -32,7 +33,15 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "geometry",
           "stylers": [
             {
-              "color": "#ebe3cd"
+              "color": "#212121"
+            }
+          ]
+        },
+        {
+          "elementType": "labels.icon",
+          "stylers": [
+            {
+              "visibility": "off"
             }
           ]
         },
@@ -40,7 +49,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "labels.text.fill",
           "stylers": [
             {
-              "color": "#523735"
+              "color": "#757575"
             }
           ]
         },
@@ -48,13 +57,33 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "labels.text.stroke",
           "stylers": [
             {
-              "color": "#f5f1e6"
+              "color": "#212121"
             }
           ]
         },
         {
           "featureType": "administrative",
           "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#757575"
+            },
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "administrative.country",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#9e9e9e"
+            }
+          ]
+        },
+        {
+          "featureType": "administrative.land_parcel",
           "stylers": [
             {
               "visibility": "off"
@@ -62,38 +91,11 @@ export class MapComponent implements OnInit, AfterViewInit {
           ]
         },
         {
-          "featureType": "administrative",
-          "elementType": "geometry.stroke",
-          "stylers": [
-            {
-              "color": "#c9b2a6"
-            }
-          ]
-        },
-        {
-          "featureType": "administrative.land_parcel",
-          "elementType": "geometry.stroke",
-          "stylers": [
-            {
-              "color": "#dcd2be"
-            }
-          ]
-        },
-        {
-          "featureType": "administrative.land_parcel",
+          "featureType": "administrative.locality",
           "elementType": "labels.text.fill",
           "stylers": [
             {
-              "color": "#ae9e90"
-            }
-          ]
-        },
-        {
-          "featureType": "landscape.natural",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "color": "#dfd2ae"
+              "color": "#bdbdbd"
             }
           ]
         },
@@ -107,28 +109,19 @@ export class MapComponent implements OnInit, AfterViewInit {
         },
         {
           "featureType": "poi",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#757575"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.park",
           "elementType": "geometry",
           "stylers": [
             {
-              "color": "#dfd2ae"
-            }
-          ]
-        },
-        {
-          "featureType": "poi",
-          "elementType": "labels.text.fill",
-          "stylers": [
-            {
-              "color": "#93817c"
-            }
-          ]
-        },
-        {
-          "featureType": "poi.park",
-          "elementType": "geometry.fill",
-          "stylers": [
-            {
-              "color": "#a5b076"
+              "color": "#181818"
             }
           ]
         },
@@ -137,16 +130,25 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "labels.text.fill",
           "stylers": [
             {
-              "color": "#447530"
+              "color": "#616161"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.park",
+          "elementType": "labels.text.stroke",
+          "stylers": [
+            {
+              "color": "#1b1b1b"
             }
           ]
         },
         {
           "featureType": "road",
-          "elementType": "geometry",
+          "elementType": "geometry.fill",
           "stylers": [
             {
-              "color": "#f5f1e6"
+              "color": "#2c2c2c"
             }
           ]
         },
@@ -160,11 +162,20 @@ export class MapComponent implements OnInit, AfterViewInit {
           ]
         },
         {
+          "featureType": "road",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#8a8a8a"
+            }
+          ]
+        },
+        {
           "featureType": "road.arterial",
           "elementType": "geometry",
           "stylers": [
             {
-              "color": "#fdfcf8"
+              "color": "#373737"
             }
           ]
         },
@@ -173,16 +184,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "geometry",
           "stylers": [
             {
-              "color": "#f8c967"
-            }
-          ]
-        },
-        {
-          "featureType": "road.highway",
-          "elementType": "geometry.stroke",
-          "stylers": [
-            {
-              "color": "#e9bc62"
+              "color": "#3c3c3c"
             }
           ]
         },
@@ -191,16 +193,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "geometry",
           "stylers": [
             {
-              "color": "#e98d58"
-            }
-          ]
-        },
-        {
-          "featureType": "road.highway.controlled_access",
-          "elementType": "geometry.stroke",
-          "stylers": [
-            {
-              "color": "#db8555"
+              "color": "#4e4e4e"
             }
           ]
         },
@@ -209,7 +202,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "labels.text.fill",
           "stylers": [
             {
-              "color": "#806b63"
+              "color": "#616161"
             }
           ]
         },
@@ -222,47 +215,20 @@ export class MapComponent implements OnInit, AfterViewInit {
           ]
         },
         {
-          "featureType": "transit.line",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "color": "#dfd2ae"
-            }
-          ]
-        },
-        {
-          "featureType": "transit.line",
+          "featureType": "transit",
           "elementType": "labels.text.fill",
           "stylers": [
             {
-              "color": "#8f7d77"
-            }
-          ]
-        },
-        {
-          "featureType": "transit.line",
-          "elementType": "labels.text.stroke",
-          "stylers": [
-            {
-              "color": "#ebe3cd"
-            }
-          ]
-        },
-        {
-          "featureType": "transit.station",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "color": "#dfd2ae"
+              "color": "#757575"
             }
           ]
         },
         {
           "featureType": "water",
-          "elementType": "geometry.fill",
+          "elementType": "geometry",
           "stylers": [
             {
-              "color": "#b9d3c2"
+              "color": "#000000"
             }
           ]
         },
@@ -271,11 +237,11 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "labels.text.fill",
           "stylers": [
             {
-              "color": "#92998d"
+              "color": "#3d3d3d"
             }
           ]
         }
-    ],
+      ],
     disableDefaultUI: true,
     maxZoom: 20,
     minZoom: 1,
@@ -407,20 +373,12 @@ export class MapComponent implements OnInit, AfterViewInit {
       if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && poisInHex.length>0 || this.smallHexToDisplay.has(hex) ) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-          strokeColor: '#FF0000',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#00FF00',
-          fillOpacity: 0.35,
-        });
-
-        hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-
-          const polygonId = hex;
-          console.log('Clicked polygon ID:', polygonId);
-          this.homepage.handleSearchTriggered([SearchFunction.SearchByHex,  polygonId], true)
-          this.flag=true;
-
+          strokeColor: '#FFFFFF',
+          strokeOpacity: 1,
+          strokeWeight: 4,
+          fillColor: '#A8CDBB',
+          fillOpacity: 0.6,
+          zIndex: 2,
         });
 
         hexagonPolygon.setMap(this.map);
@@ -437,17 +395,14 @@ export class MapComponent implements OnInit, AfterViewInit {
               strokeWeight: 2,
               fillColor: '#577D86',
               fillOpacity: 0.35,
+              zIndex: 1,
             });
 
 
             hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-
-              const polygonId = hex;
-              console.log('Clicked polygon ID:', polygonId);
-              console.log('Pois:', this.poiPerHex.get(polygonId));
-              this.homepage.handleSearchTriggered(["hex",  polygonId], true)
+              this.homepage.enqueue(['hex', hex], this.homepage.past);
+              this.homepage.handleSearchTriggered(["hex",  hex])
               this.flag=true;
-
             });
 
             hexagonPolygon.setMap(this.map);
@@ -461,22 +416,6 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   updateHazards(neededHazards: Set<RoadHazardType>) {
     this.searchedHazards = neededHazards;
-  }
-
-  search(searchTuple: [string,string]): void {
-    this.clearSearch()
-    switch (searchTuple[0]) {
-      case SearchFunction.SearchByHex:
-        this.findHexagon(searchTuple[1]);
-        break;
-      case SearchFunction.SearchByPoiId:
-        this.findPoi(searchTuple[1]);
-        break;
-      case SearchFunction.SearchByUser:
-        this.findUser(searchTuple[1]);
-        break;
-    }
-    
   }
 
   findHexagon(hexId: string): void {
@@ -517,7 +456,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));   
       this.visualizeMap();
       this.triggerInfoPanel([SearchFunction.SearchByHex, hexId]); 
-
     } catch(error) {
       alert("Hexagon not found");    
     } 

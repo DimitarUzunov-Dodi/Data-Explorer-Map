@@ -17,26 +17,30 @@ export class HomepageComponent {
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
-  @ViewChild(HexagonInfotainmentPanelComponent) hexInfotainmentPanel!: HexagonInfotainmentPanelComponent;
+  current: [string, string] | undefined = undefined;
+  past: [string,string][] = [];
+  future: [string,string][] = [];
+  title = 'RoadSense';
 
-  title = 'Angular';
-  async handleSearchTriggered(searchTouple: [string,string], needsSearching: boolean){
-    if (needsSearching){
-      this.mapComponent.search(searchTouple)
+  async handleSearchTriggered(searchTuple: [string,string]){
+    this.mapComponent.clearSearch()
+    switch (searchTuple[0]) {
+      case SearchFunction.SearchByHex:
+        this.mapComponent.findHexagon(searchTuple[1]);
+        break;
+      case SearchFunction.SearchByPoiId:
+        this.mapComponent.findPoi(searchTuple[1]);
+        break;
+      case SearchFunction.SearchByUser:
+        this.mapComponent.findUser(searchTuple[1]);
+        break;
     }
-
   }
 
   async handleInfoPanelTriggered(searchTouple: [string,string]){
     
     const id = searchTouple[1].replace(/\s/g, "");
-    if(searchTouple[0] === SearchFunction.SearchByHex){
-      this.infotainmentPanelComponent.searchedHex = id;
-    }else if(searchTouple[0] === SearchFunction.SearchByPoiId){
-      this.infotainmentPanelComponent.searchedPoi = id;
-    }else if(searchTouple[0] === SearchFunction.SearchByUser){
-      this.infotainmentPanelComponent.searchedUser = id;
-    }
+    this.infotainmentPanelComponent.searchedId = id
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
     this.infotainmentPanelComponent.chooseInfPanel = searchTouple[0];
 
@@ -76,5 +80,30 @@ export class HomepageComponent {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  enqueue(element: [string, string], stack: [string, string][]): void {
+    if (this.isEmpty(stack) && this.current == undefined){
+      this.current = element;
+    }
+    else if (this.current != undefined){
+      stack.push(this.current);
+      this.current = element;
+    }
+    this.future = [];
+  }
+  pop(stack: [string, string][]): any {
+    if (this.isEmpty(stack)) {
+      throw new Error("Stack is empty")
+    }
+    else {
+      const res = this.current
+      this.current = stack.pop();
+      return res;
+    }
+
+  }
+  isEmpty(stack: [string, string][]): boolean {
+    return stack.length === 0;
   }
 }

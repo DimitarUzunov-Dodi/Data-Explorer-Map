@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { SearchFunction } from '../Services/models/searchModels'
+import { HomepageComponent } from '../homepage/homepage.component';
 
 
 @Component({
@@ -11,15 +12,21 @@ import { SearchFunction } from '../Services/models/searchModels'
 export class TopBarComponent {
   searchText = '';
   searchBar = 'Search by Hex';
-  isDropdownOpen = false;
-  isSelectSearchOpen = true;
   selectedOption = '';
   type:SearchFunction = SearchFunction.SearchByHex;
   @Output() searchTriggered: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
   @Output() clearSearchTriggered: EventEmitter<void> = new EventEmitter<void>();
+  constructor(private homepage: HomepageComponent){}
+  onSearchKeyPress(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.triggerSearch();
+      event.preventDefault();
+    }
+  }
+
   triggerSearch() { 
     this.searchTriggered.emit([this.type,this.searchText]); 
-      
+    this.homepage.enqueue([this.type,this.searchText], this.homepage.past);
   }
 
 
