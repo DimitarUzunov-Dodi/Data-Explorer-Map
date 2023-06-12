@@ -26,7 +26,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   pois: PointOfInterest[] = [];
   showPoiData = false;
   constructor(private http: HttpClient, private poiService: PoiService, private homepage: HomepageComponent) {}
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['searchedHex'] && !changes['searchedHex'].firstChange) {
       this.ngOnInit();
@@ -111,8 +111,8 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
         };
         this.weatherIcon = weatherResponse .weather[0].icon
         this.weatherDescription = weatherResponse .weather[0].description
-        this.minTemp = "Minimum temperatur: " + this.convertToCelcius(weatherResponse.main.temp_min)
-        this.maxTemp = "Maximum temperatur: " + this.convertToCelcius(weatherResponse.main.temp_max)
+        this.minTemp = "Minimum temperature: " + this.convertToCelcius(weatherResponse.main.temp_min)
+        this.maxTemp = "Maximum temperature: " + this.convertToCelcius(weatherResponse.main.temp_max)
         this.feelsLikes ="Feels like: " +  this.convertToCelcius(weatherResponse.main.feels_like)
         this.windspeed = "Wind speed: " + weatherResponse.wind.speed.toFixed(0) + " meter/sec"
         this.rain = weatherResponse.rain? weatherResponse.rain?.['1h'] + " mm" : "Unavailable";
@@ -132,17 +132,17 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   openPoiInfotainment(poiId: string) {
     this.homepage.enqueue(["poi", poiId], this.homepage.past);
     this.homepage.handleSearchTriggered(["poi", poiId])
-    
-  } 
+
+  }
 
   openUserInfotainment(userId: string) {
     this.homepage.enqueue(["user", userId], this.homepage.past);
     this.homepage.handleSearchTriggered(["user", userId])
   }
-  
+
   convertToCelcius(temp: number): string {
     return (temp - 273.15).toFixed(0) + " °C";
   }
 }
-  
+
 

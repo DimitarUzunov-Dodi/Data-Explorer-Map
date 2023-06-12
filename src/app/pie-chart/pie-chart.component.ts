@@ -15,6 +15,9 @@ export class PieChartComponent implements OnInit, OnChanges{
   display: boolean = true;
   constructor(private poiService: PoiService) { }
   ngOnInit(): void {
+    Chart.defaults.font.family = "Arial"
+    Chart.defaults.color = "#fff"
+
     if (this.chart != undefined){
       this.chart.destroy();
     }
