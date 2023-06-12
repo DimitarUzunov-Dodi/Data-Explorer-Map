@@ -1,70 +1,249 @@
-.infotainment-panel {
-  position: fixed;
-  top: 15%;
-  left: -700px;
-  width: 700px;
-  height: 85%;
-  background-color: #f1f1f1;
-  box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3);
-  overflow-y: scroll;
-  z-index: 1;
-  transition: transform 0.3s ease-in-out;
+/*!*!*.infotainment-panel {*!*!*/
+/*!*!*  position: fixed;*!*!*/
+/*!*!*  top: 15%;*!*!*/
+/*!*!*  left: -700px;*!*!*/
+/*!*!*  width: 700px;*!*!*/
+/*!*!*  height: 85%;*!*!*/
+/*!*!*  background-color: #f1f1f1;*!*!*/
+/*!*!*  box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3);*!*!*/
+/*!*!*  overflow-y: scroll;*!*!*/
+/*!*!*  z-index: 1;*!*!*/
+/*!*!*  transition: transform 0.3s ease-in-out;*!*!*/
 
+/*!*!*  display: flex;*!*!*/
+/*!*!*  flex-direction: column;*!*!*/
+/*!*!*  align-items: flex-end;*!*!*/
+/*!*!*}*!*!*/
+
+/*!*!*.infotainment-panel .field {*!*!*/
+/*!*!*  text-align: right;*!*!*/
+/*!*!*  padding: 15px;*!*!*/
+/*!*!*}*!*!*/
+
+/*!*!*.infotainment-panel.show {*!*!*/
+/*!*!*  transform: translateX(350px);*!*!*/
+/*!*!*}*!*!*/
+
+/*!*!*!* Infotainment Panel Styling *!*!*!*/
+/*!*!*.infotainment-panel {*!*!*/
+/*!*!*  background-color: #fff;*!*!*/
+/*!*!*  border: 1px solid #ccc;*!*!*/
+/*!*!*  border-radius: 5px;*!*!*/
+/*!*!*  margin: 10px;*!*!*/
+/*!*!*  padding: 20px;*!*!*/
+/*!*!*  box-shadow: 0 2px 5px rgba(0,0,0,0.1);*!*!*/
+/*!*!*}*!*!*/
+
+/*!*!*!* Field Styling *!*!*!*/
+/*!*!*.infotainment-panel .field {*!*!*/
+/*!*!*  margin-bottom: 20px;*!*!*/
+/*!*!*}*!*!*/
+
+/*!*!*!* Heading Styling *!*!*!*/
+/*!*!*.infotainment-panel h3 {*!*!*/
+/*!*!*  color: #333;*!*!*/
+/*!*!*  font-size: 18px;*!*!*/
+/*!*!*  margin-bottom: 10px;*!*!*/
+/*!*!*}*!*!*/
+
+/*!*!*!* Table Styling *!*!*!*/
+/*!*!*.infotainment-panel tr {*!*!*/
+/*!*!*  border-bottom: 1px solid #ccc;*!*!*/
+/*!*!*}*!*!*/
+
+/*!*!*.infotainment-panel tr:last-child {*!*!*/
+/*!*!*  border-bottom: none;*!*!*/
+/*!*!*}*!*!*/
+
+/*!*!*.infotainment-panel td {*!*!*/
+/*!*!*  padding: 10px 0;*!*!*/
+/*!*!*}*!*!*/
+
+/*!*!*!* Link Styling *!*!*!*/
+/*!*!*.infotainment-panel a {*!*!*/
+/*!*!*  color: #007BFF;*!*!*/
+/*!*!*  text-decoration: none;*!*!*/
+/*!*!*}*!*!*/
+
+/*!*!*.infotainment-panel a:hover {*!*!*/
+/*!*!*  text-decoration: underline;*!*!*/
+/*!*!*}*!*!*/
+
+/*!*!* Styling for field container *!*!*/
+/*!*.field {*!*/
+/*!*  margin-bottom: 20px;*!*/
+/*!*  text-align: center;*!*/
+/*!*  right: 100%;*!*/
+
+/*!*}*!*/
+
+/*!*!* Styling for heading *!*!*/
+/*!*.field h3 {*!*/
+/*!*  font-family: Arial, serif;*!*/
+/*!*  font-size: 18px;*!*/
+/*!*  margin-bottom: 10px;*!*/
+/*!*}*!*/
+
+/*!*!* Styling for table row *!*!*/
+/*!*.field tr {*!*/
+/*!*  font-family: Arial, serif;*!*/
+/*!*}*!*/
+
+/*!*!* Styling for table data *!*!*/
+/*!*.field td {*!*/
+/*!*  padding: 5px 10px;*!*/
+/*!*}*!*/
+
+/*!*!* Styling for link *!*!*/
+/*!*.field a {*!*/
+/*!*  text-decoration: none;*!*/
+/*!*  color: #fff;*!*/
+/*!*}*!*/
+
+/*!*!* Styling for link hover *!*!*/
+/*!*.field a:hover {*!*/
+/*!*  text-decoration: underline;*!*/
+/*!*  cursor: pointer;*!*/
+/*!*}*!*/
+
+/*!*#all-user{*!*/
+/*!*  text-align: center;*!*/
+/*!*}*!*/
+
+/*!* Styling for the parent container *!*/
+/*#all-user {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  align-items: center;*/
+/*}*/
+
+/*!* Styling for field container *!*/
+/*.field {*/
+/*  margin-bottom: 20px;*/
+/*}*/
+
+/*!* Styling for heading *!*/
+/*.field h3 {*/
+/*  font-family: Arial, serif;*/
+/*  font-size: 18px;*/
+/*  margin-bottom: 10px;*/
+/*}*/
+
+/*!* Styling for table *!*/
+/*.field table {*/
+/*  margin: 0 auto; !* Center the table horizontally *!*/
+/*  font-family: Arial, serif;*/
+/*}*/
+
+/*!* Styling for table row *!*/
+/*.field tr {*/
+/*  font-family: Arial, serif;*/
+/*}*/
+
+/*!* Styling for table data *!*/
+/*.field td {*/
+/*  padding: 5px 10px;*/
+/*}*/
+
+/*!* Styling for link *!*/
+/*.field a {*/
+/*  text-decoration: none;*/
+/*  color: #007bff;*/
+/*}*/
+
+/*!* Styling for link hover *!*/
+/*.field a:hover {*/
+/*  text-decoration: underline;*/
+/*}*/
+
+/*body {*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  align-items: center;*/
+/*  height: 100vh;*/
+/*  margin: 0;*/
+/*  !*background-color: #f0f0f0;*!*/
+/*}*/
+
+/*#all-user {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  align-items: center;*/
+/*  justify-content: center;*/
+/*  box-shadow: 0px 0px 15px rgba(0,0,0,0.1);*/
+/*  padding: 20px;*/
+/*  background-color: #fff;*/
+/*}*/
+
+/*#all-user .field {*/
+/*  width: 100%;*/
+/*  margin-bottom: 10px;*/
+/*}*/
+
+/*#all-user .field h3 {*/
+/*  margin: 0 0 10px 0;*/
+/*}*/
+
+/*#all-user .field table {*/
+/*  width: 100%;*/
+/*}*/
+
+/*#all-user .field table td {*/
+/*  padding: 10px;*/
+/*  border: 1px solid #ddd;*/
+/*}*/
+
+/*#all-user .field table td a {*/
+/*  color: #333;*/
+/*  text-decoration: none;*/
+/*}*/
+
+/*#all-user .field table td a:hover {*/
+/*  color: #007bff;*/
+/*}*/
+
+#all-user {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
+  font-family: Arial, serif;
 }
 
-.infotainment-panel .field {
-  text-align: right;
-  padding: 15px;
+#all-user .field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.infotainment-panel.show {
-  transform: translateX(350px);
-}
-
-/* Infotainment Panel Styling */
-.infotainment-panel {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-/* Field Styling */
-.infotainment-panel .field {
-  margin-bottom: 20px;
-}
-
-/* Heading Styling */
-.infotainment-panel h3 {
-  color: #333;
-  font-size: 18px;
+#all-user .field h3 {
   margin-bottom: 10px;
 }
 
-/* Table Styling */
-.infotainment-panel tr {
-  border-bottom: 1px solid #ccc;
+#all-user .field table {
+  margin: 0 auto; /* Centers the table horizontally */
 }
 
-.infotainment-panel tr:last-child {
-  border-bottom: none;
+#all-user .field table td {
+  padding: 10px;
 }
 
-.infotainment-panel td {
-  padding: 10px 0;
-}
-
-/* Link Styling */
-.infotainment-panel a {
-  color: #007BFF;
+#all-user .field table td a {
+  color: #ffffff;
   text-decoration: none;
 }
 
-.infotainment-panel a:hover {
+#all-user .field table td a:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
+
+#userId{
+  position: relative;
+  text-align: center;
+}
+
+
+
+

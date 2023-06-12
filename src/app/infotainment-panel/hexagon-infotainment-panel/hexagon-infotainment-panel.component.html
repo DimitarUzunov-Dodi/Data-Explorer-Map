@@ -23,9 +23,9 @@
               <th>userId</th>
             </tr>
             <tr *ngFor="let poi of pois">
-              <td><a (click)="openPoiInfotainment(poi.id)">{{ poi.id }}</a></td>
+              <td><a (click)="openPoiInfotainment(poi.id)" style="cursor: pointer;text-decoration: underline;">{{ poi.id }}</a></td>
               <td>{{ poi.type }}</td>
-              <td><a (click)="openUserInfotainment(poi.userId)">{{ poi.userId }}</a></td>
+              <td><a (click)="openUserInfotainment(poi.userId)" style="cursor: pointer;text-decoration: underline;">{{ poi.userId }}</a></td>
             </tr>
           </table>
         </div>
