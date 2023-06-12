@@ -373,12 +373,12 @@ export class MapComponent implements OnInit, AfterViewInit {
       if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && poisInHex.length>0 || this.smallHexToDisplay.has(hex) ) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-          strokeColor: '#FFFFFF',
-          strokeOpacity: 1,
-          strokeWeight: 4,
-          fillColor: '#A8CDBB',
-          fillOpacity: 0.6,
-          zIndex: 2,
+          strokeColor: '#1E313A',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#1E313A',
+          fillOpacity: 0.35,
+          zIndex: 2
         });
 
         hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
@@ -401,7 +401,7 @@ export class MapComponent implements OnInit, AfterViewInit {
               strokeWeight: 2,
               fillColor: '#577D86',
               fillOpacity: 0.35,
-              zIndex: 1,
+              zIndex: 1
             });
 
 
