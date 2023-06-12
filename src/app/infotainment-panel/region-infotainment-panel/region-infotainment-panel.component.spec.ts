@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegionInfotainmentPanelComponent } from './region-infotainment-panel.component';
-import { MapComponent } from 'src/app/map/map.component';
+import { HomepageComponent } from 'src/app/homepage/homepage.component';
 
 describe('RegionInfotainmentPanelComponent', () => {
   let component: RegionInfotainmentPanelComponent;
@@ -9,7 +9,9 @@ describe('RegionInfotainmentPanelComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ RegionInfotainmentPanelComponent],
-      providers: [MapComponent],
+      providers: [
+        HomepageComponent,
+      ],
     })
     .compileComponents();
 

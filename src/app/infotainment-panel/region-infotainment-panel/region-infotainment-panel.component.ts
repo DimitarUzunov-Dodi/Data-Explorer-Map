@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MapComponent } from 'src/app/map/map.component';
+import { HomepageComponent } from 'src/app/homepage/homepage.component';
 @Component({
   selector: 'app-region-infotainment-panel',
   templateUrl: './region-infotainment-panel.component.html',
@@ -8,7 +8,9 @@ import { MapComponent } from 'src/app/map/map.component';
 export class RegionInfotainmentPanelComponent {
   @Input() showInfotainmentPanel = false;
   @Input() selectedRegionId = '';
-  selectedHexagons = this.mapComponent.searchHexIds;
-  constructor(private mapComponent: MapComponent){}
+  selectedHexagons: Set<string> = new Set<string>;
+  constructor(private homepageComponent: HomepageComponent){
+    this.selectedHexagons = homepageComponent.mapComponent.searchHexIds;
+  }
   
 }
