@@ -526,6 +526,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         if (status === google.maps.GeocoderStatus.OK) {
           if (results == null){
             console.error('Geocode was not successful for the following reason:', status);
+            alert("Region could not be not found");
             throw new Error("Wrong region")
           }
           const result = results[0];
@@ -533,9 +534,10 @@ export class MapComponent implements OnInit, AfterViewInit {
           const bounds = new google.maps.LatLngBounds(geometry.bounds);
           this.map.fitBounds(bounds);
           this.searchHexIds = this.filterInBounds(bounds);
-          console.log('Hex IDs:', this.searchHexIds);
+          this.triggerInfoPanel([SearchFunction.SearchByRegion, region]); 
         } else {
           console.error('Geocode was not successful for the following reason:', status);
+          alert("Region could not be not found");
           throw new Error('Geocoding failed');
         }
       })
