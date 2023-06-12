@@ -218,7 +218,7 @@
 }
 
 #all-user .field h3 {
-  text-align:right; 
+  text-align:right;
   /*align-content: center;*/
   margin-bottom: 10px;
 }
@@ -246,8 +246,8 @@
   text-align: center;
 }
 
-table{
-  width: 500px;
+#all-user{
+  width: 180%;
 }
 
 td{
