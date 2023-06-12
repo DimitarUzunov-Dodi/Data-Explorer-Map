@@ -424,6 +424,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.panTo(newLocation);
       this.map.setZoom(10);
       this.triggerInfoPanel([SearchFunction.SearchByHex, hexId]); 
+      this.homepage.enqueue([SearchFunction.SearchByHex, hexId], this.homepage.past);
     } catch(error) {
       alert("Hexagon not found");    
     } 
@@ -446,7 +447,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
       this.map.setZoom(8);       
-      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);                    
+      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);      
+      this.homepage.enqueue([SearchFunction.SearchByPoiId, poiId], this.homepage.past);              
     } catch(error) {
         alert("Point of Interest not found");
     }      
@@ -482,6 +484,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.searchUserHexIds = this.transformHexagonsToLevel(this.searchUserHexIds);
       this.visualizeMap();
       this.triggerInfoPanel([SearchFunction.SearchByUser, userId]); 
+      this.homepage.enqueue([SearchFunction.SearchByUser, userId], this.homepage.past);
     } catch(error) {
       alert("User ID not found");
     }
@@ -510,6 +513,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   triggerInfoPanel(infoTuple: [string,string]) { 
+    console.log(infoTuple)
     this.showInfotainmentPanel.emit(infoTuple);
   }
 
@@ -535,6 +539,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           this.map.fitBounds(bounds);
           this.searchHexIds = this.filterInBounds(bounds);
           this.triggerInfoPanel([SearchFunction.SearchByRegion, region]); 
+          this.homepage.enqueue([SearchFunction.SearchByRegion, region], this.homepage.past);
         } else {
           console.error('Geocode was not successful for the following reason:', status);
           alert("Region could not be not found");

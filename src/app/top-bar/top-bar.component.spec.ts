@@ -11,8 +11,7 @@ describe('TopBarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [TopBarComponent],
-      imports: [FormsModule],
-      providers: [HomepageComponent]
+      imports: [FormsModule]
     })
     .compileComponents();
 

@@ -47,7 +47,6 @@ export class HomepageComponent {
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
     this.infotainmentPanelComponent.chooseInfPanel = searchTouple[0];
 
-
   }
 
   handleClearSearchTriggered(){
