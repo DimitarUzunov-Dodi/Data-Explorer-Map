@@ -4,7 +4,9 @@
     </div>
     <div class="field">
         <ul >
-            <li *ngFor="let hexagon of selectedHexagons">{{ hexagon }}</li>
+            <li *ngFor="let hexagon of selectedHexagons">
+                <p>Hex id: <a (click)="openHexInfotainment(hexagon)">{{hexagon}} </a>  </p>
+            </li>
         </ul>
     </div>
 </div>
