@@ -23,6 +23,7 @@
   }
 
   #toggle-panel-btn  {
+    text-align: center;
     padding: 10px 20px;
     margin-left: 10px;
     border-radius: 5px;

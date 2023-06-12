@@ -17,7 +17,7 @@
 <app-hexagon-infotainment-panel *ngIf="chooseInfPanel === 'hex'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedHex]="searchedId">
 </app-hexagon-infotainment-panel>
 
-<app-user-infotainment-panel *ngIf="chooseInfPanel === 'user'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedUser] ="searchedId">
+<app-user-infotainment-panel *ngIf="chooseInfPanel === 'user'" [showInfotainmentPanel]="showInfotainmentPanel" [userId]="searchedId">
 </app-user-infotainment-panel>
 
 <app-poi-infotainment-panel *ngIf="chooseInfPanel === 'poi'" [showInfotainmentPanel]="showInfotainmentPanel" [selectedPoiId]="searchedId">

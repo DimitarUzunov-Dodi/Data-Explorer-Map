@@ -1,3 +1,70 @@
-.field{
-    margin-left: 10px;
+.infotainment-panel {
+  position: fixed;
+  top: 15%;
+  left: -700px;
+  width: 700px;
+  height: 85%;
+  background-color: #f1f1f1;
+  box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3);
+  overflow-y: scroll;
+  z-index: 1;
+  transition: transform 0.3s ease-in-out;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.infotainment-panel .field {
+  text-align: right;
+  padding: 15px;
+}
+
+.infotainment-panel.show {
+  transform: translateX(350px);
+}
+
+/* Infotainment Panel Styling */
+.infotainment-panel {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Field Styling */
+.infotainment-panel .field {
+  margin-bottom: 20px;
+}
+
+/* Heading Styling */
+.infotainment-panel h3 {
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* Table Styling */
+.infotainment-panel tr {
+  border-bottom: 1px solid #ccc;
+}
+
+.infotainment-panel tr:last-child {
+  border-bottom: none;
+}
+
+.infotainment-panel td {
+  padding: 10px 0;
+}
+
+/* Link Styling */
+.infotainment-panel a {
+  color: #007BFF;
+  text-decoration: none;
+}
+
+.infotainment-panel a:hover {
+  text-decoration: underline;
 }
