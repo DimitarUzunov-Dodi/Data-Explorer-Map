@@ -22,22 +22,28 @@ export class HomepageComponent {
   future: [string,string][] = [];
   title = 'RoadSense';
 
-  async handleSearchTriggered(searchTuple: [string,string]){
+  async handleSearchTriggeredWithEnqueue(searchTuple: [string,string]){
+    const success = this.handleSearchTriggered(searchTuple);
+    if (await success){
+      this.enqueue(searchTuple, this.past);
+      console.log(this.past)
+      console.log(this.current)
+      console.log(this.future)
+    }
+  }
+  async handleSearchTriggered(searchTuple: [string,string]): Promise<boolean>{
     this.mapComponent.clearSearch()
     switch (searchTuple[0]) {
       case SearchFunction.SearchByHex:
-        this.mapComponent.findHexagon(searchTuple[1]);
-        break;
+        return this.mapComponent.findHexagon(searchTuple[1]);
       case SearchFunction.SearchByPoiId:
-        this.mapComponent.findPoi(searchTuple[1]);
-        break;
+        return this.mapComponent.findPoi(searchTuple[1]);
       case SearchFunction.SearchByUser:
-        this.mapComponent.findUser(searchTuple[1]);
-        break;
+        return this.mapComponent.findUser(searchTuple[1]);
       case SearchFunction.SearchByRegion:
-          this.mapComponent.findRegion(searchTuple[1]);
-          break;
+        return this.mapComponent.findRegion(searchTuple[1]);
     }
+    return false;
   }
 
   async handleInfoPanelTriggered(searchTouple: [string,string]){
@@ -86,9 +92,11 @@ export class HomepageComponent {
 
   enqueue(element: [string, string], stack: [string, string][]): void {
     if (this.isEmpty(stack) && this.current == undefined){
+      console.log("Case 1")
       this.current = element;
     }
     else if (this.current != undefined){
+      console.log("Case 2")
       stack.push(this.current);
       this.current = element;
     }

@@ -409,7 +409,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.searchedHazards = neededHazards;
   }
 
-  findHexagon(hexId: string): void {
+  findHexagon(hexId: string): boolean {
     try{
       const searchedHex = hexId.replace(/\s/g, "");
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
@@ -424,13 +424,14 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.panTo(newLocation);
       this.map.setZoom(10);
       this.triggerInfoPanel([SearchFunction.SearchByHex, hexId]); 
-      this.homepage.enqueue([SearchFunction.SearchByHex, hexId], this.homepage.past);
+      return true;
     } catch(error) {
       alert("Hexagon not found");    
+      return false;
     } 
   }
 
-  findPoi(poiId: string): void {
+  findPoi(poiId: string): boolean {
     try{
       const searchedHex = this.poiService.getPoiArr()
                                        .filter(x => x.id === poiId.replace(/\s/g, ""))
@@ -440,6 +441,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       const resolution = h3.getResolution(searchedHex);
       if(resolution == -1 ){ 
         throw new Error("POI not found");
+        return false;
       }
       this.searchHexIds.clear();
       this.searchHexIds.add(searchedHex);
@@ -447,14 +449,15 @@ export class MapComponent implements OnInit, AfterViewInit {
       const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
       this.map.panTo(newLocation);
       this.map.setZoom(8);       
-      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);      
-      this.homepage.enqueue([SearchFunction.SearchByPoiId, poiId], this.homepage.past);              
+      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);  
+      return true;              
     } catch(error) {
         alert("Point of Interest not found");
+        return false;
     }      
   }
 
-  findUser(userId: string): void {
+  findUser(userId: string): boolean {
     try{
       let maxLan = -Infinity;
       let minLan = Infinity;
@@ -466,6 +469,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       if(!(searchedHexes.length > 0)){ 
         throw new Error("User not found");
+        return false;
       }
       for(const hex of searchedHexes){
 
@@ -484,9 +488,10 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.searchUserHexIds = this.transformHexagonsToLevel(this.searchUserHexIds);
       this.visualizeMap();
       this.triggerInfoPanel([SearchFunction.SearchByUser, userId]); 
-      this.homepage.enqueue([SearchFunction.SearchByUser, userId], this.homepage.past);
+      return true;
     } catch(error) {
       alert("User ID not found");
+      return false;
     }
   }
 
@@ -523,7 +528,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.visualizeMap();
   }
 
-  findRegion(region: string): void {
+  findRegion(region: string): boolean {
     try {
       const geocoder = new google.maps.Geocoder();
       geocoder.geocode({ address: region }, (results, status) => {
@@ -531,26 +536,29 @@ export class MapComponent implements OnInit, AfterViewInit {
           if (results == null){
             console.error('Geocode was not successful for the following reason:', status);
             alert("Region could not be not found");
-            throw new Error("Wrong region")
+            return false;
           }
-          const result = results[0];
-          const geometry = result.geometry;
-          const bounds = new google.maps.LatLngBounds(geometry.bounds);
-          this.map.fitBounds(bounds);
-          this.searchHexIds = this.filterInBounds(bounds);
-          this.triggerInfoPanel([SearchFunction.SearchByRegion, region]); 
-          this.homepage.enqueue([SearchFunction.SearchByRegion, region], this.homepage.past);
+          else {
+            const result = results[0];
+            const geometry = result.geometry;
+            const bounds = new google.maps.LatLngBounds(geometry.bounds);
+            this.map.fitBounds(bounds);
+            this.searchHexIds = this.filterInBounds(bounds);
+            this.triggerInfoPanel([SearchFunction.SearchByRegion, region]); 
+            return true;
+          }
         } else {
           console.error('Geocode was not successful for the following reason:', status);
           alert("Region could not be not found");
-          throw new Error('Geocoding failed');
+          return false;
         }
       })
+      return false;
     }
     catch {
       console.error("Region could not be not found");
       alert("Region could not be not found");
-      throw new Error("Region could not be not found");
+      return false;
     }
   }
 }

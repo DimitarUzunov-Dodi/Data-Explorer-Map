@@ -16,7 +16,7 @@ export class TopBarComponent {
   type:SearchFunction = SearchFunction.SearchByHex;
   @Output() searchTriggered: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
   @Output() clearSearchTriggered: EventEmitter<void> = new EventEmitter<void>();
-  constructor(){}
+  constructor(private homepage: HomepageComponent){}
   onSearchKeyPress(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       this.triggerSearch();
