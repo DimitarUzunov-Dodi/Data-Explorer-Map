@@ -23,7 +23,7 @@ export class UserInfotainmentPanelComponent implements OnInit {
   }
 
   openPoiInfotainment(poiId: string) {
-    this.homepage.handleSearchTriggered(["poi", poiId], true)
+    this.homepage.handleSearchTriggered(["poi", poiId])
   }
 
 
