@@ -68,7 +68,7 @@ export class PoiService {
   }
   getPoIsByHexId(hexId: string): PointOfInterest[] {
     const fex = this.poiPerHex.get(hexId) ?? [];
-    console.log(fex);
+    
     return fex;
   }
 

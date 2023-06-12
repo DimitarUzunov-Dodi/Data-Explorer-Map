@@ -12,14 +12,14 @@ describe('HexagonInfotainmentPanelComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ HexagonInfotainmentPanelComponent, PieChartComponent ],
       imports: [HttpClientTestingModule],
-      providers: [HomepageComponent], 
+      providers: [HomepageComponent],
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(HexagonInfotainmentPanelComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  });6
 
   it('should create', () => {
     expect(component).toBeTruthy();

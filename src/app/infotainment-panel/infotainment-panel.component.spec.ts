@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InfotainmentPanelComponent } from './infotainment-panel.component';
+import { HomepageComponent } from '../homepage/homepage.component';
 
 describe('InfotainmentPanelComponent', () => {
   let component: InfotainmentPanelComponent;
@@ -8,7 +9,8 @@ describe('InfotainmentPanelComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InfotainmentPanelComponent ]
+      declarations: [ InfotainmentPanelComponent ],
+      providers: [HomepageComponent]
     })
     .compileComponents();
 

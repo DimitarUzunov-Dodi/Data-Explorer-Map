@@ -1,15 +1,18 @@
-<div class="top-bar">
-  <button id="toggle-panel-btn" (click)="togglePanel()">Infotainment Panel</button>
-</div>
 
-<app-hexagon-infotainment-panel *ngIf="chooseInfPanel === 'hex'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedHex]="searchedHex"  >
+
+<button id="toggle-panel-btn" (click)="togglePanel()">Infotainment Panel</button>
+<div class="infotainment-panel" [class.show]="showInfotainmentPanel">
+<app-hexagon-infotainment-panel *ngIf="chooseInfPanel === 'hex'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedHex]="searchedId">
 </app-hexagon-infotainment-panel>
 
-<app-user-infotainment-panel *ngIf="chooseInfPanel === 'user'" [showInfotainmentPanel]="showInfotainmentPanel">
+<app-user-infotainment-panel *ngIf="chooseInfPanel === 'user'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedUser] ="searchedId">
 </app-user-infotainment-panel>
 
-<app-poi-infotainment-panel *ngIf="chooseInfPanel === 'poi'" [showInfotainmentPanel]="showInfotainmentPanel" [selectedPoiId]="searchedHex">
+<app-poi-infotainment-panel *ngIf="chooseInfPanel === 'poi'" [showInfotainmentPanel]="showInfotainmentPanel" [selectedPoiId]="searchedId">
 </app-poi-infotainment-panel>
 
-
-
+<div class="button-container">
+    <button id="move" class="back-button" (click)="backButton()">Back</button>
+    <button id="move" class="forward-button" (click)="forwardButton()">Forward</button>
+  </div>
+</div>

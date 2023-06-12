@@ -1,5 +1,5 @@
 <div class="top-bar">
-  <app-top-bar (searchTriggered)="handleSearchTriggered($event, true)" (clearSearchTriggered)="handleClearSearchTriggered()"></app-top-bar>
+  <app-top-bar (searchTriggered)="handleSearchTriggered($event)" (clearSearchTriggered)="handleClearSearchTriggered()"></app-top-bar>
 </div>
 
 <div class="inf">
@@ -7,7 +7,7 @@
 </div>
 
 <div class="map">
-<app-map ></app-map>
+<app-map (showInfotainmentPanel)="handleInfoPanelTriggered($event)"></app-map>
 </div>
 
 <div>

@@ -36,9 +36,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     try {
       this.calculateParentHexId();
       this.calculateArea();
-      console.log("Reseaved hex: " + this.searchedHex)
       this.pois = this.poiService.getPoIsByHexId(this.searchedHex)
-      console.log("Reseaved POIs: " + this.pois)
       const geocodingPromise = this.getCountries()
       const countries: string[] = await geocodingPromise;
       this.countries = [...new Set(countries)];
@@ -132,11 +130,14 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     this.showPoiData = !this.showPoiData;
   }
   openPoiInfotainment(poiId: string) {
-    this.homepage.handleSearchTriggered(["poi", poiId], false)
+    this.homepage.enqueue(["poi", poiId], this.homepage.past);
+    this.homepage.handleSearchTriggered(["poi", poiId])
+    
   } 
 
   openUserInfotainment(userId: string) {
-    this.homepage.handleSearchTriggered(["user", userId], false)
+    this.homepage.enqueue(["user", userId], this.homepage.past);
+    this.homepage.handleSearchTriggered(["user", userId])
   }
   
   convertToCelcius(temp: number): string {

@@ -8,5 +8,6 @@ import { Component, Input } from '@angular/core';
 export class UserInfotainmentPanelComponent {
   @Input()
   showInfotainmentPanel = false;
+  @Input() searchedUser = '';
 
 }
