@@ -218,6 +218,8 @@
 }
 
 #all-user .field h3 {
+  text-align:right; 
+  /*align-content: center;*/
   margin-bottom: 10px;
 }
 
@@ -241,6 +243,14 @@
 
 #userId{
   position: relative;
+  text-align: center;
+}
+
+table{
+  width: 500px;
+}
+
+td{
   text-align: center;
 }
 
