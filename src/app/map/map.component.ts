@@ -261,11 +261,12 @@ export class MapComponent implements OnInit, AfterViewInit {
   @Output() showInfotainmentPanel: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
 
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
-
   searchHexIds: Set<string> = new Set<string>();
   searchUserHexIds:Set<string> = new Set<string>();
+  smallHexToDisplay:Set<string> = new Set<string>();
   flag =false;
   hexagonIds: Set<string> = new Set<string>;
+
   constructor(private poiService: PoiService, private homepage: HomepageComponent) {}
 
   ngOnInit(): void {
@@ -358,10 +359,18 @@ export class MapComponent implements OnInit, AfterViewInit {
   clickedHexId = '';
 
   displayHexagons(hexagons: Set<string>, poisPerHex: Map<string, PointOfInterest[]>): void {
+    console.log(this.zoom,hexagons)
+    for( const hex of this.smallHexToDisplay){
+      hexagons.add(hex);
+    }
+    for (const hex of this.smallHexToDisplay) {
+      this.poiService.getPoIsByHexId(hex).filter(x => this.searchedHazards.has(x.type));
+    }
     for (const hex of hexagons) {
       const poisInHex = this.poiService.getPoIsByHexId(hex).filter(x => this.searchedHazards.has(x.type))
+      
       const hexagonCoords = h3.cellToBoundary(hex, true);
-      if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && poisInHex.length>0 ) {
+      if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && poisInHex.length>0 || this.smallHexToDisplay.has(hex) ) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
           strokeColor: '#FFFFFF',
@@ -370,6 +379,12 @@ export class MapComponent implements OnInit, AfterViewInit {
           fillColor: '#A8CDBB',
           fillOpacity: 0.6,
           zIndex: 2,
+        });
+
+        hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
+          this.homepage.enqueue(['hex', hex], this.homepage.past);
+          this.homepage.handleSearchTriggered(["hex",  hex])
+          this.flag=true;
         });
 
         hexagonPolygon.setMap(this.map);
@@ -414,15 +429,38 @@ export class MapComponent implements OnInit, AfterViewInit {
       const searchedHex = hexId.replace(/\s/g, "");
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
       const resolution = h3.getResolution(searchedHex);
-      if(resolution == -1){ 
-        throw new Error("Hexagon not found");
+      if(resolution == -1 ){ 
+        throw new Error("POI not found");
+      } else if(resolution < resolutionLevel){
+          const poiIdSet = new Set<string>();
+          poiIdSet.add(searchedHex);
+          for( const hexId of this.transformHexagonsToLevel(poiIdSet) ){
+            this.searchHexIds.add(hexId)
+          }
+      } else if(resolution > resolutionLevel){
+        this.smallHexToDisplay.clear();
+        this.smallHexToDisplay.add(searchedHex)
+      } else{
+        this.searchHexIds.clear();
+        this.searchHexIds.add(searchedHex);
       }
-      this.searchHexIds.clear();
-      this.searchHexIds.add(searchedHex);
+      
+      let maxLan = -Infinity;
+      let minLan = Infinity;
+      let maxLng = -Infinity;
+      let minLng = Infinity;
+      for(const coord of hexagonCoords){
+        maxLan = Math.max(maxLan, coord[0]); 
+        minLan = Math.min(minLan, coord[0]);
+        maxLng = Math.max(maxLng, coord[1]);
+        minLng = Math.min(minLng, coord[1]); 
 
-      const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
-      this.map.panTo(newLocation);
-      this.map.setZoom(10);
+      }
+      this.visualizeMap();
+      const bottomLeft = new google.maps.LatLng(minLng, minLan);
+      const topRight = new google.maps.LatLng(maxLng, maxLan);
+      this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));   
+      this.visualizeMap();
       this.triggerInfoPanel([SearchFunction.SearchByHex, hexId]); 
     } catch(error) {
       alert("Hexagon not found");    
@@ -439,14 +477,36 @@ export class MapComponent implements OnInit, AfterViewInit {
       const resolution = h3.getResolution(searchedHex);
       if(resolution == -1 ){ 
         throw new Error("POI not found");
+      } else if(resolution < resolutionLevel){
+          const poiIdSet = new Set<string>();
+          poiIdSet.add(searchedHex);
+          for( const hexId of this.transformHexagonsToLevel(poiIdSet) ){
+            this.searchHexIds.add(hexId)
+          }
+      } else if(resolution > resolutionLevel){
+        this.smallHexToDisplay.clear();
+        this.smallHexToDisplay.add(searchedHex)
+      } else{
+        this.searchHexIds.clear();
+        this.searchHexIds.add(searchedHex);
       }
-      this.searchHexIds.clear();
-      this.searchHexIds.add(searchedHex);
+      let maxLan = -Infinity;
+      let minLan = Infinity;
+      let maxLng = -Infinity;
+      let minLng = Infinity;
+      for(const coord of hexagonCoords){
+        maxLan = Math.max(maxLan, coord[0]); 
+        minLan = Math.min(minLan, coord[0]);
+        maxLng = Math.max(maxLng, coord[1]);
+        minLng = Math.min(minLng, coord[1]); 
 
-      const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
-      this.map.panTo(newLocation);
-      this.map.setZoom(8);       
-      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);                    
+      }
+      this.visualizeMap();
+      const bottomLeft = new google.maps.LatLng(minLng, minLan);
+      const topRight = new google.maps.LatLng(maxLng, maxLan);
+      this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));   
+      this.visualizeMap();
+      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);                     
     } catch(error) {
         alert("Point of Interest not found");
     }      
@@ -519,6 +579,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   clearSearch(){
     this.searchHexIds.clear();
     this.searchUserHexIds.clear();
+    this.smallHexToDisplay.clear();
     this.visualizeMap();
   }
 
