@@ -3,9 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import * as h3 from 'h3-js';
 import { PoiService } from 'src/app/Services/poi.service';
 import { PointOfInterest } from 'src/app/Services/models/poi';
-import { ResolutionLevel } from 'src/app/Services/models/mapModels';
 import { HomepageComponent } from 'src/app/homepage/homepage.component';
-
+import { resolutionLevel } from 'src/app/Services/models/mapModels';
 @Component({
   selector: 'app-hexagon-infotainment-panel',
   templateUrl: './hexagon-infotainment-panel.component.html',
@@ -55,8 +54,7 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
       this.parentHexId="The selected hex has no parent."
     }
     if(resoulution!=-1){
-       const res = this.findClosestResolutionLevel(resoulution-1)
-      this.parentHexId=  h3.cellToParent(this.searchedHex,res);
+      this.parentHexId=  h3.cellToParent(this.searchedHex,resolutionLevel);
     }
   }
 
@@ -134,30 +132,11 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     this.showPoiData = !this.showPoiData;
   }
   openPoiInfotainment(poiId: string) {
-    this.homepage.handleSearchTriggered(["poi", poiId], true)
+    this.homepage.handleSearchTriggered(["poi", poiId], false)
   } 
 
   openUserInfotainment(userId: string) {
     this.homepage.handleSearchTriggered(["user", userId], false)
-  }
-  
-  findClosestResolutionLevel(target: number): ResolutionLevel {
-    let closestResolution: ResolutionLevel = ResolutionLevel.CountryLevel;
-    let closestDifference: number = Math.abs(target - closestResolution);
-  
-    for (const resolutionLevel in ResolutionLevel) {
-      if (isNaN(Number(resolutionLevel))) {
-        const resolutionValue = ResolutionLevel[resolutionLevel] as unknown as number;
-        const difference = Math.abs(target - resolutionValue);
-  
-        if (difference < closestDifference) {
-          closestDifference = difference;
-          closestResolution = resolutionValue;
-        }
-      }
-    }
-  
-    return closestResolution;
   }
   
   convertToCelcius(temp: number): string {
