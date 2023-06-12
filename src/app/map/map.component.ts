@@ -381,6 +381,12 @@ export class MapComponent implements OnInit, AfterViewInit {
           zIndex: 2,
         });
 
+        hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
+          this.homepage.enqueue(['hex', hex], this.homepage.past);
+          this.homepage.handleSearchTriggered(["hex",  hex])
+          this.flag=true;
+        });
+
         hexagonPolygon.setMap(this.map);
         this.displayedHexagons.set(hex, hexagonPolygon);
         this.polygonIds.push(hex);
