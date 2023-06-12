@@ -1,4 +1,5 @@
-    <div class="field">
+<div id="parent-all-hex">
+  <div class="field">
         <h3>Hexagon</h3>
       </div>
     <div class="field">
@@ -12,7 +13,7 @@
     </div>
 
     <div style="text-align: center" class="field">
-      <button id="toggle-panel-btn" (click)="openPoiData()">List of POIs</button>
+      <button id="toggle-panel-btn" (click)="openPoiData()" style="color: #f2f2f2">List of POIs</button>
       <div *ngIf="showPoiData">
         <div *ngIf="pois.length > 0">
           <table>
@@ -38,7 +39,7 @@
 
 
 
-    <div class="field">
+    <div class="field" id="countries">
       <h3>Countries:</h3>
       <ul>
         <li *ngFor="let country of countries">{{ country }}</li>
@@ -59,3 +60,4 @@
     </div>
 
   <app-pie-chart [hexId]="searchedHex"> </app-pie-chart>
+</div>

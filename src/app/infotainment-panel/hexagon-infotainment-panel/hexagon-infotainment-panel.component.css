@@ -14,14 +14,14 @@
     background-color: #f2f2f2;
   }
   .field {
-    text-align: left;
+    text-align: center;
     margin-left: 35px;
     margin-bottom: 10px; /* Adjust the margin-bottom value as needed */
     line-height: 1.2; /* Adjust the line-height value as needed */
-    font-family: "Times New Roman", Times, serif; /* Set the desired font family */
+    font-family: Arial,"Times New Roman", Times, serif; /* Set the desired font family */
 
   }
-  
+
   #toggle-panel-btn  {
     padding: 10px 20px;
     margin-left: 10px;
@@ -31,7 +31,37 @@
     color: black;
     cursor: pointer;
     font-size: 20px;
-    font-family: "Times New Roman", Times, serif; /* Set the desired font family */
+    font-family: Arial,"Times New Roman", Times, serif; /* Set the desired font family */
     margin-bottom: 10px; /* Add margin-bottom for space between the button and the table */
 
   }
+  #parent-all-hex{
+    table-layout: fixed;
+  }
+
+  /* Styling for field container */
+  #countries {
+    margin-bottom: 20px;
+  }
+
+  /* Styling for heading */
+  #countriesh3 {
+    font-family: Arial, serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  /* Styling for unordered list */
+  #countries ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Styling for list items */
+  #countries li {
+    font-family: Arial, serif;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+
