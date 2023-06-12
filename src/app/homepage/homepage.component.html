@@ -3,11 +3,11 @@
 </div>
 
 <div class="inf">
-  <app-infotainment-panel></app-infotainment-panel>
+  <app-infotainment-panel [hexagons] = "hexagons"></app-infotainment-panel>
 </div>
 
 <div class="map">
-<app-map (showInfotainmentPanel)="handleInfoPanelTriggered($event)"></app-map>
+<app-map (showInfotainmentPanel)="handleInfoPanelTriggered($event)" ></app-map>
 </div>
 
 <div>

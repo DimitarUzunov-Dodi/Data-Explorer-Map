@@ -259,7 +259,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   @Input() poiPerHex: Map<string, PointOfInterest[]> = new Map<string, PointOfInterest[]>;
   @Output() showInfotainmentPanel: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
-
+  @Output() foundHexIds: EventEmitter<Set<string>> = new EventEmitter<Set<string>>();
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
 
   searchHexIds: Set<string> = new Set<string>();
@@ -542,6 +542,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             this.map.fitBounds(bounds);
             this.searchHexIds = this.filterInBounds(bounds);
             this.triggerInfoPanel([SearchFunction.SearchByRegion, result.formatted_address]); 
+            this.homepage.hexagons = this.searchHexIds;
             return true;
           }
         } else {

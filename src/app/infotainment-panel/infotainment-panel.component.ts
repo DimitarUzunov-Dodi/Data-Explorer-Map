@@ -1,5 +1,5 @@
 
-import { Component, ViewChild} from '@angular/core';
+import { Component, ViewChild, Input} from '@angular/core';
 import { HexagonInfotainmentPanelComponent } from './hexagon-infotainment-panel/hexagon-infotainment-panel.component';
 import { HomepageComponent } from '../homepage/homepage.component';
 
@@ -13,6 +13,7 @@ export class InfotainmentPanelComponent {
   showInfotainmentPanel = false;
   searchedId = '';
   chooseInfPanel = "";
+  @Input() hexagons: Set<string> = new Set<string>;
   togglePanel(): void {
     this.showInfotainmentPanel = !this.showInfotainmentPanel;
   }
