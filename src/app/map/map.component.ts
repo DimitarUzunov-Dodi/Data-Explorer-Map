@@ -259,7 +259,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   @Input() poiPerHex: Map<string, PointOfInterest[]> = new Map<string, PointOfInterest[]>;
   @Output() showInfotainmentPanel: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
-
+  @Output() foundHexIds: EventEmitter<Set<string>> = new EventEmitter<Set<string>>();
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
   searchHexIds: Set<string> = new Set<string>();
   searchUserHexIds:Set<string> = new Set<string>();
@@ -328,25 +328,25 @@ export class MapComponent implements OnInit, AfterViewInit {
         const minLng = sw.lng();
         const maxLng = ne.lng();
 
-        const coords = [minLat, maxLat, minLng, maxLng];
+        const coords = new google.maps.LatLngBounds(new google.maps.LatLng(minLat, minLng), new google.maps.LatLng(maxLat, maxLng));
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
         this.displayedHexagons = new Map<string, google.maps.Polygon>();
 
-        const hexInBounds = this.filterInBounds(this.hexagonIds, coords);
+        const hexInBounds = this.filterInBounds(coords);
         this.displayHexagons(hexInBounds, this.poiPerHex)
       }
     }
   }
 
-  filterInBounds(hexagons: Set<string>, bounds: number[]): Set<string> {
+  filterInBounds(bounds: google.maps.LatLngBounds): Set<string> {
     const res = new Set<string>;
-    for (const hex of hexagons){
+    for (const hex of this.hexagonIds){
       const coords = h3.cellToLatLng(hex);
       const hexLat = coords[0];
       const hexLng = coords[1];
-      if (hexLat >= bounds[0] && hexLat <= bounds[1] && hexLng >= bounds[2] && hexLng <= bounds[3]){
+      if (bounds.contains(new google.maps.LatLng(hexLat, hexLng))){
         res.add(hex);
       }
     }
@@ -424,7 +424,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.searchedHazards = neededHazards;
   }
 
-  findHexagon(hexId: string): void {
+  findHexagon(hexId: string): boolean {
     try{
       const searchedHex = hexId.replace(/\s/g, "");
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
@@ -462,12 +462,14 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));   
       this.visualizeMap();
       this.triggerInfoPanel([SearchFunction.SearchByHex, hexId]); 
+      return true;
     } catch(error) {
       alert("Hexagon not found");    
+      return false;
     } 
   }
 
-  findPoi(poiId: string): void {
+  findPoi(poiId: string): boolean {
     try{
       const searchedHex = this.poiService.getPoiArr()
                                        .filter(x => x.id === poiId.replace(/\s/g, ""))
@@ -506,15 +508,15 @@ export class MapComponent implements OnInit, AfterViewInit {
       const topRight = new google.maps.LatLng(maxLng, maxLan);
       this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));   
       this.visualizeMap();
-      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);                     
+      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);      
+      return true;               
     } catch(error) {
         alert("Point of Interest not found");
+        return false;
     }      
   }
 
-  
-
-  findUser(userId: string): void {
+  findUser(userId: string): boolean {
     try{
       let maxLan = -Infinity;
       let minLan = Infinity;
@@ -544,11 +546,12 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.searchUserHexIds = this.transformHexagonsToLevel(this.searchUserHexIds);
       this.visualizeMap();
       this.triggerInfoPanel([SearchFunction.SearchByUser, userId]); 
+      return true;
     } catch(error) {
       alert("User ID not found");
+      return false;
     }
   }
-
 
   transformHexagonsToLevel(searchUserHexIds: Set<string>): Set<string>{
 
@@ -583,5 +586,32 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.visualizeMap();
   }
 
+  findRegion(region: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ address: region }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          if (results && results.length > 0) {
+            const result = results[0];
+            const geometry = result.geometry;
+            const bounds = new google.maps.LatLngBounds(geometry.bounds);
+            this.map.fitBounds(bounds);
+            this.searchHexIds = this.filterInBounds(bounds);
+            this.triggerInfoPanel([SearchFunction.SearchByRegion, result.formatted_address]);
+            this.homepage.hexagons = this.searchHexIds;
+            resolve(true);
+          } else {
+            console.error('Geocode was not successful for the following reason:', status);
+            alert("Region could not be found");
+            resolve(false);
+          }
+        } else {
+          console.error('Geocode was not successful for the following reason:', status);
+          alert("Region could not be found");
+          resolve(false);
+        }
+      });
+    });
+  }
 }
 

@@ -36,12 +36,12 @@ export class PoiInfotainmentPanelComponent {
   }
 
   openHexInfotainment(hexId: string){
-    this.homepage.handleSearchTriggered(["hex", hexId])
+    this.homepage.enqueue(["hex", hexId], this.homepage.past);
     this.homepage.handleSearchTriggered(["hex", hexId])
   }
 
   openUserInfotainment(userId :string){
-    this.homepage.handleSearchTriggered(["user", userId])
+    this.homepage.enqueue(["user", userId], this.homepage.past);
     this.homepage.handleSearchTriggered(["user", userId])
   }
 

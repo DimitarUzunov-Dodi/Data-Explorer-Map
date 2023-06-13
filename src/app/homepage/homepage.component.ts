@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Input } from '@angular/core';
 import { MapComponent } from '../map/map.component';
 import { TopBarComponent } from '../top-bar/top-bar.component';
 import { InfotainmentPanelComponent } from '../infotainment-panel/infotainment-panel.component';
@@ -21,20 +21,26 @@ export class HomepageComponent {
   past: [string,string][] = [];
   future: [string,string][] = [];
   title = 'RoadSense';
-
-  async handleSearchTriggered(searchTuple: [string,string]){
+  hexagons: Set<string> = new Set<string>;
+  async handleSearchTriggeredWithEnqueue(searchTuple: [string,string]){
+    const success = this.handleSearchTriggered(searchTuple);
+    if (await success){
+      this.enqueue(searchTuple, this.past);
+    }
+  }
+  async handleSearchTriggered(searchTuple: [string,string]): Promise<boolean>{
     this.mapComponent.clearSearch()
     switch (searchTuple[0]) {
       case SearchFunction.SearchByHex:
-        this.mapComponent.findHexagon(searchTuple[1]);
-        break;
+        return this.mapComponent.findHexagon(searchTuple[1]);
       case SearchFunction.SearchByPoiId:
-        this.mapComponent.findPoi(searchTuple[1]);
-        break;
+        return this.mapComponent.findPoi(searchTuple[1]);
       case SearchFunction.SearchByUser:
-        this.mapComponent.findUser(searchTuple[1]);
-        break;
+        return this.mapComponent.findUser(searchTuple[1]);
+      case SearchFunction.SearchByRegion:
+        return this.mapComponent.findRegion(searchTuple[1]);
     }
+    return false;
   }
 
   async handleInfoPanelTriggered(searchTouple: [string,string]){
@@ -43,8 +49,6 @@ export class HomepageComponent {
     this.infotainmentPanelComponent.searchedId = id
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
     this.infotainmentPanelComponent.chooseInfPanel = searchTouple[0];
-
-
   }
 
   handleClearSearchTriggered(){
