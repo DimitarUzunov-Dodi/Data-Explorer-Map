@@ -508,7 +508,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       const topRight = new google.maps.LatLng(maxLng, maxLan);
       this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));   
       this.visualizeMap();
-      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);                     
+      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);      
+      return true;               
     } catch(error) {
         alert("Point of Interest not found");
         return false;
