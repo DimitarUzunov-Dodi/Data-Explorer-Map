@@ -55,8 +55,6 @@ export class PoiService {
       }
       return map;
     }, beginMapSetup);
-    console.log("setup compete: ");
-    console.log(this.poiPerHex)
   }
 
   getPoiMap() {
@@ -138,20 +136,28 @@ export class PoiService {
 
   }
 
+  getUserPOIs(userId: string){
+
+    return this.poiArr.filter(x => x.userId == userId)
+  }
+
+
+
+
   getHexagonsByPoiId(poiId: string): { hexId: string, resolution: number }[] {
     const hexagons: { hexId: string, resolution: number }[] = [];
-  
-   
+
+
       for (const [hexId, pois] of this.poiPerHex.entries()) {
         const matchingPois = pois.filter(poi => poi.id === poiId);
-  
+
         if (matchingPois.length > 0) {
           const resolution =  h3.getResolution(hexId);
           hexagons.push({ hexId, resolution});
         }
-      
+
     }
-  
+
     return hexagons;
   }
   expDate= new Date();
@@ -161,40 +167,40 @@ export class PoiService {
         this.expDate = new Date(p.createdAt);
         this.expDate.setMonth(this.expDate.getMonth() + 6);
         return this.expDate;
-      case RoadHazardType.Fog: 
+      case RoadHazardType.Fog:
         this.expDate = new Date(p.createdAt);
         this.expDate.setDate(this.expDate.getDate() + 1);
         return this.expDate;
       case RoadHazardType.Aquaplaning:
         this.expDate = new Date(p.createdAt);
         this.expDate.setDate(this.expDate.getDate() + 1);
-        return this.expDate;  
-      case RoadHazardType.IcyRoads:  
+        return this.expDate;
+      case RoadHazardType.IcyRoads:
         this.expDate = new Date(p.createdAt);
         this.expDate.setDate(this.expDate.getDate() + 2);
         return this.expDate;
-      case RoadHazardType.TrafficJams: 
+      case RoadHazardType.TrafficJams:
         this.expDate = new Date(p.createdAt);
         this.expDate.setDate(this.expDate.getDate() + 1);
         return this.expDate;
-      case RoadHazardType.RoadEmergencies:  
+      case RoadHazardType.RoadEmergencies:
         this.expDate = new Date(p.createdAt);
         this.expDate.setDate(this.expDate.getDate() + 1);
         return this.expDate;
-      case RoadHazardType.RoadConditions:  
+      case RoadHazardType.RoadConditions:
       this.expDate = new Date(p.createdAt);
       this.expDate.setDate(this.expDate.getDate() + 1);
       return this.expDate;
       case RoadHazardType.Police:
         this.expDate = new Date(p.createdAt);
         this.expDate.setDate(this.expDate.getDate() + 1);
-        return this.expDate;  
-      case RoadHazardType.CamerasAndRadars: 
+        return this.expDate;
+      case RoadHazardType.CamerasAndRadars:
         this.expDate = new Date(p.createdAt);
         this.expDate.setMonth(this.expDate.getMonth() + 6);
         return this.expDate;
-      
-      case RoadHazardType.Incidents:  
+
+      case RoadHazardType.Incidents:
       this.expDate = new Date(p.createdAt);
       this.expDate.setDate(this.expDate.getDate() + 1);
       return this.expDate;
@@ -202,4 +208,3 @@ export class PoiService {
     }
   }
 }
-

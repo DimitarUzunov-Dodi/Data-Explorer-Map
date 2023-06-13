@@ -15,7 +15,9 @@ export class InfotainmentPanelComponent {
   chooseInfPanel = "";
   @Input() hexagons: Set<string> = new Set<string>;
   togglePanel(): void {
-    this.showInfotainmentPanel = !this.showInfotainmentPanel;
+    if (this.chooseInfPanel != ""){
+      this.showInfotainmentPanel = !this.showInfotainmentPanel;
+    }
   }
   constructor(private homepage: HomepageComponent){}
   backButton():void {
