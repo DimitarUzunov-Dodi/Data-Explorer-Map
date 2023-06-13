@@ -27,11 +27,23 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   showPoiData = false;
   constructor(private http: HttpClient, private poiService: PoiService, private homepage: HomepageComponent) {}
 
+   /**
+   * Lifecycle hook that is called when any of the input properties change.
+   * Used to trigger a refresh of data when the searched hexagon changes.
+   * @param changes An object containing the changed input properties.
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['searchedHex'] && !changes['searchedHex'].firstChange) {
       this.ngOnInit();
     }
   }
+
+   /**
+   * Lifecycle hook that is called after the component has been initialized.
+   * Used to fetch necessary data and perform initialization tasks, 
+   * including calls for other methods to initialize parent hex id, area, points 
+   * of interest, coutries, weather.
+   */
   async ngOnInit(): Promise<void> {
     try {
       this.calculateParentHexId();
@@ -45,7 +57,10 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
       console.error(error);
     }
   }
-
+  
+  /**
+   * Computes the parent hex id of the searched hexagon.
+   */
   calculateParentHexId(): void {
     const resoulution = h3.getResolution(this.searchedHex);
     if (resoulution==1){
@@ -56,12 +71,20 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
     }
   }
 
+   /**
+   * Calculates the area of the hexagon in square kilometers.
+   */
   calculateArea():void{
     const areaMeters = (h3.cellArea(this.searchedHex, 'km2')).toFixed(3);
     this.area =+areaMeters;
 
   }
 
+  /**
+   * Retrieves the countries associated with the hexagon by performing reverse geocoding.
+   * @returns A Promise that resolves to an array of country names.
+   * @throws Error if the hexagon is not found or if reverse geocoding fails.
+   */
   async getCountries(): Promise<string[]> {
     try {
       const newHexagonIds = h3.cellToChildren(this.searchedHex, h3.getResolution(this.searchedHex) + 1);
@@ -97,6 +120,12 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   }
 
   /* eslint-disable */
+
+  /**
+   * Retrieves the weather forecast for the hexagon's coordinates.
+   * @returns A Promise that resolves to the weather forecast response.
+   * @throws Error if failed to fetch the weather forecast.
+   */
   async getWeatherForecast(): Promise<any> {
     const coords = h3.cellToLatLng(this.searchedHex)
     const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${coords[0]}&lon=${coords[1]}&appid=61179205d75402bec9bf8541e2a2846b`;
@@ -126,22 +155,38 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   }
   /* eslint-enable */
 
-  openPoiData() {
+  /**
+   * Toggles the visibility of the POI data in the infotainment panel.
+   */
+  openPoiData(): void {
     this.showPoiData = !this.showPoiData;
   }
-  openPoiInfotainment(poiId: string) {
-    this.homepage.enqueue(["poi", poiId], this.homepage.past);
-    this.homepage.handleSearchTriggered(["poi", poiId])
 
+  /**
+   * Opens the infotainment panel for the selected POI.
+   * @param poiId The ID of the selected POI.
+   */
+  openPoiInfotainment(poiId: string): void {
+    this.homepage.enqueue(['poi', poiId], this.homepage.past);
+    this.homepage.handleSearchTriggered(['poi', poiId]);
   }
 
-  openUserInfotainment(userId: string) {
-    this.homepage.enqueue(["user", userId], this.homepage.past);
-    this.homepage.handleSearchTriggered(["user", userId])
+  /**
+   * Opens the infotainment panel for the user.
+   * @param userId The ID of the user.
+   */
+  openUserInfotainment(userId: string): void {
+    this.homepage.enqueue(['user', userId], this.homepage.past);
+    this.homepage.handleSearchTriggered(['user', userId]);
   }
 
+  /**
+   * Converts temperature from Kelvin to Celsius.
+   * @param temp The temperature in Kelvin.
+   * @returns The temperature in Celsius.
+   */
   convertToCelcius(temp: number): string {
-    return (temp - 273.15).toFixed(0) + " °C";
+    return (temp - 273.15).toFixed(0) + ' °C';
   }
 }
 

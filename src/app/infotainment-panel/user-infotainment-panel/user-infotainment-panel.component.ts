@@ -18,12 +18,21 @@ export class UserInfotainmentPanelComponent implements OnInit {
 
   constructor(private poiService: PoiService,private homepage: HomepageComponent) {}
 
-  ngOnInit(){
-    this.pois = this.poiService.getUserPOIs(this.userId)
+   /**
+   * Lifecycle hook that is called after the component has been initialized.
+   * Used to fetch necessary data and perform initialization tasks, such as
+   * getting the Points of Interested related to the user.
+   */
+   ngOnInit() {
+    this.pois = this.poiService.getUserPOIs(this.userId);
   }
 
-  openPoiInfotainment(poiId: string) {
-    this.homepage.handleSearchTriggered(["poi", poiId])
+  /**
+   * Opens the Point of Interest (POI) infotainment panel for the specified POI ID.
+   * @param poiId The ID of the POI to open.
+   */
+  openPoiInfotainment(poiId: string): void {
+    this.homepage.handleSearchTriggered(['poi', poiId]);
   }
 
 
