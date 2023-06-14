@@ -324,7 +324,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     google.maps.event.addListener(this.map, 'bounds_changed', () => this.visualizeMap());
 
   }
-
+  
+  hexDensities: Map<string, number> = new Map<string, number>();
   visualizeMap(): void {
     {
       const bounds = this.map.getBounds();
@@ -344,6 +345,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.displayedHexagons = new Map<string, google.maps.Polygon>();
 
         const hexInBounds = this.filterInBounds(coords);
+       this.hexDensities = this.calculateHexagonDensity(this.poiPerHex);
         this.displayHexagons(hexInBounds, this.poiPerHex)
       }
     }
@@ -374,6 +376,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       const poisInHex = this.poiService.getPoIsByHexId(hex).filter(x => this.searchedHazards.has(x.type))
 
       const hexagonCoords = h3.cellToBoundary(hex, true);
+      const fillOp = this.hexDensities.get(hex) || 0;
       if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && poisInHex.length>0 || this.smallHexToDisplay.has(hex) ) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
@@ -381,7 +384,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           strokeOpacity: 0.8,
           strokeWeight: 2,
           fillColor: '#577D86',
-          fillOpacity: 0.35,
+          fillOpacity: fillOp,
           zIndex: 2
         });
 
@@ -404,7 +407,7 @@ export class MapComponent implements OnInit, AfterViewInit {
               strokeOpacity: 0.8,
               strokeWeight: 2,
               fillColor: '#577D86',
-              fillOpacity: 0.35,
+              fillOpacity: fillOp,
               zIndex: 1
             });
 
@@ -663,5 +666,33 @@ export class MapComponent implements OnInit, AfterViewInit {
       });
     });
   }
+
+  /**
+ * Calculates the density of points of interest (POIs) for each hexagon based on the provided data.
+ * The density is calculated as the number of POIs per hexagon divided by the maximum density 
+ * to normalize it in the range [0, 1].
+ *
+ * @param {Map<string, PointOfInterest[]>} poisPerHex - A map where each key is a hexagon id,
+ * and the corresponding value is an array of PointOfInterest objects within that hexagon.
+ * @returns {Map<string, number>} - A map where each key represents a hexagon id,
+ * and the corresponding value is the density of POIs for that hexagon.
+ */
+  calculateHexagonDensity(poisPerHex: Map<string, PointOfInterest[]>): Map<string, number> {
+    const densities = new Map<string, number>();
+    let maxDensity = 0;
+  
+    for (const [hex, pois] of poisPerHex.entries()) {
+      const poiCount = pois.length;
+      densities.set(hex, poiCount);
+      maxDensity = Math.max(maxDensity, poiCount);
+    }
+  
+    for (const [hex, density] of densities.entries()) {
+      densities.set(hex, density / maxDensity);
+    }
+  
+    return densities;
+  }
+  
 }
 
