@@ -38,4 +38,5 @@ npx eslint --ext .ts . --fix
 
 ## Dependencies
 - Google Maps API: used to visualize map and for Geocoder
-- H3-js: used to create and visualize hexagons over the map.
+- H3-js: used to create and visualize hexagons over the map
+- Chart.js: JS library used to create interactive charts
