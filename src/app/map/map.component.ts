@@ -269,9 +269,16 @@ export class MapComponent implements OnInit, AfterViewInit {
   showPopup = false;
   poiTypes: Set<string> = new Set<string>;
   hexagonIds: Set<string> = new Set<string>;
+  polygonIds: string[] = [];
+  clickedHexId = '';
 
   constructor(private poiService: PoiService, private homepage: HomepageComponent) {}
 
+/**
+ * Initializes the component and loads data from a JSON file.
+ * Retrieves Points of Interest (POI) from the JSON file and processes it.
+ * Populates the hexagonIds Set with unique hexagon IDs found in the data.
+ */
   ngOnInit(): void {
     // Loads json files from file
     fetch('./assets/mock_data_explorer.json').then(async res => {
@@ -289,7 +296,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
 
   }
-
 
   ngAfterViewInit(): void {
 
@@ -355,11 +361,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
     return res;
   }
-
-  // why is this here?????????
-  polygonIds: string[] = [];
-
-  clickedHexId = '';
 
   displayHexagons(hexagons: Set<string>, poisPerHex: Map<string, PointOfInterest[]>): void {
     console.log(this.zoom,hexagons)
