@@ -269,8 +269,9 @@ export class MapComponent implements OnInit, AfterViewInit {
   polygonIds: string[] = [];
   clickedHexId = '';
 
-  constructor(private poiService: PoiService, private homepage: HomepageComponent) {}
+  constructor(private poiService: PoiService, public homepage: HomepageComponent) {}
 
+  
 /**
  * Initializes the component and loads data from a JSON file.
  * Retrieves Points of Interest (POI) from the JSON file and processes it.
