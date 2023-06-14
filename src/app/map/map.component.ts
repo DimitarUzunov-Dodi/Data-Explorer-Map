@@ -376,10 +376,10 @@ export class MapComponent implements OnInit, AfterViewInit {
       if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && poisInHex.length>0 || this.smallHexToDisplay.has(hex) ) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-          strokeColor: '#1E313A',
+          strokeColor: '#fff',
           strokeOpacity: 0.8,
           strokeWeight: 2,
-          fillColor: '#1E313A',
+          fillColor: '#577D86',
           fillOpacity: 0.35,
           zIndex: 2
         });
