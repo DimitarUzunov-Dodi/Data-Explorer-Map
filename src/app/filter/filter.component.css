@@ -2,17 +2,17 @@
     position: fixed;
     top: 20vh;
     left: 30vw;
-    height: 60vh;
+    height: auto;
     width: 40vw;
     z-index: 1;
     opacity: 0;
 }
 
 .hazards {
-    height: 60vh;
+    height: auto;
     background-color: whitesmoke;
     border: 1px solid black;
-    border-radius: 10px;
+    border-radius: 15px;
 }
 
 #checkBoxForm {
@@ -28,14 +28,20 @@ p {
 }
 
 #selectAll{
-    background-color:#4CAF50;
+    background-color:#577d86;
+    border-top-left-radius: 15px;
+    font-size: 20px;
+    font-weight: bold;
     color:white;
     width: 20vw;
     height: 10vh;
 }
 
 #deselectAll{
-    background-color:#4CAF50;
+    background-color:#577d86;
+    border-top-right-radius: 15px;
+    font-size: 20px;
+    font-weight: bold;
     color:white;
     position: absolute;
     width: 20vw;
@@ -43,24 +49,25 @@ p {
     right: 0;
 }
 
+#hazardBtnImage {
+  height: 54px;
+  width:auto;
+}
+
 #minimizeBtn {
     position: fixed;
-    height: 40px;
-    width: 300px;
-    right: 0;
-    top: 80px;
-    background-color:#4CAF50;
+    top: 3%;
+    right: 3%;
+    background-color:#577d86;
     color:white;
     text-align: center;
-    font-weight: bold;
-    font-size: 16px;
-    border-radius: 10vh;
+    border-radius: 7vh;
     z-index: 1;
 }
 
 .filter.show {
     visibility: visible;
-    opacity: 0.75;
+    opacity: 0.9;
     transition: visibility 0s linear 0s, opacity 500ms;
 }
 

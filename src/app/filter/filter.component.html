@@ -1,10 +1,8 @@
 <div class = "buttonHolder">
-    <button id="minimizeBtn" (click)="changeState()">Open Hazard List</button> 
+    <button id="minimizeBtn" (click)="changeState()"><input type="image" id="hazardBtnImage" src=".\..\assets\hazard_list_button.png"></button> 
 </div>
 <div class = "filter" [class.show]="isShown" [class.hide]="!isShown">
     <div class = "hazards">
-        <p>Which types of hazards would you like to be shown on the map?</p> 
-        
         <button id="selectAll" (click)="selectAll(true)">Select All</button>
         <button id="deselectAll" (click)="selectAll(false)">Clear Selections</button>
         <br>

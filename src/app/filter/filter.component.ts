@@ -25,18 +25,7 @@ export class FilterCheckbox {
       }
 
     changeState() {
-      try {
-        const minibtn : HTMLElement = document.getElementById('minimizeBtn') as HTMLElement;
-        if(this.isShown) {
-          minibtn.innerHTML = 'Open Hazard List';
-        } else {
-          minibtn.innerHTML = 'Close Hazard List';
-        }
         this.isShown = !this.isShown;
-      } catch (error) {
-        console.log(error);
-      }
-      
     }
 
     selectAll(areChecked: boolean) {
