@@ -39,3 +39,14 @@ npx eslint --ext .ts . --fix
 ## Dependencies
 - Google Maps API: used to visualize map and for Geocoder
 - H3-js: used to create and visualize hexagons over the map.
+
+## Usage
+- Each displayed Hexagon represents a reported hazard or a point of interest inside the region the hexagon is on.
+- Hovering over a hexagon will display a pop-up showing all the unique types of hazards.
+- Clicking a hexagon will show an infotainment panel with further information for the hexagon.
+- Searching for hexagon will show an infotainment panel with further information for the hexagon.
+- Searching for a hazard will show an infotainment panel with further information for the hazard.
+- Searching for a user will show an infotainment panel with further information for the user.
+- Searching for a region will show an infotainment panel with further information for the region.
+- Hexagons can be fittered so that only hexagon with certain point of interests will be visualized.
+- Users can navigate between searches and infotainment panels throught the back and forward buttons inside the infotainment panels.
