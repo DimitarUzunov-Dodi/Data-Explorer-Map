@@ -2,7 +2,7 @@
 
 ## Description
 
-Data Explorer Map is Web Tool for visual representation of data that was submitted by vehicles driving on the road across the globe. It aims to provide a tool for visual representation of data that was created by vehicles driving on the road across the globe.
+Data Explorer Map is Web Tool for visual representation of data that was submitted by vehicles driving on the road across the globe.
 
 ## Installation
 -  Make sure you have Node.js and npm (Node Package Manager) installed on your system. You can download them from the official Node.js website: https://nodejs.org 
