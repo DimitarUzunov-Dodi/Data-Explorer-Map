@@ -1,9 +1,18 @@
-<div class="infotainment-panel" [class.show]="showInfotainmentPanel">
-  <div class="poi">
+    <div id="all-pois">
       <h3>POIs</h3>
+    <div class="field" *ngIf="poi">
+      <ul >
+        <p>Id: {{ poi.id }}</p>
+        <p>Date of creation: {{ poi.createdAt | date:'dd/MM/yyyy' }}</p>
+        <p>Expiration date: {{expDate | date:'dd/MM/yyyy'}} </p>
+        <p>Status: {{ stat }}</p>
+        <p>Type: {{ poi.type }}</p>
+        <p>Hex id (max resolution): <a (click)="openHexInfotainment(hexIdMaxRes)">{{hexIdMaxRes}} </a>  </p>
+        <p>User id: <a (click)="openUserInfotainment(poi.userId)">{{ poi.userId }}</a></p>
+      </ul>
+    </div>
+    <div class="field" *ngIf="poi=== null">
+      <h3>No POIs available for this hexagon.</h3>
+    </div>
     </div>
 
-  <div class="field">
-    <h3>Other info: ...</h3>
-  </div>
-</div>

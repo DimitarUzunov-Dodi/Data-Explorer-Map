@@ -1,10 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Input } from '@angular/core';
 import { MapComponent } from '../map/map.component';
 import { TopBarComponent } from '../top-bar/top-bar.component';
 import { InfotainmentPanelComponent } from '../infotainment-panel/infotainment-panel.component';
 import { FilterCheckbox } from '../filter/filter.component';
 import { RoadHazardType } from '../Services/models/poi';
 import { HexagonInfotainmentPanelComponent } from '../infotainment-panel/hexagon-infotainment-panel/hexagon-infotainment-panel.component';
+import { SearchFunction } from '../Services/models/searchModels';
 
 @Component({
   selector: 'app-homepage',
@@ -16,19 +17,40 @@ export class HomepageComponent {
   @ViewChild(TopBarComponent) topBarComponent!: TopBarComponent;
   @ViewChild(InfotainmentPanelComponent) infotainmentPanelComponent!: InfotainmentPanelComponent;
   @ViewChild(FilterCheckbox) filterCheckbox!: FilterCheckbox;
-  @ViewChild(HexagonInfotainmentPanelComponent) hexInfotainmentPanel!: HexagonInfotainmentPanelComponent;
-
-  title = 'Angular';
-  async handleSearchTriggered(searchTouple: [string,string], needsSearching: boolean){
-    if (needsSearching){
-      this.mapComponent.findHexagon(searchTouple)
+  current: [string, string] | undefined = undefined;
+  past: [string,string][] = [];
+  future: [string,string][] = [];
+  title = 'RoadSense';
+  hexagons: Set<string> = new Set<string>;
+  async handleSearchTriggeredWithEnqueue(searchTuple: [string,string]){
+    const success = this.handleSearchTriggered(searchTuple);
+    if (await success){
+      this.enqueue(searchTuple, this.past);
     }
+  }
+  async handleSearchTriggered(searchTuple: [string,string]): Promise<boolean>{
+    this.mapComponent.clearSearch()
+    switch (searchTuple[0]) {
+      case SearchFunction.SearchByHex:
+        return this.mapComponent.findHexagon(searchTuple[1]);
+      case SearchFunction.SearchByPoiId:
+        return this.mapComponent.findPoi(searchTuple[1]);
+      case SearchFunction.SearchByUser:
+        return this.mapComponent.findUser(searchTuple[1]);
+      case SearchFunction.SearchByRegion:
+        return this.mapComponent.findRegion(searchTuple[1]);
+    }
+    return false;
+  }
+
+  async handleInfoPanelTriggered(searchTouple: [string,string]){
+    
     const id = searchTouple[1].replace(/\s/g, "");
-    this.infotainmentPanelComponent.searchedHex = id
+    this.infotainmentPanelComponent.searchedId = id
     this.infotainmentPanelComponent.showInfotainmentPanel = true;
     this.infotainmentPanelComponent.chooseInfPanel = searchTouple[0];
-
   }
+
   handleClearSearchTriggered(){
     this.mapComponent.clearSearch();
     this.infotainmentPanelComponent.chooseInfPanel = ""
@@ -62,5 +84,30 @@ export class HomepageComponent {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  enqueue(element: [string, string], stack: [string, string][]): void {
+    if (this.isEmpty(stack) && this.current == undefined){
+      this.current = element;
+    }
+    else if (this.current != undefined){
+      stack.push(this.current);
+      this.current = element;
+    }
+    this.future = [];
+  }
+  pop(stack: [string, string][]): any {
+    if (this.isEmpty(stack)) {
+      throw new Error("Stack is empty")
+    }
+    else {
+      const res = this.current
+      this.current = stack.pop();
+      return res;
+    }
+
+  }
+  isEmpty(stack: [string, string][]): boolean {
+    return stack.length === 0;
   }
 }

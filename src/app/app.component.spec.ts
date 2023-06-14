@@ -6,7 +6,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule,],
       declarations: [
         AppComponent,
         HomepageComponent

@@ -1,5 +1,5 @@
-<div class="infotainment-panel" [class.show]="showInfotainmentPanel">
-    <div class="Hexagon">
+<div id="parent-all-hex">
+  <div class="field">
         <h3>Hexagon</h3>
       </div>
     <div class="field">
@@ -12,8 +12,8 @@
       <h3>Area: {{area}} km^2</h3>
     </div>
 
-    <div class="field">
-      <button id="toggle-panel-btn" (click)="openPoiData()">List of POI's</button>
+    <div style="text-align: center" class="field">
+      <button id="toggle-panel-btn" (click)="openPoiData()" style="color: #f2f2f2">List of POIs</button>
       <div *ngIf="showPoiData">
         <div *ngIf="pois.length > 0">
           <table>
@@ -23,13 +23,13 @@
               <th>userId</th>
             </tr>
             <tr *ngFor="let poi of pois">
-              <td><a (click)="openPoiInfotainment(poi.id)">{{ poi.id }}</a></td>
+              <td><a (click)="openPoiInfotainment(poi.id)" style="cursor: pointer;text-decoration: underline;">{{ poi.id }}</a></td>
               <td>{{ poi.type }}</td>
-              <td><a (click)="openUserInfotainment(poi.userId)">{{ poi.userId }}</a></td>
+              <td><a (click)="openUserInfotainment(poi.userId)" style="cursor: pointer;text-decoration: underline;">{{ poi.userId }}</a></td>
             </tr>
           </table>
         </div>
-      
+
       <div class="field" *ngIf="pois.length === 0">
         <h3>No POIs available for this hexagon.</h3>
       </div>
@@ -39,7 +39,7 @@
 
 
 
-    <div class="field">
+    <div class="field" id="countries">
       <h3>Countries:</h3>
       <ul>
         <li *ngFor="let country of countries">{{ country }}</li>
@@ -60,6 +60,4 @@
     </div>
 
   <app-pie-chart [hexId]="searchedHex"> </app-pie-chart>
-
-  </div>
-
+</div>

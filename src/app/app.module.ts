@@ -14,12 +14,13 @@ import { PoiInfotainmentPanelComponent } from './infotainment-panel/poi-infotain
 import { HttpClientModule } from '@angular/common/http';
 import { FilterCheckbox } from './filter/filter.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
+import { RegionInfotainmentPanelComponent } from './infotainment-panel/region-infotainment-panel/region-infotainment-panel.component';
 
 
 
 const routes: Routes = [
   { path: '', component: HomepageComponent }
-  
+
 ];
 
 @NgModule({
@@ -34,6 +35,7 @@ const routes: Routes = [
     PoiInfotainmentPanelComponent,
     FilterCheckbox,
     PieChartComponent,
+    RegionInfotainmentPanelComponent
   ],
   imports: [
     BrowserModule,

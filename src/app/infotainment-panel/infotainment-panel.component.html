@@ -1,15 +1,29 @@
-<div class="top-bar">
-  <button id="toggle-panel-btn" (click)="togglePanel()">Infotainment Panel</button>
+
+<button id="toggle-panel-btn" (click)="togglePanel()" [class.show]="showInfotainmentPanel">
+  <img id="infotainment-icon" src="https://static.thenounproject.com/png/3765295-200.png" alt="Infotainment Panel" />
+</button>
+
+<div class="infotainment-panel" [class.show]="showInfotainmentPanel">
+
+  <div class="button-container">
+    <button id="move" class="back-button" (click)="backButton()">
+      <img id="back-icon" src="https://cdn-icons-png.flaticon.com/512/93/93634.png" alt="Back button" />
+    </button>
+    <button id="move" class="forward-button" (click)="forwardButton()">
+      <img id="back-icon" src="https://cdn-icons-png.flaticon.com/512/93/93634.png" alt="Forward button" />
+    </button>
 </div>
 
-<app-hexagon-infotainment-panel *ngIf="chooseInfPanel === 'hex'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedHex]="searchedHex"  >
+<app-hexagon-infotainment-panel *ngIf="chooseInfPanel === 'hex'" [showInfotainmentPanel]="showInfotainmentPanel" [searchedHex]="searchedId">
 </app-hexagon-infotainment-panel>
 
-<app-user-infotainment-panel *ngIf="chooseInfPanel === 'user'" [showInfotainmentPanel]="showInfotainmentPanel">
+<app-user-infotainment-panel *ngIf="chooseInfPanel === 'user'" [showInfotainmentPanel]="showInfotainmentPanel" [userId]="searchedId">
 </app-user-infotainment-panel>
 
-<app-poi-infotainment-panel *ngIf="chooseInfPanel === 'poi'" [showInfotainmentPanel]="showInfotainmentPanel">
+<app-poi-infotainment-panel *ngIf="chooseInfPanel === 'poi'" [showInfotainmentPanel]="showInfotainmentPanel" [selectedPoiId]="searchedId">
 </app-poi-infotainment-panel>
 
+<app-region-infotainment-panel *ngIf="chooseInfPanel === 'region'" [showInfotainmentPanel]="showInfotainmentPanel" [selectedRegionId]="searchedId" [selectedHexagons]="hexagons">
+</app-region-infotainment-panel>
 
-
+</div>

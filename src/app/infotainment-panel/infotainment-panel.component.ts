@@ -1,6 +1,7 @@
 
-import { Component, ViewChild} from '@angular/core';
+import { Component, ViewChild, Input} from '@angular/core';
 import { HexagonInfotainmentPanelComponent } from './hexagon-infotainment-panel/hexagon-infotainment-panel.component';
+import { HomepageComponent } from '../homepage/homepage.component';
 
 @Component({
   selector: 'app-infotainment-panel',
@@ -9,11 +10,35 @@ import { HexagonInfotainmentPanelComponent } from './hexagon-infotainment-panel/
 
 })
 export class InfotainmentPanelComponent {
-  @ViewChild(HexagonInfotainmentPanelComponent) hexInfotainmentPanel!: HexagonInfotainmentPanelComponent;
   showInfotainmentPanel = false;
-  searchedHex = '';
+  searchedId = '';
   chooseInfPanel = "";
+  @Input() hexagons: Set<string> = new Set<string>;
   togglePanel(): void {
-    this.showInfotainmentPanel = !this.showInfotainmentPanel;
+    if (this.chooseInfPanel != ""){
+      this.showInfotainmentPanel = !this.showInfotainmentPanel;
+    }
+  }
+  constructor(private homepage: HomepageComponent){}
+  backButton():void {
+    if (!this.homepage.isEmpty(this.homepage.past) && this.homepage.current != undefined){
+      const cur = this.homepage.pop(this.homepage.past)
+      this.homepage.future.push(cur)
+      this.homepage.handleSearchTriggered(this.homepage.current)
+    }
+    else {
+      throw new Error("")
+    }
+  }
+
+  forwardButton():void {
+    if (!this.homepage.isEmpty(this.homepage.future) && this.homepage.current != undefined){
+      const cur = this.homepage.pop(this.homepage.future)
+      this.homepage.past.push(cur)
+      this.homepage.handleSearchTriggered(this.homepage.current)
+    }
+    else {
+      throw new Error("")
+    }
   }
 }

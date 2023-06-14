@@ -1,10 +1,14 @@
-import {  Component, OnInit, ViewChild, AfterViewInit, Input, ElementRef } from '@angular/core';
+import {  Component, OnInit, ViewChild, AfterViewInit, Input, ElementRef, EventEmitter, Output } from '@angular/core';
 import * as h3 from 'h3-js';
 import {PoiService} from "src/app/Services/poi.service";
 import { PointOfInterest, RoadHazardType } from 'src/app/Services/models/poi';
+import { resolutionLevel } from '../Services/models/mapModels';
+import { SearchFunction } from '../Services/models/searchModels'
 import { GoogleMapsModule } from '@angular/google-maps';
 import { HomepageComponent } from '../homepage/homepage.component';
-import { resolutionLevel } from '../Services/models/mapModels';
+import {ChartModel} from "../Services/models/chartModel";
+
+
 
 
 @Component({
@@ -19,6 +23,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   zoom = 12;
   mapOptions: google.maps.MapOptions = {
     mapTypeId: 'roadmap',
+    backgroundColor: '#212121',
     styles: [
       {
         featureType: 'poi',
@@ -29,7 +34,15 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "geometry",
           "stylers": [
             {
-              "color": "#ebe3cd"
+              "color": "#212121"
+            }
+          ]
+        },
+        {
+          "elementType": "labels.icon",
+          "stylers": [
+            {
+              "visibility": "off"
             }
           ]
         },
@@ -37,7 +50,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "labels.text.fill",
           "stylers": [
             {
-              "color": "#523735"
+              "color": "#757575"
             }
           ]
         },
@@ -45,13 +58,33 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "labels.text.stroke",
           "stylers": [
             {
-              "color": "#f5f1e6"
+              "color": "#212121"
             }
           ]
         },
         {
           "featureType": "administrative",
           "elementType": "geometry",
+          "stylers": [
+            {
+              "color": "#757575"
+            },
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "administrative.country",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#9e9e9e"
+            }
+          ]
+        },
+        {
+          "featureType": "administrative.land_parcel",
           "stylers": [
             {
               "visibility": "off"
@@ -59,38 +92,11 @@ export class MapComponent implements OnInit, AfterViewInit {
           ]
         },
         {
-          "featureType": "administrative",
-          "elementType": "geometry.stroke",
-          "stylers": [
-            {
-              "color": "#c9b2a6"
-            }
-          ]
-        },
-        {
-          "featureType": "administrative.land_parcel",
-          "elementType": "geometry.stroke",
-          "stylers": [
-            {
-              "color": "#dcd2be"
-            }
-          ]
-        },
-        {
-          "featureType": "administrative.land_parcel",
+          "featureType": "administrative.locality",
           "elementType": "labels.text.fill",
           "stylers": [
             {
-              "color": "#ae9e90"
-            }
-          ]
-        },
-        {
-          "featureType": "landscape.natural",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "color": "#dfd2ae"
+              "color": "#bdbdbd"
             }
           ]
         },
@@ -104,28 +110,19 @@ export class MapComponent implements OnInit, AfterViewInit {
         },
         {
           "featureType": "poi",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#757575"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.park",
           "elementType": "geometry",
           "stylers": [
             {
-              "color": "#dfd2ae"
-            }
-          ]
-        },
-        {
-          "featureType": "poi",
-          "elementType": "labels.text.fill",
-          "stylers": [
-            {
-              "color": "#93817c"
-            }
-          ]
-        },
-        {
-          "featureType": "poi.park",
-          "elementType": "geometry.fill",
-          "stylers": [
-            {
-              "color": "#a5b076"
+              "color": "#181818"
             }
           ]
         },
@@ -134,16 +131,25 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "labels.text.fill",
           "stylers": [
             {
-              "color": "#447530"
+              "color": "#616161"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.park",
+          "elementType": "labels.text.stroke",
+          "stylers": [
+            {
+              "color": "#1b1b1b"
             }
           ]
         },
         {
           "featureType": "road",
-          "elementType": "geometry",
+          "elementType": "geometry.fill",
           "stylers": [
             {
-              "color": "#f5f1e6"
+              "color": "#2c2c2c"
             }
           ]
         },
@@ -157,11 +163,20 @@ export class MapComponent implements OnInit, AfterViewInit {
           ]
         },
         {
+          "featureType": "road",
+          "elementType": "labels.text.fill",
+          "stylers": [
+            {
+              "color": "#8a8a8a"
+            }
+          ]
+        },
+        {
           "featureType": "road.arterial",
           "elementType": "geometry",
           "stylers": [
             {
-              "color": "#fdfcf8"
+              "color": "#373737"
             }
           ]
         },
@@ -170,16 +185,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "geometry",
           "stylers": [
             {
-              "color": "#f8c967"
-            }
-          ]
-        },
-        {
-          "featureType": "road.highway",
-          "elementType": "geometry.stroke",
-          "stylers": [
-            {
-              "color": "#e9bc62"
+              "color": "#3c3c3c"
             }
           ]
         },
@@ -188,16 +194,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "geometry",
           "stylers": [
             {
-              "color": "#e98d58"
-            }
-          ]
-        },
-        {
-          "featureType": "road.highway.controlled_access",
-          "elementType": "geometry.stroke",
-          "stylers": [
-            {
-              "color": "#db8555"
+              "color": "#4e4e4e"
             }
           ]
         },
@@ -206,7 +203,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "labels.text.fill",
           "stylers": [
             {
-              "color": "#806b63"
+              "color": "#616161"
             }
           ]
         },
@@ -219,47 +216,20 @@ export class MapComponent implements OnInit, AfterViewInit {
           ]
         },
         {
-          "featureType": "transit.line",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "color": "#dfd2ae"
-            }
-          ]
-        },
-        {
-          "featureType": "transit.line",
+          "featureType": "transit",
           "elementType": "labels.text.fill",
           "stylers": [
             {
-              "color": "#8f7d77"
-            }
-          ]
-        },
-        {
-          "featureType": "transit.line",
-          "elementType": "labels.text.stroke",
-          "stylers": [
-            {
-              "color": "#ebe3cd"
-            }
-          ]
-        },
-        {
-          "featureType": "transit.station",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "color": "#dfd2ae"
+              "color": "#757575"
             }
           ]
         },
         {
           "featureType": "water",
-          "elementType": "geometry.fill",
+          "elementType": "geometry",
           "stylers": [
             {
-              "color": "#b9d3c2"
+              "color": "#000000"
             }
           ]
         },
@@ -268,11 +238,11 @@ export class MapComponent implements OnInit, AfterViewInit {
           "elementType": "labels.text.fill",
           "stylers": [
             {
-              "color": "#92998d"
+              "color": "#3d3d3d"
             }
           ]
         }
-    ],
+      ],
     disableDefaultUI: true,
     maxZoom: 20,
     minZoom: 1,
@@ -289,13 +259,26 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   displayedHexagons: Map<string, google.maps.Polygon> = new Map<string, google.maps.Polygon>();
   @Input() poiPerHex: Map<string, PointOfInterest[]> = new Map<string, PointOfInterest[]>;
-
+  @Output() showInfotainmentPanel: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
+  @Output() foundHexIds: EventEmitter<Set<string>> = new EventEmitter<Set<string>>();
   searchedHazards : Set<RoadHazardType> = new Set<RoadHazardType>(Object.values(RoadHazardType));
-  searchHexId = '';
+  searchHexIds: Set<string> = new Set<string>();
+  searchUserHexIds:Set<string> = new Set<string>();
+  smallHexToDisplay:Set<string> = new Set<string>();
   flag =false;
+  showPopup = false;
+  poiTypes: Set<string> = new Set<string>;
   hexagonIds: Set<string> = new Set<string>;
+  polygonIds: string[] = [];
+  clickedHexId = '';
+
   constructor(private poiService: PoiService, private homepage: HomepageComponent) {}
 
+/**
+ * Initializes the component and loads data from a JSON file.
+ * Retrieves Points of Interest (POI) from the JSON file and processes it.
+ * Populates the hexagonIds Set with unique hexagon IDs found in the data.
+ */
   ngOnInit(): void {
     // Loads json files from file
     fetch('./assets/mock_data_explorer.json').then(async res => {
@@ -313,7 +296,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
 
   }
-
 
   ngAfterViewInit(): void {
 
@@ -355,57 +337,58 @@ export class MapComponent implements OnInit, AfterViewInit {
         const minLng = sw.lng();
         const maxLng = ne.lng();
 
-        const coords = [minLat, maxLat, minLng, maxLng];
+        const coords = new google.maps.LatLngBounds(new google.maps.LatLng(minLat, minLng), new google.maps.LatLng(maxLat, maxLng));
         this.displayedHexagons.forEach((hexagon) => {
           hexagon.setMap(null);
         });
         this.displayedHexagons = new Map<string, google.maps.Polygon>();
 
-        const hexInBounds = this.filterInBounds(this.hexagonIds, coords);
+        const hexInBounds = this.filterInBounds(coords);
         this.displayHexagons(hexInBounds, this.poiPerHex)
       }
     }
   }
 
-  filterInBounds(hexagons: Set<string>, bounds: number[]): Set<string> {
+  filterInBounds(bounds: google.maps.LatLngBounds): Set<string> {
     const res = new Set<string>;
-    for (const hex of hexagons){
+    for (const hex of this.hexagonIds){
       const coords = h3.cellToLatLng(hex);
       const hexLat = coords[0];
       const hexLng = coords[1];
-      if (hexLat >= bounds[0] && hexLat <= bounds[1] && hexLng >= bounds[2] && hexLng <= bounds[3]){
+      if (bounds.contains(new google.maps.LatLng(hexLat, hexLng))){
         res.add(hex);
       }
     }
     return res;
   }
 
-
-  polygonIds: string[] = [];
-
-  clickedHexId = '';
-
   displayHexagons(hexagons: Set<string>, poisPerHex: Map<string, PointOfInterest[]>): void {
-    console.log(hexagons);
+    console.log(this.zoom,hexagons)
+    for( const hex of this.smallHexToDisplay){
+      hexagons.add(hex);
+    }
+    for (const hex of this.smallHexToDisplay) {
+      this.poiService.getPoIsByHexId(hex).filter(x => this.searchedHazards.has(x.type));
+    }
     for (const hex of hexagons) {
+      const poisInHex = this.poiService.getPoIsByHexId(hex).filter(x => this.searchedHazards.has(x.type))
+
       const hexagonCoords = h3.cellToBoundary(hex, true);
-      if (hex == this.searchHexId) {
+      if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && poisInHex.length>0 || this.smallHexToDisplay.has(hex) ) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-          strokeColor: '#FF0000',
+          strokeColor: '#fff',
           strokeOpacity: 0.8,
           strokeWeight: 2,
-          fillColor: '#00FF00',
+          fillColor: '#577D86',
           fillOpacity: 0.35,
+          zIndex: 2
         });
 
         hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-
-          const polygonId = hex;
-          console.log('Clicked polygon ID:', polygonId);
-          this.homepage.handleSearchTriggered(["hex",  polygonId ], true)
+          this.homepage.enqueue(['hex', hex], this.homepage.past);
+          this.homepage.handleSearchTriggered(["hex",  hex])
           this.flag=true;
-
         });
 
         hexagonPolygon.setMap(this.map);
@@ -422,22 +405,65 @@ export class MapComponent implements OnInit, AfterViewInit {
               strokeWeight: 2,
               fillColor: '#577D86',
               fillOpacity: 0.35,
+              zIndex: 1
             });
 
 
+            hexagonPolygon.addListener('mouseover', (event: google.maps.MapMouseEvent) => {
+
+              const model = this.poiService.loadData(hex,"")
+
+              if(model.emergCount > 0){
+                this.poiTypes.add("Emergency Conditions")
+              }
+              if(model.icyCount > 0){
+                this.poiTypes.add("Icy Conditions")
+              }
+              if(model.condCount > 0){
+                this.poiTypes.add("Traffic Conditions")
+              }
+              if(model.aqCount > 0){
+                this.poiTypes.add("Aquaplaning")
+              }
+              if(model.fogCount > 0){
+                this.poiTypes.add("Fog")
+              }
+              if(model.potCount > 0){
+                this.poiTypes.add("Potholes")
+              }
+              if(model.policeCount > 0){
+                this.poiTypes.add("Police")
+              }
+              if(model.cameraCount > 0){
+                this.poiTypes.add("Camera")
+              }
+              if(model.incCount > 0){
+                this.poiTypes.add("Incidents")
+              }
+              if(model.trafficJamsCount > 0){
+                this.poiTypes.add("Traffic Jams")
+              }
+
+              this.showPopup = true
+
+            });
+
+            hexagonPolygon.addListener('mouseout', (event: google.maps.MapMouseEvent) => {
+              this.showPopup = false
+              this.poiTypes.clear()
+            });
+
             hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-
-              const polygonId = hex;
-              console.log('Clicked polygon ID:', polygonId);
-              console.log('Pois:', this.poiPerHex.get(polygonId));
-              this.homepage.handleSearchTriggered(["hex",  polygonId], true)
+              this.homepage.enqueue(['hex', hex], this.homepage.past);
+              this.homepage.handleSearchTriggered(["hex",  hex])
               this.flag=true;
-
             });
 
             hexagonPolygon.setMap(this.map);
             this.displayedHexagons.set(hex, hexagonPolygon);
             this.polygonIds.push(hex);
+
+
           }
         }
       }
@@ -448,58 +474,194 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.searchedHazards = neededHazards;
   }
 
-  moveMap(event: google.maps.MapMouseEvent) {
-    if (event.latLng != null){
-     this.center = (event.latLng.toJSON());
-  }
-}
-
-  findHexagon(searchTouple: [string,string]): void {
-    const searchCommand = searchTouple[0];
-    try {
-
-      let searchedHex = '';
-      if(searchCommand == SearchFunction.SearchByHex){
-        searchedHex = searchTouple[1].replace(/\s/g, "");
-      } else if(searchCommand == SearchFunction.SearchByPoiId){
-        searchedHex  = this.poiService.getPoiArr()
-                                      .filter(x => x.id === searchTouple[1].replace(/\s/g, ""))
-                                      .map(x => x.hexId)[0];
+  findHexagon(hexId: string): boolean {
+    try{
+      const searchedHex = hexId.replace(/\s/g, "");
+      const hexagonCoords = h3.cellToBoundary(searchedHex, true);
+      const resolution = h3.getResolution(searchedHex);
+      if(resolution == -1 ){
+        throw new Error("POI not found");
+      } else if(resolution < resolutionLevel){
+          const poiIdSet = new Set<string>();
+          poiIdSet.add(searchedHex);
+          for( const hexId of this.transformHexagonsToLevel(poiIdSet) ){
+            this.searchHexIds.add(hexId)
+          }
+      } else if(resolution > resolutionLevel){
+        this.smallHexToDisplay.clear();
+        this.smallHexToDisplay.add(searchedHex)
+      } else{
+        this.searchHexIds.clear();
+        this.searchHexIds.add(searchedHex);
       }
+
+      let maxLan = -Infinity;
+      let minLan = Infinity;
+      let maxLng = -Infinity;
+      let minLng = Infinity;
+      for(const coord of hexagonCoords){
+        maxLan = Math.max(maxLan, coord[0]);
+        minLan = Math.min(minLan, coord[0]);
+        maxLng = Math.max(maxLng, coord[1]);
+        minLng = Math.min(minLng, coord[1]);
+
+      }
+      this.visualizeMap();
+      const bottomLeft = new google.maps.LatLng(minLng, minLan);
+      const topRight = new google.maps.LatLng(maxLng, maxLan);
+      this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));
+      this.visualizeMap();
+      this.triggerInfoPanel([SearchFunction.SearchByHex, hexId]);
+      return true;
+    } catch(error) {
+      alert("Hexagon not found");
+      return false;
+    }
+  }
+
+  findPoi(poiId: string): boolean {
+    try{
+      const searchedHex = this.poiService.getPoiArr()
+                                       .filter(x => x.id === poiId.replace(/\s/g, ""))
+                                       .map(x => x.hexId)[0];
 
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
-      const resoulution = h3.getResolution(searchedHex);
-      if(resoulution == -1 && searchCommand == SearchFunction.SearchByHex){
-        throw new Error("Hexagon not found");
-      } else if(resoulution == -1 && searchCommand == SearchFunction.SearchByPoiId){
-        throw new Error("Point of Interest not found");
+      const resolution = h3.getResolution(searchedHex);
+      if(resolution == -1 ){
+        throw new Error("POI not found");
+      } else if(resolution < resolutionLevel){
+          const poiIdSet = new Set<string>();
+          poiIdSet.add(searchedHex);
+          for( const hexId of this.transformHexagonsToLevel(poiIdSet) ){
+            this.searchHexIds.add(hexId)
+          }
+      } else if(resolution > resolutionLevel){
+        this.smallHexToDisplay.clear();
+        this.smallHexToDisplay.add(searchedHex)
+      } else{
+        this.searchHexIds.clear();
+        this.searchHexIds.add(searchedHex);
       }
-      this.searchHexId = searchedHex;
-      //let zoom = 11;
-      const newLocation = new google.maps.LatLng(hexagonCoords[0][1], hexagonCoords[0][0]);
-      this.map.panTo(newLocation);
-      this.map.setZoom(10);
+      let maxLan = -Infinity;
+      let minLan = Infinity;
+      let maxLng = -Infinity;
+      let minLng = Infinity;
+      for(const coord of hexagonCoords){
+        maxLan = Math.max(maxLan, coord[0]);
+        minLan = Math.min(minLan, coord[0]);
+        maxLng = Math.max(maxLng, coord[1]);
+        minLng = Math.min(minLng, coord[1]);
 
+      }
+      this.visualizeMap();
+      const bottomLeft = new google.maps.LatLng(minLng, minLan);
+      const topRight = new google.maps.LatLng(maxLng, maxLan);
+      this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));
+      this.visualizeMap();
+      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);
+      return true;
     } catch(error) {
-      if( searchCommand === SearchFunction.SearchByHex){
-        alert("Hexagon not found");
-        throw new Error("Hexagon not found");
-      } else if ( searchCommand === SearchFunction.SearchByPoiId){
         alert("Point of Interest not found");
-        throw new Error("Point of Interest not found");
+        return false;
+    }
+  }
+
+  findUser(userId: string): boolean {
+    try{
+      let maxLan = -Infinity;
+      let minLan = Infinity;
+      let maxLng = -Infinity;
+      let minLng = Infinity;
+      const searchedHexes = this.poiService.getPoiArr()
+                                         .filter(x => x.userId === userId)
+                                         .map(x => x.hexId);
+
+      if(!(searchedHexes.length > 0)){
+        throw new Error("User not found");
+      }
+      for(const hex of searchedHexes){
+
+        this.searchUserHexIds.add(hex);
+        const hexagonCoords = h3.cellToBoundary(hex, true);
+
+        maxLan = Math.max(maxLan, hexagonCoords[0][0]);
+        minLan = Math.min(minLan, hexagonCoords[0][0]);
+        maxLng = Math.max(maxLng, hexagonCoords[0][1]);
+        minLng = Math.min(minLng, hexagonCoords[0][1]);
+
+      }
+      const bottomLeft = new google.maps.LatLng(minLng, minLan);
+      const topRight = new google.maps.LatLng(maxLng, maxLan);
+      this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));
+      this.searchUserHexIds = this.transformHexagonsToLevel(this.searchUserHexIds);
+      this.visualizeMap();
+      this.triggerInfoPanel([SearchFunction.SearchByUser, userId]);
+      return true;
+    } catch(error) {
+      alert("User ID not found");
+      return false;
+    }
+  }
+
+  transformHexagonsToLevel(searchUserHexIds: Set<string>): Set<string>{
+
+    const returnHexes: Set<string> = new Set<string>();
+    for ( const hexId of searchUserHexIds)  {
+      const hexResolution = h3.getResolution(hexId);
+      if(resolutionLevel < hexResolution){
+        const parentHexId = h3.cellToParent(hexId, resolutionLevel);
+        returnHexes.add(parentHexId);
+
+      } else if(resolutionLevel > hexResolution) {
+        const childrenHexIds = h3.cellToChildren(hexId, resolutionLevel);
+
+        for(const child of childrenHexIds){
+          searchUserHexIds.add(child);
+        }
+      } else{
+        returnHexes.add(hexId)
       }
     }
-
+    return returnHexes;
   }
+
+  triggerInfoPanel(infoTuple: [string,string]) {
+    this.showInfotainmentPanel.emit(infoTuple);
+  }
+
   clearSearch(){
-    this.searchHexId = "";
+    this.searchHexIds.clear();
+    this.searchUserHexIds.clear();
+    this.smallHexToDisplay.clear();
     this.visualizeMap();
   }
 
+  findRegion(region: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ address: region }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          if (results && results.length > 0) {
+            const result = results[0];
+            const geometry = result.geometry;
+            const bounds = new google.maps.LatLngBounds(geometry.bounds);
+            this.map.fitBounds(bounds);
+            this.searchHexIds = this.filterInBounds(bounds);
+            this.triggerInfoPanel([SearchFunction.SearchByRegion, result.formatted_address]);
+            this.homepage.hexagons = this.searchHexIds;
+            resolve(true);
+          } else {
+            console.error('Geocode was not successful for the following reason:', status);
+            alert("Region could not be found");
+            resolve(false);
+          }
+        } else {
+          console.error('Geocode was not successful for the following reason:', status);
+          alert("Region could not be found");
+          resolve(false);
+        }
+      });
+    });
+  }
 }
 
-enum SearchFunction{
-  SearchByHex = 'hex',
-  SearchByPoiId = 'poi',
-  SearchByUser = 'user'
-}

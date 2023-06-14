@@ -1,25 +1,56 @@
-.infotainment-panel {
-  position: fixed;
-  top: 15%;
-  left: -700px;
-  width: 700px;
-  height: 85%;
-  background-color: #f1f1f1;
-  box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3);
-  overflow-y: scroll;
-  z-index: 1;
-  transition: transform 0.3s ease-in-out;
 
+#all-user {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
+  font-family: Arial, serif;
 }
 
-.infotainment-panel .field {
-  text-align: right;
-  padding: 15px;
+#all-user .field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.infotainment-panel.show {
-  transform: translateX(350px);
+#all-user .field h3 {
+  text-align:right;
+  /*align-content: center;*/
+  margin-bottom: 10px;
 }
+
+#all-user .field table {
+  margin: 0 auto; /* Centers the table horizontally */
+}
+
+#all-user .field table td {
+  padding: 10px;
+}
+
+#all-user .field table td a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+#all-user .field table td a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#userId{
+  position: relative;
+  text-align: center;
+}
+
+#all-user{
+  width: 180%;
+}
+
+td{
+  text-align: center;
+}
+
+
+
+
