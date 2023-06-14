@@ -36,6 +36,33 @@
     "userId":"user1"
   },
   {
+    "type":"Fog",
+    "hexId":"891ec8b4473ffff",
+    "id":"101219",
+    "note":"mock_note",
+    "status":"Active",
+    "createdAt":"2018-11-12T14:10:52.985Z",
+    "userId":"user1"
+  },
+  {
+    "type":"Potholes",
+    "hexId":"891ec8b4473ffff",
+    "id":"101217",
+    "note":"mock_note",
+    "status":"Active",
+    "createdAt":"2018-11-12T14:10:52.985Z",
+    "userId":"user1"
+  },
+  {
+    "type":"TrafficJams",
+    "hexId":"891ec8b4473ffff",
+    "id":"101216",
+    "note":"mock_note",
+    "status":"Active",
+    "createdAt":"2018-11-12T14:10:52.985Z",
+    "userId":"user1"
+  },
+  {
     "type":"Police",
     "hexId":"891eccb6ecbffff",
     "id":"135892",
