@@ -10,13 +10,45 @@ import { HomepageComponent } from '../homepage/homepage.component';
   
 })
 export class TopBarComponent {
+  
+  /**
+   * The text entered by the user in the search bar.
+   */
   searchText = '';
+  
+  /**
+   * The label displayed in the search bar.
+   */
   searchBar = 'Search by Hex';
-  selectedOption = '';
-  type:SearchFunction = SearchFunction.SearchByHex;
-  @Output() searchTriggered: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
+  
+  /**
+   * The type of search function to be performed.
+   */
+  type: SearchFunction = SearchFunction.SearchByHex;
+  
+  /**
+   * Event emitter triggered when a search is triggered.
+   * Emits a tuple containing the search function type and the search text.
+   */
+  @Output() searchTriggered: EventEmitter<[string, string]> = new EventEmitter<[string, string]>();
+  
+  /**
+   * Event emitter triggered when a clear search is triggered.
+   * Emits an empty event.
+   */
   @Output() clearSearchTriggered: EventEmitter<void> = new EventEmitter<void>();
-  constructor(private homepage: HomepageComponent){}
+  
+  /**
+   * Creates an instance of the TopBarComponent.
+   * @param homepage - The HomepageComponent instance.
+   */
+  constructor(private homepage: HomepageComponent) {}
+  
+  /**
+   * Event handler for the key press event in the search input field.
+   * Triggers a search if the Enter key is pressed.
+   * @param event - The keyboard event.
+   */
   onSearchKeyPress(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       this.triggerSearch();
@@ -24,11 +56,18 @@ export class TopBarComponent {
     }
   }
 
+  /**
+   * Triggers a search with the selected search function type and search text.
+   */
   triggerSearch() { 
     this.searchTriggered.emit([this.type,this.searchText]); 
   }
 
 
+  /**
+   * Switches the search functionality between different search options.
+   * Updates the search bar label and the search function type accordingly.
+   */
   switchSearch() {
     this.searchText = ''
     if(this.searchBar === 'Search by Hex'){
@@ -47,6 +86,10 @@ export class TopBarComponent {
     }
   }
 
+  /**
+   * Triggers a clear search event.
+   * Emits an empty event to clear the search results.
+   */
   triggerClearSearch() {
     this.clearSearchTriggered.emit(); 
   }
