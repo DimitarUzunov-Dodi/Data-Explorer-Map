@@ -26,8 +26,11 @@
   width: 100%; /* Fill the available width */
   padding: 6px 10px;
   border-radius: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #577d86;
   font-size: 14px;
+  color: #9de3f2; /* White text color */
+  background-color: #333;
+  
 }
 
 .search-container .search-button {
@@ -49,3 +52,5 @@
   width: 500px;
   height: 50px;
 }
+
+
