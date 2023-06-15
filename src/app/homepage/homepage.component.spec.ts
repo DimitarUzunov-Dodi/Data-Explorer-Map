@@ -3,6 +3,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { HomepageComponent } from './homepage.component';
 import { FilterCheckbox } from '../filter/filter.component';
 import { InfotainmentPanelComponent } from '../infotainment-panel/infotainment-panel.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 @Component({
   selector: 'app-top-bar',
@@ -26,7 +27,8 @@ describe('HomepageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HomepageComponent, MockTopBarComponent, MockMapComponent, FilterCheckbox, InfotainmentPanelComponent ]
+      declarations: [ HomepageComponent, MockTopBarComponent, MockMapComponent, FilterCheckbox, InfotainmentPanelComponent ],
+      schemas: [NO_ERRORS_SCHEMA],
     })
     .compileComponents();
 
