@@ -13,7 +13,6 @@ import { resolutionLevel } from 'src/app/Services/models/mapModels';
 export class HexagonInfotainmentPanelComponent implements OnChanges{
   @Input() showInfotainmentPanel = false;
   @Input() searchedHex = '';
-  parentHexId = '';
   area = 0;
   countries: string[] = [];
   weatherIcon = '';
@@ -34,7 +33,6 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
   }
   async ngOnInit(): Promise<void> {
     try {
-      this.calculateParentHexId();
       this.calculateArea();
       this.pois = this.poiService.getPoIsByHexId(this.searchedHex)
       const geocodingPromise = this.getCountries()
@@ -43,16 +41,6 @@ export class HexagonInfotainmentPanelComponent implements OnChanges{
       await this.getWeatherForecast();
     } catch (error) {
       console.error(error);
-    }
-  }
-
-  calculateParentHexId(): void {
-    const resoulution = h3.getResolution(this.searchedHex);
-    if (resoulution==1){
-      this.parentHexId="The selected hex has no parent."
-    }
-    if(resoulution!=-1){
-      this.parentHexId=  h3.cellToParent(this.searchedHex,resolutionLevel);
     }
   }
 
