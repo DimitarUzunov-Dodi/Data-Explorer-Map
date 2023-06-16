@@ -34,7 +34,6 @@
 
 /* Styling for canvas */
 #MyChart {
-  position: absolute;
   font-family: Arial, serif;
   padding-bottom: 25px;
 }
