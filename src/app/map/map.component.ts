@@ -277,22 +277,26 @@ export class MapComponent implements OnInit, AfterViewInit {
  * Retrieves Points of Interest (POI) from the JSON file and processes it.
  * Populates the hexagonIds Set with unique hexagon IDs found in the data.
  */
-  ngOnInit(): void {
-    // Loads json files from file
-    fetch('./assets/mock_data_explorer.json').then(async res => {
-      this.poiService.processJson(await res.json())
+  async ngOnInit(): Promise<void> {
+    try {
+      const response = await fetch('./assets/mock_data_explorer.json');
+      const jsonData = await response.json();
+
+      this.poiService.processJson(jsonData);
       this.poiPerHex = this.poiService.getPoiMap();
+
       const getHex = this.poiPerHex?.keys();
-      if (getHex != undefined){
+
+      if (getHex !== undefined) {
         for (const h of getHex) {
           this.hexagonIds.add(h);
         }
-      }
-      else {
+      } else {
         this.hexagonIds = new Set();
       }
-    });
-
+    } catch (error) {
+      console.error('Error occurred:', error);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -361,7 +365,6 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   displayHexagons(hexagons: Set<string>, poisPerHex: Map<string, PointOfInterest[]>): void {
-    console.log(this.zoom,hexagons)
     for( const hex of this.smallHexToDisplay){
       hexagons.add(hex);
     }

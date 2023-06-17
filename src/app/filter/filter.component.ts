@@ -51,8 +51,6 @@ export class FilterCheckbox {
         const hazards : RoadHazardType[] = Object.values(RoadHazardType);
         const form : HTMLElement | null = document.getElementById('checkBoxForm');
 
-        // console.log(poi);
-
         for (let i  = 0; i < hazards.length; i++) {
             const haz : string = hazards[i].toString();
 
@@ -75,9 +73,6 @@ export class FilterCheckbox {
     }
 
     handleCheckboxChange(hazardType: string, isChecked: boolean) {
-      console.log(hazardType);
-      // console.log(isChecked);
-      console.log([hazardType, isChecked])
       this.hazardChecked.emit([hazardType, isChecked]);
     }
 }
