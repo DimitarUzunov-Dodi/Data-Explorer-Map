@@ -26,7 +26,11 @@ export class UserInfotainmentPanelComponent implements OnInit {
    ngOnInit() {
     this.pois = this.poiService.getUserPOIs(this.userId);
   }
-
+  /**
+  Opens the POI infotainment for the specified POI ID.
+  @param poiId - The ID of the POI to open the infotainment for.
+  @returns void
+  */
   openPoiInfotainment(poiId: string) {
     this.homepage.enqueue(["poi", poiId], this.homepage.past);
     this.homepage.handleSearchTriggered(["poi", poiId])

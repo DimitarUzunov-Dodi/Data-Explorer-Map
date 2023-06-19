@@ -10,6 +10,11 @@ export class RegionInfotainmentPanelComponent{
   @Input() selectedRegionId = '';
   @Input() selectedHexagons: Set<string> = new Set<string>;
   constructor(private homepage: HomepageComponent) {}
+  /**
+  Opens the hex infotainment for the specified hexagon ID.
+  @param hexId - The ID of the hexagon to open the infotainment for.
+  @returns void
+  */
   openHexInfotainment(hexId: string){
     this.homepage.enqueue(["hex", hexId], this.homepage.past);
     this.homepage.handleSearchTriggered(["hex", hexId])
