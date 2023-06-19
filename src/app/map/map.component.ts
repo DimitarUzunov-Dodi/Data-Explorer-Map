@@ -276,11 +276,11 @@ export class MapComponent implements OnInit, AfterViewInit {
   constructor(private poiService: PoiService, public homepage: HomepageComponent) {}
 
   
-/**
- * Initializes the component and loads data from a JSON file.
- * Retrieves Points of Interest (POI) from the JSON file and processes it.
- * Populates the hexagonIds Set with unique hexagon IDs found in the data.
- */
+  /**
+   * Initializes the component and loads data from a JSON file.
+   * Retrieves Points of Interest (POI) from the JSON file and processes it.
+   * Populates the hexagonIds Set with unique hexagon IDs found in the data.
+   */
   async ngOnInit(): Promise<void> {
     try {
       const response = await fetch('./assets/mock_data_explorer.json');
@@ -303,33 +303,29 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
   }
 
-/**
- * Performs actions after the view has been initialized.
- * Checks for the availability of the geolocation API and retrieves the current position if available.
- * Sets the center coordinates of the map based on the current position or uses a default center.
- * Initializes the map component.
- */
+  /**
+   * Performs actions after the view has been initialized.
+   * Checks for the availability of the geolocation API and retrieves the current position if available.
+   * Sets the center coordinates of the map based on the current position or uses a default center.
+   * Initializes the map component.
+   */
   ngAfterViewInit(): void {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.center = { lat: position.coords.latitude, lng: position.coords.longitude };
-          this.initializeMap();
-        },
-        () => {
-          this.initializeMap();
-        }
-      );
-    } else {
-      this.initializeMap();
-    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.center = { lat: position.coords.latitude, lng: position.coords.longitude };
+        this.initializeMap();
+      },
+      () => {
+        this.initializeMap();
+      }
+    );
   }
 
-/**
- * Initializes the map component with the specified center coordinates and options.
- * Creates a Google Maps map instance and binds it to the map element in the view.
- * Sets up an event listener for the 'bounds_changed' event to trigger the visualization of hexagons based on the map bounds.
- */
+  /**
+   * Initializes the map component with the specified center coordinates and options.
+   * Creates a Google Maps map instance and binds it to the map element in the view.
+   * Sets up an event listener for the 'bounds_changed' event to trigger the visualization of hexagons based on the map bounds.
+   */
   initializeMap(): void {
     this.map = new google.maps.Map(this.mapElement.nativeElement, {
       center: this.center,
@@ -348,8 +344,6 @@ export class MapComponent implements OnInit, AfterViewInit {
    * Retrieves the hexagons within the current bounds using the `filterInBounds` method.
    * Displays the filtered hexagons on the map using the `displayHexagons` method.
  */
-  
-  
   visualizeMap(): void {
     const bounds = this.map.getBounds();
     if (bounds) {
@@ -371,17 +365,17 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.displayHexagons(hexInBounds, this.poiPerHex)
       }
 
-    }
+  }
 
   /**
- * Filters the hexagons based on whether they fall within the specified bounds.
- * Iterates through the `hexagonIds` Set and checks if each hexagon's coordinates fall within the given bounds.
- * If a hexagon's coordinates are within the bounds, it is added to the resulting Set.
- * Returns a Set containing the hexagons that fall within the specified bounds.
- *
- * @param bounds - The LatLngBounds object representing the bounds to filter the hexagons.
- * @returns A Set of hexagon IDs that fall within the specified bounds.
- */
+   * Filters the hexagons based on whether they fall within the specified bounds.
+   * Iterates through the `hexagonIds` Set and checks if each hexagon's coordinates fall within the given bounds.
+   * If a hexagon's coordinates are within the bounds, it is added to the resulting Set.
+   * Returns a Set containing the hexagons that fall within the specified bounds.
+   *
+   * @param bounds - The LatLngBounds object representing the bounds to filter the hexagons.
+   * @returns A Set of hexagon IDs that fall within the specified bounds.
+   */
   filterInBounds(bounds: google.maps.LatLngBounds): Set<string> {
     const res = new Set<string>;
     for (const hex of this.hexagonIds){
@@ -396,14 +390,14 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   /**
- * Displays hexagons on the map based on the provided hexagon IDs and points of interest (POIs).
- * It iterates through each hexagon ID and checks if it meets the specified conditions to be displayed.
- * Hexagons that meet the conditions are rendered as polygons on the map.
- * The method also attaches click event listeners to the hexagons for interaction.
- *
- * @param hexagons - A Set of hexagon IDs to be displayed on the map.
- * @param poisPerHex - A Map that stores the points of interest (POIs) per hexagon ID.
- */
+   * Displays hexagons on the map based on the provided hexagon IDs and points of interest (POIs).
+   * It iterates through each hexagon ID and checks if it meets the specified conditions to be displayed.
+   * Hexagons that meet the conditions are rendered as polygons on the map.
+   * The method also attaches click event listeners to the hexagons for interaction.
+   *
+   * @param hexagons - A Set of hexagon IDs to be displayed on the map.
+   * @param poisPerHex - A Map that stores the points of interest (POIs) per hexagon ID.
+   */
   displayHexagons(hexagons: Set<string>, poisPerHex: Map<string, PointOfInterest[]>): void {
     for( const hex of this.smallHexToDisplay){
       hexagons.add(hex);
@@ -529,25 +523,25 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   /**
- * Updates the set of needed road hazards based on the provided set of road hazard types.
- * The method replaces the existing set of searched hazards with the new set.
- *
- * @param neededHazards - A Set of RoadHazardType representing the new set of needed road hazards.
- */
-  updateHazards(neededHazards: Set<RoadHazardType>) {
+   * Updates the set of needed road hazards based on the provided set of road hazard types.
+   * The method replaces the existing set of searched hazards with the new set.
+   *
+   * @param neededHazards - A Set of RoadHazardType representing the new set of needed road hazards.
+   */
+    updateHazards(neededHazards: Set<RoadHazardType>) {
     this.searchedHazards = neededHazards;
   }
 
   /**
- * Finds and displays a specific hexagon on the map based on the provided hexagon ID.
- * The method retrieves the coordinates of the hexagon, determines its resolution level,
- * and sets the appropriate hexagons to be displayed on the map.
- * It also adjusts the map view to focus on the selected hexagon.
- *
- * @param hexId - A string representing the hexagon ID to be found and displayed.
- * @returns A boolean indicating whether the hexagon was found and displayed successfully.
- *          Returns true if the hexagon was found and displayed, false otherwise.
- */
+   * Finds and displays a specific hexagon on the map based on the provided hexagon ID.
+   * The method retrieves the coordinates of the hexagon, determines its resolution level,
+   * and sets the appropriate hexagons to be displayed on the map.
+   * It also adjusts the map view to focus on the selected hexagon.
+   *
+   * @param hexId - A string representing the hexagon ID to be found and displayed.
+   * @returns A boolean indicating whether the hexagon was found and displayed successfully.
+   *          Returns true if the hexagon was found and displayed, false otherwise.
+   */
   findHexagon(hexId: string): boolean {
     try{
       const searchedHex = hexId.replace(/\s/g, "");
@@ -594,15 +588,15 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   /**
- * Finds and displays a specific point of interest (POI) on the map based on the provided POI ID.
- * The method retrieves the associated hexagon ID of the POI, determines the resolution level of the hexagon,
- * and sets the appropriate hexagons to be displayed on the map.
- * It also adjusts the map view to focus on the hexagon containing the selected POI.
- *
- * @param poiId - A string representing the ID of the point of interest to be found and displayed.
- * @returns A boolean indicating whether the point of interest was found and displayed successfully.
- *          Returns true if the POI was found and displayed, false otherwise.
- */
+   * Finds and displays a specific point of interest (POI) on the map based on the provided POI ID.
+   * The method retrieves the associated hexagon ID of the POI, determines the resolution level of the hexagon,
+   * and sets the appropriate hexagons to be displayed on the map.
+   * It also adjusts the map view to focus on the hexagon containing the selected POI.
+   *
+   * @param poiId - A string representing the ID of the point of interest to be found and displayed.
+   * @returns A boolean indicating whether the point of interest was found and displayed successfully.
+   *          Returns true if the POI was found and displayed, false otherwise.
+   */
   findPoi(poiId: string): boolean {
     try{
       const searchedHex = this.poiService.getPoiArr()
@@ -651,14 +645,14 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   /**
- * Finds and displays the hexagons associated with a specific user on the map based on the provided user ID.
- * The method retrieves the associated hexagon IDs of the user's points of interest (POIs),
- * determines the boundaries of these hexagons, and adjusts the map view to focus on the user's hexagons.
- *
- * @param userId - A string representing the ID of the user whose hexagons are to be found and displayed.
- * @returns A boolean indicating whether the user's hexagons were found and displayed successfully.
- *          Returns true if the user's hexagons were found and displayed, false otherwise.
- */
+   * Finds and displays the hexagons associated with a specific user on the map based on the provided user ID.
+   * The method retrieves the associated hexagon IDs of the user's points of interest (POIs),
+   * determines the boundaries of these hexagons, and adjusts the map view to focus on the user's hexagons.
+   *
+   * @param userId - A string representing the ID of the user whose hexagons are to be found and displayed.
+   * @returns A boolean indicating whether the user's hexagons were found and displayed successfully.
+   *          Returns true if the user's hexagons were found and displayed, false otherwise.
+   */
   findUser(userId: string): boolean {
     try{
       let maxLan = -Infinity;
@@ -697,13 +691,13 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   /**
- * Transforms a set of hexagon IDs to a specific resolution level and returns the transformed hexagon IDs.
- * This method allows adjusting the resolution level of the hexagons based on a desired level,
- * by either finding the parent hexagon or obtaining the children hexagons at the specified resolution.
- *
- * @param searchUserHexIds - A set of hexagon IDs to be transformed to the desired resolution level.
- * @returns A set of hexagon IDs at the specified resolution level.
- */
+   * Transforms a set of hexagon IDs to a specific resolution level and returns the transformed hexagon IDs.
+   * This method allows adjusting the resolution level of the hexagons based on a desired level,
+   * by either finding the parent hexagon or obtaining the children hexagons at the specified resolution.
+   *
+   * @param searchUserHexIds - A set of hexagon IDs to be transformed to the desired resolution level.
+   * @returns A set of hexagon IDs at the specified resolution level.
+   */
   transformHexagonsToLevel(searchUserHexIds: Set<string>): Set<string>{
 
     const returnHexes: Set<string> = new Set<string>();
@@ -727,14 +721,14 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   /**
- * Finds and displays a region on the map based on the provided region name.
- * This method uses the Google Maps Geocoding service to retrieve the coordinates of the region,
- * and then fits the map bounds to display the region. It also filters and stores the hexagon IDs
- * that fall within the displayed region.
- *
- * @param region - The name of the region to be found and displayed.
- * @returns A Promise that resolves to a boolean indicating whether the region was successfully found and displayed.
- */
+   * Finds and displays a region on the map based on the provided region name.
+   * This method uses the Google Maps Geocoding service to retrieve the coordinates of the region,
+   * and then fits the map bounds to display the region. It also filters and stores the hexagon IDs
+   * that fall within the displayed region.
+   *
+   * @param region - The name of the region to be found and displayed.
+   * @returns A Promise that resolves to a boolean indicating whether the region was successfully found and displayed.
+   */
   findRegion(region: string): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       const geocoder = new google.maps.Geocoder();
@@ -764,23 +758,23 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   /**
- * Triggers the display of the infotainment panel with the provided information tuple.
- * Emits an event to show the infotainment panel with the specified information.
- *
- * @param infoTuple - A tuple containing the information to be displayed in the infotainment panel.
- *                    The first element of the tuple represents the type of search function,
- *                    and the second element represents the corresponding search query or identifier.
- */
+   * Triggers the display of the infotainment panel with the provided information tuple.
+   * Emits an event to show the infotainment panel with the specified information.
+   *
+   * @param infoTuple - A tuple containing the information to be displayed in the infotainment panel.
+   *                    The first element of the tuple represents the type of search function,
+   *                    and the second element represents the corresponding search query or identifier.
+   */
   triggerInfoPanel(infoTuple: [string,string]) { 
     this.showInfotainmentPanel.emit(infoTuple);
   }
 
-/**
- * Clears the search state and resets the map display.
- * This method clears the search results by clearing the sets of search hexagons and user hexagons,
- * as well as the set of small hexagons to display. It then triggers the visualization of the map
- * to update the display accordingly.
- */
+  /**
+   * Clears the search state and resets the map display.
+   * This method clears the search results by clearing the sets of search hexagons and user hexagons,
+   * as well as the set of small hexagons to display. It then triggers the visualization of the map
+   * to update the display accordingly.
+   */
   clearSearch(){
     this.searchHexIds.clear();
     this.searchUserHexIds.clear();
@@ -788,16 +782,16 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.visualizeMap();
   }
 
-/*
- * Calculates the density of points of interest (POIs) for each hexagon based on the provided data.
- * The density is calculated as the number of POIs per hexagon divided by the maximum density 
- * to normalize it in the range [0, 1].
- *
- * @param {Map<string, PointOfInterest[]>} poisPerHex - A map where each key is a hexagon id,
- * and the corresponding value is an array of PointOfInterest objects within that hexagon.
- * @returns {Map<string, number>} - A map where each key represents a hexagon id,
- * and the corresponding value is the density of POIs for that hexagon.
- */
+  /**
+  * Calculates the density of points of interest (POIs) for each hexagon based on the provided data.
+  * The density is calculated as the number of POIs per hexagon divided by the maximum density 
+  * to normalize it in the range [0, 1].
+  *
+  * @param {Map<string, PointOfInterest[]>} poisPerHex - A map where each key is a hexagon id,
+  * and the corresponding value is an array of PointOfInterest objects within that hexagon.
+  * @returns {Map<string, number>} - A map where each key represents a hexagon id,
+  * and the corresponding value is the density of POIs for that hexagon.
+  */
   calculateHexagonDensity(poisPerHex: Map<string, PointOfInterest[]>): Map<string, number> {
     const densities = new Map<string, number>();
     let maxDensity = 0;
@@ -814,6 +808,5 @@ export class MapComponent implements OnInit, AfterViewInit {
   
     return densities;
   }
-  
 }
 
