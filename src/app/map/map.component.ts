@@ -660,7 +660,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           }
         } else {
           console.error('Geocode was not successful for the following reason:', status);
-          alert("Region could not be found");
+          alert("Nothing like this found! Are you sure this is what you are looking for?");
           resolve(false);
         }
       });
