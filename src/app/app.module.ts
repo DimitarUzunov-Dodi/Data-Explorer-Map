@@ -20,7 +20,7 @@ import { RegionInfotainmentPanelComponent } from './infotainment-panel/region-in
 
 const routes: Routes = [
   { path: '', component: HomepageComponent }
-  
+
 ];
 
 @NgModule({
@@ -35,7 +35,7 @@ const routes: Routes = [
     PoiInfotainmentPanelComponent,
     FilterCheckbox,
     PieChartComponent,
-    RegionInfotainmentPanelComponent,
+    RegionInfotainmentPanelComponent
   ],
   imports: [
     BrowserModule,

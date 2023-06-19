@@ -14,23 +14,18 @@ export class FilterCheckbox {
 
     isShown  = false;
 
+    hazards: Hazard[] = [];
+
     ngOnInit(): void {
-        this.initializeCheckBox();
+      const hazardValues: string[] = Object.values(RoadHazardType);
+      this.hazards = hazardValues.map(value => ({
+        value,
+        checked: true
+      }));
       }
 
     changeState() {
-      try {
-        const minibtn : HTMLElement = document.getElementById('minimizeBtn') as HTMLElement;
-        if(this.isShown) {
-          minibtn.innerHTML = 'Open Hazard List';
-        } else {
-          minibtn.innerHTML = 'Close Hazard List';
-        }
         this.isShown = !this.isShown;
-      } catch (error) {
-        console.log(error);
-      }
-      
     }
 
     selectAll(areChecked: boolean) {
@@ -44,35 +39,15 @@ export class FilterCheckbox {
         console.log(error);
       }
     }
-    
-    initializeCheckBox() {
-
-        // add try/catch to make sure poi is array of string and form is an HTMLElement ?
-        const hazards : RoadHazardType[] = Object.values(RoadHazardType);
-        const form : HTMLElement | null = document.getElementById('checkBoxForm');
-
-        for (let i  = 0; i < hazards.length; i++) {
-            const haz : string = hazards[i].toString();
-
-            const checkBox : HTMLInputElement = document.createElement('input');
-            checkBox.type = 'checkbox';
-            checkBox.checked = true;
-
-            // new Array of keys of RoadHazardTypes for checkbox value so a method can return the key?
-            checkBox.value = haz;
-            checkBox.onchange = () => { this.handleCheckboxChange(checkBox.value, checkBox.checked) };
-            checkBox.name = 'boxcheck';
-
-            const label : HTMLLabelElement = document.createElement('label');
-            label.textContent = haz;
-
-            form?.appendChild(checkBox);
-            form?.appendChild(label);
-            form?.appendChild(document.createElement('br'));
-        }
-    }
 
     handleCheckboxChange(hazardType: string, isChecked: boolean) {
-      this.hazardChecked.emit([hazardType, isChecked]);
+      console.log(hazardType);
+      console.log([hazardType, isChecked])
+       this.hazardChecked.emit([hazardType, isChecked]);
     }
+}
+
+interface Hazard {
+  value: string;
+  checked: boolean;
 }

@@ -1,1 +1,9 @@
 <div #map style="height: 100% !important;width: 100% !important;"></div>
+<div id="popupContainer" *ngIf="showPopup">
+  <div id="popupContent">
+    <h2>POI Types</h2>
+    <ul>
+      <li *ngFor="let poiType of poiTypes">{{ poiType }}</li>
+    </ul>
+  </div>
+</div>
