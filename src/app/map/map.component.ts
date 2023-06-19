@@ -377,7 +377,23 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       const hexagonCoords = h3.cellToBoundary(hex, true);
       const fillOp = this.hexDensities.get(hex) || 0;
-      if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && poisInHex.length>0 || this.smallHexToDisplay.has(hex) ) {
+      if (h3.getResolution(hex) > resolutionLevel){
+        console.log("enters")
+        const hexagonPolygon = new google.maps.Polygon({
+          paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+          strokeColor: '#fff',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#577D86',
+          fillOpacity: 1,
+          zIndex: 2
+        });
+
+        hexagonPolygon.setMap(this.map);
+        this.displayedHexagons.set(hex, hexagonPolygon);
+        this.polygonIds.push(hex);
+      }
+      else if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && poisInHex.length>0 || this.smallHexToDisplay.has(hex) ) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
           strokeColor: '#fff',

@@ -1,23 +1,48 @@
-
 #all-user {
+  text-align: center;
+  height: 100%;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-family: Arial, serif;
 }
 
-#all-user .field {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+h3{
+  font-family: Arial, sans-serif;
 }
 
-#all-user .field h3 {
-  text-align:right;
-  /*align-content: center;*/
-  margin-bottom: 10px;
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.field {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+p{
+  padding: 5%;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul p {
+  margin: 5px 0;
+}
+
+ul p a {
+  text-decoration: none;
+}
+
+ul p a:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 #all-user .field table {
@@ -41,10 +66,6 @@
 #userId{
   position: relative;
   text-align: center;
-}
-
-#all-user{
-  width: 180%;
 }
 
 td{

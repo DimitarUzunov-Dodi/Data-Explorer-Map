@@ -41,6 +41,7 @@
   background-color: #577d86;
   cursor: pointer;
   font-size: 20px;
+  z-index: 3;
 }
 
 #toggle-panel-btn.show {
