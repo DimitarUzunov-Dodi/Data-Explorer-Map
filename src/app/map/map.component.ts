@@ -6,6 +6,7 @@ import { resolutionLevel } from '../Services/models/mapModels';
 import { SearchFunction } from '../Services/models/searchModels'
 import { GoogleMapsModule } from '@angular/google-maps';
 import { HomepageComponent } from '../homepage/homepage.component';
+import {ChartModel} from "../Services/models/chartModel";
 
 
 
@@ -265,11 +266,15 @@ export class MapComponent implements OnInit, AfterViewInit {
   searchUserHexIds:Set<string> = new Set<string>();
   smallHexToDisplay:Set<string> = new Set<string>();
   flag =false;
+  showPopup = false;
+  poiTypes: Set<string> = new Set<string>;
   hexagonIds: Set<string> = new Set<string>;
   polygonIds: string[] = [];
   clickedHexId = '';
-  
+  hexDensities: Map<string, number> = new Map<string, number>();
+
   constructor(private poiService: PoiService, private homepage: HomepageComponent) {}
+
 /**
  * Initializes the component and loads data from a JSON file.
  * Retrieves Points of Interest (POI) from the JSON file and processes it.
@@ -338,6 +343,8 @@ export class MapComponent implements OnInit, AfterViewInit {
    * Retrieves the hexagons within the current bounds using the `filterInBounds` method.
    * Displays the filtered hexagons on the map using the `displayHexagons` method.
  */
+  
+  
   visualizeMap(): void {
     const bounds = this.map.getBounds();
     if (bounds) {
@@ -354,11 +361,12 @@ export class MapComponent implements OnInit, AfterViewInit {
         hexagon.setMap(null);
       });
       this.displayedHexagons = new Map<string, google.maps.Polygon>();
-
       const hexInBounds = this.filterInBounds(coords);
+      this.hexDensities = this.calculateHexagonDensity(this.poiPerHex);
       this.displayHexagons(hexInBounds, this.poiPerHex)
+      }
+
     }
-  }
 
   /**
  * Filters the hexagons based on whether they fall within the specified bounds.
@@ -401,16 +409,17 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
     for (const hex of hexagons) {
       const poisInHex = this.poiService.getPoIsByHexId(hex).filter(x => this.searchedHazards.has(x.type))
-      
+
       const hexagonCoords = h3.cellToBoundary(hex, true);
+      const fillOp = this.hexDensities.get(hex) || 0;
       if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && poisInHex.length>0 || this.smallHexToDisplay.has(hex) ) {
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-          strokeColor: '#1E313A',
+          strokeColor: '#fff',
           strokeOpacity: 0.8,
           strokeWeight: 2,
-          fillColor: '#1E313A',
-          fillOpacity: 0.35,
+          fillColor: '#577D86',
+          fillOpacity: fillOp,
           zIndex: 2
         });
 
@@ -433,10 +442,54 @@ export class MapComponent implements OnInit, AfterViewInit {
               strokeOpacity: 0.8,
               strokeWeight: 2,
               fillColor: '#577D86',
-              fillOpacity: 0.35,
+              fillOpacity: fillOp,
               zIndex: 1
             });
 
+
+            hexagonPolygon.addListener('mouseover', (event: google.maps.MapMouseEvent) => {
+
+              const model = this.poiService.loadData(hex,"")
+
+              if(model.emergCount > 0){
+                this.poiTypes.add("Emergency Conditions")
+              }
+              if(model.icyCount > 0){
+                this.poiTypes.add("Icy Conditions")
+              }
+              if(model.condCount > 0){
+                this.poiTypes.add("Traffic Conditions")
+              }
+              if(model.aqCount > 0){
+                this.poiTypes.add("Aquaplaning")
+              }
+              if(model.fogCount > 0){
+                this.poiTypes.add("Fog")
+              }
+              if(model.potCount > 0){
+                this.poiTypes.add("Potholes")
+              }
+              if(model.policeCount > 0){
+                this.poiTypes.add("Police")
+              }
+              if(model.cameraCount > 0){
+                this.poiTypes.add("Camera")
+              }
+              if(model.incCount > 0){
+                this.poiTypes.add("Incidents")
+              }
+              if(model.trafficJamsCount > 0){
+                this.poiTypes.add("Traffic Jams")
+              }
+
+              this.showPopup = true
+
+            });
+
+            hexagonPolygon.addListener('mouseout', (event: google.maps.MapMouseEvent) => {
+              this.showPopup = false
+              this.poiTypes.clear()
+            });
 
             hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
               this.homepage.enqueue(['hex', hex], this.homepage.past);
@@ -447,6 +500,8 @@ export class MapComponent implements OnInit, AfterViewInit {
             hexagonPolygon.setMap(this.map);
             this.displayedHexagons.set(hex, hexagonPolygon);
             this.polygonIds.push(hex);
+
+
           }
         }
       }
@@ -478,7 +533,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       const searchedHex = hexId.replace(/\s/g, "");
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
       const resolution = h3.getResolution(searchedHex);
-      if(resolution == -1 ){ 
+      if(resolution == -1 ){
         throw new Error("POI not found");
       } else if(resolution < resolutionLevel){
           const poiIdSet = new Set<string>();
@@ -493,29 +548,29 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.searchHexIds.clear();
         this.searchHexIds.add(searchedHex);
       }
-      
+
       let maxLan = -Infinity;
       let minLan = Infinity;
       let maxLng = -Infinity;
       let minLng = Infinity;
       for(const coord of hexagonCoords){
-        maxLan = Math.max(maxLan, coord[0]); 
+        maxLan = Math.max(maxLan, coord[0]);
         minLan = Math.min(minLan, coord[0]);
         maxLng = Math.max(maxLng, coord[1]);
-        minLng = Math.min(minLng, coord[1]); 
+        minLng = Math.min(minLng, coord[1]);
 
       }
       this.visualizeMap();
       const bottomLeft = new google.maps.LatLng(minLng, minLan);
       const topRight = new google.maps.LatLng(maxLng, maxLan);
-      this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));   
+      this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));
       this.visualizeMap();
-      this.triggerInfoPanel([SearchFunction.SearchByHex, hexId]); 
+      this.triggerInfoPanel([SearchFunction.SearchByHex, hexId]);
       return true;
     } catch(error) {
-      alert("Hexagon not found");    
+      alert("Hexagon not found");
       return false;
-    } 
+    }
   }
 
   /**
@@ -533,10 +588,10 @@ export class MapComponent implements OnInit, AfterViewInit {
       const searchedHex = this.poiService.getPoiArr()
                                        .filter(x => x.id === poiId.replace(/\s/g, ""))
                                        .map(x => x.hexId)[0];
-      
+
       const hexagonCoords = h3.cellToBoundary(searchedHex, true);
       const resolution = h3.getResolution(searchedHex);
-      if(resolution == -1 ){ 
+      if(resolution == -1 ){
         throw new Error("POI not found");
       } else if(resolution < resolutionLevel){
           const poiIdSet = new Set<string>();
@@ -556,23 +611,23 @@ export class MapComponent implements OnInit, AfterViewInit {
       let maxLng = -Infinity;
       let minLng = Infinity;
       for(const coord of hexagonCoords){
-        maxLan = Math.max(maxLan, coord[0]); 
+        maxLan = Math.max(maxLan, coord[0]);
         minLan = Math.min(minLan, coord[0]);
         maxLng = Math.max(maxLng, coord[1]);
-        minLng = Math.min(minLng, coord[1]); 
+        minLng = Math.min(minLng, coord[1]);
 
       }
       this.visualizeMap();
       const bottomLeft = new google.maps.LatLng(minLng, minLan);
       const topRight = new google.maps.LatLng(maxLng, maxLan);
-      this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));   
+      this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));
       this.visualizeMap();
-      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);      
-      return true;               
+      this.triggerInfoPanel([SearchFunction.SearchByPoiId, poiId]);
+      return true;
     } catch(error) {
         alert("Point of Interest not found");
         return false;
-    }      
+    }
   }
 
   /**
@@ -594,7 +649,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                                          .filter(x => x.userId === userId)
                                          .map(x => x.hexId);
 
-      if(!(searchedHexes.length > 0)){ 
+      if(!(searchedHexes.length > 0)){
         throw new Error("User not found");
       }
       for(const hex of searchedHexes){
@@ -602,10 +657,10 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.searchUserHexIds.add(hex);
         const hexagonCoords = h3.cellToBoundary(hex, true);
 
-        maxLan = Math.max(maxLan, hexagonCoords[0][0]); 
+        maxLan = Math.max(maxLan, hexagonCoords[0][0]);
         minLan = Math.min(minLan, hexagonCoords[0][0]);
         maxLng = Math.max(maxLng, hexagonCoords[0][1]);
-        minLng = Math.min(minLng, hexagonCoords[0][1]); 
+        minLng = Math.min(minLng, hexagonCoords[0][1]);
 
       }
       const bottomLeft = new google.maps.LatLng(minLng, minLan);
@@ -613,7 +668,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.fitBounds(new google.maps.LatLngBounds(bottomLeft, topRight));
       this.searchUserHexIds = this.transformHexagonsToLevel(this.searchUserHexIds);
       this.visualizeMap();
-      this.triggerInfoPanel([SearchFunction.SearchByUser, userId]); 
+      this.triggerInfoPanel([SearchFunction.SearchByUser, userId]);
       return true;
     } catch(error) {
       alert("User ID not found");
@@ -640,13 +695,13 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       } else if(resolutionLevel > hexResolution) {
         const childrenHexIds = h3.cellToChildren(hexId, resolutionLevel);
-        
+
         for(const child of childrenHexIds){
           searchUserHexIds.add(child);
         }
       } else{
         returnHexes.add(hexId)
-      } 
+      }
     }
     return returnHexes;
   }
@@ -699,6 +754,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   triggerInfoPanel(infoTuple: [string,string]) { 
     this.showInfotainmentPanel.emit(infoTuple);
   }
+
 /**
  * Clears the search state and resets the map display.
  * This method clears the search results by clearing the sets of search hexagons and user hexagons,
@@ -711,5 +767,33 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.smallHexToDisplay.clear();
     this.visualizeMap();
   }
+
+/*
+ * Calculates the density of points of interest (POIs) for each hexagon based on the provided data.
+ * The density is calculated as the number of POIs per hexagon divided by the maximum density 
+ * to normalize it in the range [0, 1].
+ *
+ * @param {Map<string, PointOfInterest[]>} poisPerHex - A map where each key is a hexagon id,
+ * and the corresponding value is an array of PointOfInterest objects within that hexagon.
+ * @returns {Map<string, number>} - A map where each key represents a hexagon id,
+ * and the corresponding value is the density of POIs for that hexagon.
+ */
+  calculateHexagonDensity(poisPerHex: Map<string, PointOfInterest[]>): Map<string, number> {
+    const densities = new Map<string, number>();
+    let maxDensity = 0;
+  
+    for (const [hex, pois] of poisPerHex.entries()) {
+      const poiCount = pois.length;
+      densities.set(hex, poiCount);
+      maxDensity = Math.max(maxDensity, poiCount);
+    }
+  
+    for (const [hex, density] of densities.entries()) {
+      densities.set(hex, density / maxDensity);
+    }
+  
+    return densities;
+  }
+  
 }
 

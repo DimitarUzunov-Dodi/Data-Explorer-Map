@@ -27,13 +27,8 @@ export class UserInfotainmentPanelComponent implements OnInit {
     this.pois = this.poiService.getUserPOIs(this.userId);
   }
 
-  /**
-   * Opens the Point of Interest (POI) infotainment panel for the specified POI ID.
-   * @param poiId The ID of the POI to open.
-   */
-  openPoiInfotainment(poiId: string): void {
-    this.homepage.handleSearchTriggered(['poi', poiId]);
+  openPoiInfotainment(poiId: string) {
+    this.homepage.enqueue(["poi", poiId], this.homepage.past);
+    this.homepage.handleSearchTriggered(["poi", poiId])
   }
-
-
 }
