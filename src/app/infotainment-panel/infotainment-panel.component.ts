@@ -26,7 +26,7 @@ export class InfotainmentPanelComponent {
    * Initializes the InfotainmentPanelComponent.
    * @param homepage - The HomepageComponent instance.
    */
-  constructor(private homepage: HomepageComponent) {}
+  constructor(public homepage: HomepageComponent) {}
 
   /**
    * Handles the back button functionality.
