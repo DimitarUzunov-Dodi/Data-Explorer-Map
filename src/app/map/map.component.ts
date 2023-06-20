@@ -310,7 +310,7 @@ export class MapComponent implements OnInit, AfterViewInit {
    *
    * @param neededHazards - A Set of RoadHazardType representing the new set of needed road hazards.
    */
-    updateHazards(neededHazards: Set<RoadHazardType>) {
+  updateHazards(neededHazards: Set<RoadHazardType>) {
     this.searchedHazards = neededHazards;
   }
 

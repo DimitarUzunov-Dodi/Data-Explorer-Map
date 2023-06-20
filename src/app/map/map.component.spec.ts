@@ -38,22 +38,22 @@ describe('MapComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // ngOnInit
   it('should load and process data from JSON file during initialization', async () => {
     const poi: PointOfInterest = {
-      id: "135892",
-      type:  RoadHazardType.Police,
+      id: '135892',
+      type: RoadHazardType.Police,
       createdAt: new Date('2016-11-04T16:57:11.718Z'),
-      hexId : "891eccb6ecbffff",
-      status: "Active",
-      note : "mock_note",
+      hexId: '891eccb6ecbffff',
+      status: 'Active',
+      note: 'mock_note',
       userId: 'user1'
     };
     const inp = new Map<string, PointOfInterest[]>();
-    inp.set("891eccb6ecbffff", [poi])
+    inp.set('891eccb6ecbffff', [poi]);
 
     spyOn(poiService, 'processJson').and.callThrough();
     spyOn(poiService, 'getPoiMap').and.returnValue(inp);
-
 
     const response = await fetch('./assets/mock_data_explorer.json');
     const jsonData = await response.json();
@@ -74,7 +74,7 @@ describe('MapComponent', () => {
   it('should handle error during data loading', async () => {
     spyOn(poiService, 'processJson').and.callThrough();
     spyOn(poiService, 'getPoiMap').and.returnValue(new Map<string, PointOfInterest[]>());
-  
+
     const response = await fetch('./assets/mock_data_explorer.json');
     const jsonData = await response.json();
 
@@ -85,9 +85,7 @@ describe('MapComponent', () => {
     expect(component.hexagonIds.size).toBe(0); // Adjust the expected size based on your mock data
   });
 
-  it('should load map with current center', () => {
-  });
-
+  // ngAfterViewInit
   it('should initialize the map with current position if geolocation is available', () => {
     const mockPosition: GeolocationPosition = {
       coords: {
@@ -121,8 +119,7 @@ describe('MapComponent', () => {
       code: 1,
       PERMISSION_DENIED: 1,
       POSITION_UNAVAILABLE: 2,
-      TIMEOUT: 3 // Use the appropriate constant value based on your test case
-      ,
+      TIMEOUT: 3, // Use the appropriate constant value based on your test case
       message: ''
     };
 
@@ -140,5 +137,72 @@ describe('MapComponent', () => {
     expect(component.initializeMap).toHaveBeenCalled();
   });
 
+  //clearSearch
+  it('should clear search data and visualize the map', () => {
+    // Arrange
+    component.searchHexIds = new Set<string>
+    component.searchUserHexIds = new Set<string>
+    component.smallHexToDisplay = new  Set<string>
+  
+    spyOn(component, 'visualizeMap');
+  
+    // Act
+    component.clearSearch();
+  
+    // Assert
+    expect(component.searchHexIds.size).toBe(0);
+    expect(component.searchUserHexIds.size).toBe(0);
+    expect(component.smallHexToDisplay.size).toBe(0);
+    expect(component.visualizeMap).toHaveBeenCalled();
+  });
 
+  //triggerInfoPanel
+  it('should emit showInfotainmentPanel event with the provided infoTuple', () => {
+    const infoTuple: [string, string] = ['Info 1', 'Info 2'];
+    spyOn(component.showInfotainmentPanel, 'emit');
+
+    component.triggerInfoPanel(infoTuple);
+  
+    expect(component.showInfotainmentPanel.emit).toHaveBeenCalledWith(infoTuple);
+  });
+
+  //calculateHexagonDensity
+  it('should calculate the density correctly', () => {
+    const poisPerHex = new Map<string, PointOfInterest[]>();
+    poisPerHex.set('hex1', [
+      { id: '1', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user2' },
+      { id: '3', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note3', userId: 'user1' }
+    ]);
+    poisPerHex.set('hex2', [
+      { id: '4', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex2', status: 'Active', note: 'Note4', userId: 'user2' },
+      { id: '5', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex2', status: 'Active', note: 'Note5', userId: 'user1' }
+    ]);
+    const expectedDensities = new Map<string, number>();
+    expectedDensities.set('hex1', 1);
+    expectedDensities.set('hex2', 0.6666666666666666);
+    const densities = component.calculateHexagonDensity(poisPerHex);
+    expect(densities).toEqual(expectedDensities);
+  });
+
+  it('should handle empty poisPerHex map', () => {
+    const poisPerHex = new Map<string, PointOfInterest[]>();
+    const expectedDensities = new Map<string, number>();
+    const densities = component.calculateHexagonDensity(poisPerHex);
+    expect(densities).toEqual(expectedDensities);
+  });
+
+  it('should handle poisPerHex map with missing hexagons', () => {
+    const poisPerHex = new Map<string, PointOfInterest[]>();
+    poisPerHex.set('hex1', [
+      { id: '1', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user2' }
+    ]);
+    poisPerHex.set('hex2', []);
+    const expectedDensities = new Map<string, number>();
+    expectedDensities.set('hex1', 1);
+    expectedDensities.set('hex2', 0);
+    const densities = component.calculateHexagonDensity(poisPerHex);
+    expect(densities).toEqual(expectedDensities);
+  });
 });
