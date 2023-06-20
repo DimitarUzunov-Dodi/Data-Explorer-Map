@@ -51,7 +51,7 @@ describe('FilterCheckbox', () => {
 
   it('should emit hazardChecked event when handleCheckboxChange() is called', () => {
     spyOn(component.hazardChecked, 'emit');
-    const hazardType = RoadHazardType.Potholes;
+    const hazardType = Object.keys(RoadHazardType)[0];
     const isChecked = true;
     component.handleCheckboxChange(hazardType, isChecked);
     expect(component.hazardChecked.emit).toHaveBeenCalledWith([hazardType, isChecked]);
