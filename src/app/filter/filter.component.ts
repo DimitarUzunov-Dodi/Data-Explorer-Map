@@ -29,7 +29,7 @@ export class FilterCheckbox {
     }
 
   /**
-   * variable that keeps track on weather or not the filter part is shown
+   * function that keeps changes weather or not the filter part is shown
    */
   changeState() {
       this.isShown = !this.isShown;

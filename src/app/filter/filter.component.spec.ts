@@ -26,8 +26,8 @@ describe('FilterCheckbox', () => {
 
   it('should initialize hazards list with values from RoadHazardType enum', () => {
     expect(component.hazards.length).toBe(Object.keys(RoadHazardType).length);
-    expect(component.hazards[0].value).toBe(RoadHazardType.Potholes);
-    // Add assertions for other hazard values
+    expect(component.hazards[0].value).toBe(Object.keys(RoadHazardType)[0]);
+    expect(component.hazards[1].value).toBe(Object.keys(RoadHazardType)[1]);
   });
 
   it('should toggle the state of isShown when changeState() is called', () => {
