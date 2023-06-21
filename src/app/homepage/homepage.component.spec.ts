@@ -150,4 +150,66 @@ describe('HomepageComponent', () => {
     expect(component.mapComponent.updateHazards).toHaveBeenCalledWith(hazardSet);
     expect(component.mapComponent.visualizeMap).toHaveBeenCalled();
   });
+
+  it('should enqueue the element and update current if stack is empty', () => {
+    const element: [string, string] = ['functionType', 'searchText'];
+    const stack: [string, string][] = [];
+    const expectedStack: [string, string][] = [];
+    const expectedCurrent: [string, string] = ['functionType', 'searchText'];
+    const expectedFuture: [string, string][] = [];
+
+    component.enqueue(element, stack);
+
+    expect(stack).toEqual(expectedStack);
+    expect(component.current).toEqual(expectedCurrent);
+    expect(component.future).toEqual(expectedFuture);
+  });
+
+  // it('should enqueue the element and push current to the stack if current is not undefined', () => {
+  //   const element1: [string, string] = ['functionType1', 'searchText1'];
+  //   const element2: [string, string] = ['functionType2', 'searchText2'];
+  //   const stack: [string, string][] = [['functionType1', 'searchText1']];
+  //   const expectedStack: [string, string][] = [['functionType1', 'searchText1'], ['functionType', 'searchText']];
+  //   const expectedCurrent: [string, string] = ['functionType2', 'searchText2'];
+  //   const expectedFuture: [string, string][] = [];
+
+  //   component.enqueue(element1, stack);
+  //   component.enqueue(element2, stack);
+    
+
+  //   expect(stack).toEqual(expectedStack);
+  //   expect(component.current).toEqual(expectedCurrent);
+  //   expect(component.future).toEqual(expectedFuture);
+  // });
+
+  it("should pop and return the top element from the stack, and throw an error when is empty", () => {
+    let stack: [string, string][]
+    stack = [['hex', '881ec218e9fffff'], ['poi', '1539639'], ['user', 'user2']];
+    component.pop(stack);
+    expect(component.current).toEqual(['user', 'user2']);
+    expect(stack).toEqual([['hex', '881ec218e9fffff'], ['poi', '1539639']]);
+    component.pop(stack);
+    expect(component.current).toEqual(['poi', '1539639']);
+    expect(stack).toEqual([['hex', '881ec218e9fffff']]);
+    component.pop(stack);
+    expect(component.current).toEqual(['hex', '881ec218e9fffff']);
+    expect(stack).toEqual([]);
+    expect(() => component.pop(stack)).toThrow(new Error("Stack is empty"));
+  });
+
+  it("should return true for an empty stack", () => {
+    const stack: [string, string][] = [];
+    const result = component.isEmpty(stack);
+    expect(result).toBe(true);
+  });
+
+  it("should return false for a non-empty stack", () => {
+    const stack: [string, string][] =  [['item1', 'value1'], ['item2', 'value2']];
+    const result = component.isEmpty(stack);
+    expect(result).toBe(false);
+  });
+
+
 });
+
+
