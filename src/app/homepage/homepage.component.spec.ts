@@ -165,23 +165,6 @@ describe('HomepageComponent', () => {
     expect(component.future).toEqual(expectedFuture);
   });
 
-  // it('should enqueue the element and push current to the stack if current is not undefined', () => {
-  //   const element1: [string, string] = ['functionType1', 'searchText1'];
-  //   const element2: [string, string] = ['functionType2', 'searchText2'];
-  //   const stack: [string, string][] = [['functionType1', 'searchText1']];
-  //   const expectedStack: [string, string][] = [['functionType1', 'searchText1'], ['functionType', 'searchText']];
-  //   const expectedCurrent: [string, string] = ['functionType2', 'searchText2'];
-  //   const expectedFuture: [string, string][] = [];
-
-  //   component.enqueue(element1, stack);
-  //   component.enqueue(element2, stack);
-    
-
-  //   expect(stack).toEqual(expectedStack);
-  //   expect(component.current).toEqual(expectedCurrent);
-  //   expect(component.future).toEqual(expectedFuture);
-  // });
-
   it("should pop and return the top element from the stack, and throw an error when is empty", () => {
     let stack: [string, string][]
     stack = [['hex', '881ec218e9fffff'], ['poi', '1539639'], ['user', 'user2']];
