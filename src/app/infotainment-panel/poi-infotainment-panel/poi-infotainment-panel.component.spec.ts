@@ -14,7 +14,7 @@ describe('PoiInfotainmentPanelComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ PoiInfotainmentPanelComponent ],
-      providers: [HomepageComponent]
+      providers: [HomepageComponent, PoiService]
     })
     .compileComponents();
 
