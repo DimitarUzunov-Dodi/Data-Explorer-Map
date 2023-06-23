@@ -70,7 +70,9 @@ describe('UserInfotainmentPanelComponent', () => {
   it('should call homepage handleSearchTriggered method when opening POI infotainment', () => {
     const poiId = '135892';
     spyOn(homepage, 'handleSearchTriggered');
+    spyOn(homepage, 'enqueue');
     component.openPoiInfotainment(poiId);
+    expect(homepage.enqueue).toHaveBeenCalledWith(['poi', poiId], homepage.past);
     expect(homepage.handleSearchTriggered).toHaveBeenCalledWith(['poi', poiId]);
   });
 });
