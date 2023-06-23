@@ -127,35 +127,54 @@ describe('HomepageComponent', () => {
     expect(component.mapComponent.updateHazards).toHaveBeenCalledWith(new Set(Object.values(RoadHazardType)));
     expect(component.mapComponent.visualizeMap).toHaveBeenCalled();
   });
-  
-  it('should update hazards with the selected hazard type and visualize the map when status is false', () => {
+
+  it('should update hazards with all hazard types and visualize the map when status is false', () => {
     spyOn(component.mapComponent, 'updateHazards');
     spyOn(component.mapComponent, 'visualizeMap');
   
-    const hazardType: RoadHazardType = RoadHazardType.Fog;
+    component.allHazardsSelection(false);
   
-    component.handleHazardCheckboxChange([hazardType, false]);
-    const hazardSet: Set<RoadHazardType> = new Set<RoadHazardType>();
+    expect(component.mapComponent.updateHazards).toHaveBeenCalledWith(new Set());
+    expect(component.mapComponent.visualizeMap).toHaveBeenCalled();
+  });
+  
+  it('should add to currentHaz', () => {
+    spyOn(component.mapComponent, 'updateHazards');
+    spyOn(component.mapComponent, 'visualizeMap');
+    component.mapComponent.searchedHazards = new Set<RoadHazardType>;
+    component.mapComponent.searchedHazards.add(RoadHazardType.Potholes)
+    component.mapComponent.searchedHazards.add(RoadHazardType.Police)
+    component.mapComponent.searchedHazards.add(RoadHazardType.Fog)
+    component.handleHazardCheckboxChange([RoadHazardType.Aquaplaning, true]);
+    const result = new Set<RoadHazardType>
+    result.add(RoadHazardType.Potholes)
+    result.add(RoadHazardType.Police)
+    result.add(RoadHazardType.Fog)
+    result.add(RoadHazardType.Aquaplaning)
+    expect(component.mapComponent.updateHazards).toHaveBeenCalledWith(result);
+    expect(component.mapComponent.visualizeMap).toHaveBeenCalled();
+  });
 
-    hazardSet.add(RoadHazardType.Potholes);
-    hazardSet.add(RoadHazardType.Aquaplaning);
-    hazardSet.add(RoadHazardType.IcyRoads);
-    hazardSet.add(RoadHazardType.TrafficJams);
-    hazardSet.add(RoadHazardType.RoadEmergencies);
-    hazardSet.add(RoadHazardType.RoadConditions);
-    hazardSet.add(RoadHazardType.Police);
-    hazardSet.add(RoadHazardType.CamerasAndRadars);
-    hazardSet.add(RoadHazardType.Incidents);
-
-    expect(component.mapComponent.updateHazards).toHaveBeenCalledWith(hazardSet);
+  it('should remove to currentHaz', () => {
+    spyOn(component.mapComponent, 'updateHazards');
+    spyOn(component.mapComponent, 'visualizeMap');
+    component.mapComponent.searchedHazards = new Set<RoadHazardType>;
+    component.mapComponent.searchedHazards.add(RoadHazardType.Potholes)
+    component.mapComponent.searchedHazards.add(RoadHazardType.Police)
+    component.mapComponent.searchedHazards.add(RoadHazardType.Fog)
+    component.handleHazardCheckboxChange([RoadHazardType.Fog, false]);
+    const result = new Set<RoadHazardType>
+    result.add(RoadHazardType.Potholes)
+    result.add(RoadHazardType.Police)
+    expect(component.mapComponent.updateHazards).toHaveBeenCalledWith(result);
     expect(component.mapComponent.visualizeMap).toHaveBeenCalled();
   });
 
   it('should enqueue the element and update current if stack is empty', () => {
-    const element: [string, string] = ['functionType', 'searchText'];
+    const element: [string, string] = ['hex', '1'];
     const stack: [string, string][] = [];
     const expectedStack: [string, string][] = [];
-    const expectedCurrent: [string, string] = ['functionType', 'searchText'];
+    const expectedCurrent: [string, string] = ['hex', '1'];
     const expectedFuture: [string, string][] = [];
 
     component.enqueue(element, stack);
@@ -165,19 +184,50 @@ describe('HomepageComponent', () => {
     expect(component.future).toEqual(expectedFuture);
   });
 
+  it('should enqueue the element and update current if stack is not empty', () => {
+    const element: [string, string] = ['hex', '1'];
+    component.past = [];
+    component.current = ['hex', '2'];
+    component.future = [];
+    const expectedPast: [string, string][] = [['hex', '2']];
+    const expectedFuture: [string, string][] = [];
+
+    component.enqueue(element, component.past);
+
+    expect(component.past).toEqual(expectedPast);
+    expect(component.current).toEqual(element);
+    expect(component.future).toEqual(expectedFuture);
+  });
+
+  it('should enqueue the element and update current if stack has future and past', () => {
+    const element: [string, string] = ['hex', '1'];
+    component.past = [['hex', '3']];
+    component.current = ['hex', '2'];
+    component.future = [['hex', '4']];
+    const expectedPast: [string, string][] = [['hex', '3'], ['hex', '2']];
+    const expectedFuture: [string, string][] = [];
+
+    component.enqueue(element, component.past);
+
+    expect(component.past).toEqual(expectedPast);
+    expect(component.current).toEqual(element);
+    expect(component.future).toEqual(expectedFuture);
+  });
+
   it("should pop and return the top element from the stack, and throw an error when is empty", () => {
-    let stack: [string, string][]
-    stack = [['hex', '881ec218e9fffff'], ['poi', '1539639'], ['user', 'user2']];
-    component.pop(stack);
-    expect(component.current).toEqual(['user', 'user2']);
-    expect(stack).toEqual([['hex', '881ec218e9fffff'], ['poi', '1539639']]);
-    component.pop(stack);
-    expect(component.current).toEqual(['poi', '1539639']);
-    expect(stack).toEqual([['hex', '881ec218e9fffff']]);
-    component.pop(stack);
-    expect(component.current).toEqual(['hex', '881ec218e9fffff']);
-    expect(stack).toEqual([]);
-    expect(() => component.pop(stack)).toThrow(new Error("Stack is empty"));
+    component.future = [];
+    expect(() => component.pop(component.future)).toThrow(new Error("Stack is empty"));
+  });
+
+  it("should pop, change stacks and retunr past current", () => {
+    component.past = [['hex', '1']];
+    component.current = ['hex', '2'];
+    component.future = [['hex', '3']];
+    const res = component.pop(component.future);
+    expect(res).toEqual(['hex', '2'])
+    expect(component.current).toEqual(['hex', '3']);
+    expect(component.future).toEqual([]);
+    expect(component.past).toEqual([['hex', '1']]);
   });
 
   it("should return true for an empty stack", () => {
