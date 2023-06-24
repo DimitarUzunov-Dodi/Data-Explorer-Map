@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { PoiService } from './poi.service';
 import { PointOfInterest, RoadHazardType } from './models/poi';
+import { combineLatest } from 'rxjs';
 
 describe('PoiService', () => {
   let service: PoiService;
@@ -48,6 +49,7 @@ describe('PoiService', () => {
     ];
 
     service.processJson(rawData);
+    const setupSpy = spyOn(service, "setupPois");
     expect(service.getPoiArr().length).toBe(rawData.length);
     expect(service.getPoiArr()[2]).toEqual(new PointOfInterest(
         "152628", 
@@ -153,7 +155,7 @@ describe('PoiService', () => {
     service.poiPerHex.set("891ec1bb28bffff", [
       new PointOfInterest(
       "152628", 
-      RoadHazardType.Police,
+      RoadHazardType.Potholes,
       new Date(validDate),
       "891ec1bb28bffff",
       "Active",
@@ -161,7 +163,7 @@ describe('PoiService', () => {
       'user1'),
       new PointOfInterest(
         "152628", 
-        RoadHazardType.Potholes,
+        RoadHazardType.Fog,
         new Date(validDate),
         "891ec1bb28bffff",
         "Active",
@@ -169,7 +171,7 @@ describe('PoiService', () => {
         'user1'),
         new PointOfInterest(
           "152628", 
-          RoadHazardType.CamerasAndRadars,
+          RoadHazardType.Aquaplaning,
           new Date(invalidDate),
           "891ec1bb28bffff",
           "Active",
@@ -190,8 +192,8 @@ describe('PoiService', () => {
 
     expect(chartModel).toBeDefined();
     expect(chartModel.potCount).toBe(1);
-    expect(chartModel.policeCount).toBe(1);
-    expect(chartModel.cameraCount).toBe(0);
+    expect(chartModel.fogCount).toBe(1);
+    expect(chartModel.aqCount).toBe(0);
   });
 
   it('should filter POI data for Month', () => {
@@ -204,7 +206,7 @@ describe('PoiService', () => {
     service.poiPerHex.set("891ec1bb28bffff", [
       new PointOfInterest(
       "152628", 
-      RoadHazardType.Police,
+      RoadHazardType.Aquaplaning,
       new Date(validDate),
       "891ec1bb28bffff",
       "Active",
@@ -212,7 +214,7 @@ describe('PoiService', () => {
       'user1'),
       new PointOfInterest(
         "152628", 
-        RoadHazardType.Potholes,
+        RoadHazardType.IcyRoads,
         new Date(validDate),
         "891ec1bb28bffff",
         "Active",
@@ -220,7 +222,7 @@ describe('PoiService', () => {
         'user1'),
         new PointOfInterest(
           "152628", 
-          RoadHazardType.CamerasAndRadars,
+          RoadHazardType.TrafficJams,
           new Date(invalidDate),
           "891ec1bb28bffff",
           "Active",
@@ -240,9 +242,9 @@ describe('PoiService', () => {
     const chartModel = service.loadData(hexId, history);
 
     expect(chartModel).toBeDefined();
-    expect(chartModel.potCount).toBe(1);
-    expect(chartModel.policeCount).toBe(1);
-    expect(chartModel.cameraCount).toBe(0);
+    expect(chartModel.aqCount).toBe(1);
+    expect(chartModel.icyCount).toBe(1);
+    expect(chartModel.trafficJamsCount).toBe(0);
   });
 
   it('should filter POI data for Week', () => {
@@ -255,7 +257,7 @@ describe('PoiService', () => {
     service.poiPerHex.set("891ec1bb28bffff", [
       new PointOfInterest(
       "152628", 
-      RoadHazardType.Police,
+      RoadHazardType.TrafficJams,
       new Date(validDate),
       "891ec1bb28bffff",
       "Active",
@@ -263,7 +265,7 @@ describe('PoiService', () => {
       'user1'),
       new PointOfInterest(
         "152628", 
-        RoadHazardType.Potholes,
+        RoadHazardType.RoadEmergencies,
         new Date(validDate),
         "891ec1bb28bffff",
         "Active",
@@ -271,7 +273,7 @@ describe('PoiService', () => {
         'user1'),
         new PointOfInterest(
           "152628", 
-          RoadHazardType.CamerasAndRadars,
+          RoadHazardType.RoadConditions,
           new Date(invalidDate),
           "891ec1bb28bffff",
           "Active",
@@ -291,11 +293,60 @@ describe('PoiService', () => {
     const chartModel = service.loadData(hexId, history);
 
     expect(chartModel).toBeDefined();
-    expect(chartModel.potCount).toBe(1);
-    expect(chartModel.policeCount).toBe(1);
-    expect(chartModel.cameraCount).toBe(0);
+    expect(chartModel.trafficJamsCount).toBe(1);
+    expect(chartModel.emergCount).toBe(1);
+    expect(chartModel.condCount).toBe(0);
   });
 
+  it('should filter POI data for Week And Rest', () => {
+    const hexId = '891ec1bb28bffff';
+    const history = 'week';
+    const validDate = new Date();
+    validDate.setDate(validDate.getDate() - 5);
+    const invalidDate = new Date();
+    invalidDate.setDate(invalidDate.getDate() - 10);
+    service.poiPerHex.set("891ec1bb28bffff", [
+      new PointOfInterest(
+      "152628", 
+      RoadHazardType.RoadConditions,
+      new Date(validDate),
+      "891ec1bb28bffff",
+      "Active",
+      "mock_note",
+      'user1'),
+      new PointOfInterest(
+        "152628", 
+        RoadHazardType.Police,
+        new Date(validDate),
+        "891ec1bb28bffff",
+        "Active",
+        "mock_note",
+        'user1'),
+        new PointOfInterest(
+          "152628", 
+          RoadHazardType.CamerasAndRadars,
+          new Date(validDate),
+          "891ec1bb28bffff",
+          "Active",
+          "mock_note",
+          'user1'),
+          new PointOfInterest(
+            "152628", 
+            RoadHazardType.Incidents,
+            new Date(validDate),
+            "891ec1bb28bffff",
+            "Active",
+            "mock_note",
+            'user1')
+    ]);
+    const chartModel = service.loadData(hexId, history);
+
+    expect(chartModel).toBeDefined();
+    expect(chartModel.condCount).toBe(1);
+    expect(chartModel.policeCount).toBe(1);
+    expect(chartModel.cameraCount).toBe(1);
+    expect(chartModel.incCount).toBe(1);
+  });
 
   //getUserPOIs
   it('should filter the POI array based on the given userId', () => {
@@ -574,4 +625,29 @@ describe('PoiService', () => {
 
     expect(expDate).toEqual(validDate);
   });
+
+  it('getPoitMap', () => {
+    const cur = new Map<string, PointOfInterest[]>
+    const poi1 =       {
+      id: "135892",
+      type:  RoadHazardType.Potholes,
+      createdAt: new Date('2016-11-04T16:57:11.718Z'),
+      hexId : "hex1",
+      status: "Active",
+      note : "mock_note",
+      userId: 'user1'
+    };
+    const poi2 =       {
+      id: "135892",
+      type:  RoadHazardType.Potholes,
+      createdAt: new Date('2016-11-04T16:57:11.718Z'),
+      hexId : "hex1",
+      status: "Active",
+      note : "mock_note",
+      userId: 'user1'
+    };
+    cur.set("hex1", [poi1, poi2]);
+    service.poiPerHex = cur;
+    expect(service.getPoiMap()).toEqual(cur);
+  })
 });
