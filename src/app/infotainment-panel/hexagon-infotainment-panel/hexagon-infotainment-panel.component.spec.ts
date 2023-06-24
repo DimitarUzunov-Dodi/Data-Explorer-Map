@@ -101,4 +101,9 @@ describe('HexagonInfotainmentPanelComponent', () => {
     component.openPoiData();
     expect(component.showPoiData).toBeTruthy();
   });
+
+  it('convertToCelcius', () => {
+    const res = component.convertToCelcius(273.15);
+    expect(res).toEqual("0 °C")
+  })
 });
