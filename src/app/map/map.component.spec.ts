@@ -205,4 +205,14 @@ describe('MapComponent', () => {
     const densities = component.calculateHexagonDensity(poisPerHex);
     expect(densities).toEqual(expectedDensities);
   });
+
+  //updatehazards
+  it('updateHazards', () => {
+    const neededHazards = new Set<RoadHazardType>
+    neededHazards.add(RoadHazardType.Fog)
+    neededHazards.add(RoadHazardType.Police)
+    component.updateHazards(neededHazards);
+    expect(component.searchedHazards).toEqual(neededHazards);
+  });
+
 });
