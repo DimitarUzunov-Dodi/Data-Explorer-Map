@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, flush, tick } from '@angular/core/testing';
 import { MapComponent } from './map.component';
 import { HomepageComponent } from '../homepage/homepage.component';
 import { PoiService } from '../Services/poi.service';
@@ -415,7 +415,7 @@ describe('MapComponent', () => {
     expect(searchedHexes).toEqual([]);
   });
 
-  it('should convert the bounds values to LatLngBounds correctly', () => {
+  it('boundsToCoordinates should convert the bounds values to LatLngBounds correctly', () => {
     const maxLat = 10;
     const minLat = 5;
     const maxLng = -75;
@@ -430,8 +430,8 @@ describe('MapComponent', () => {
     expect(result.getSouthWest().lng()).toEqual(minLat);
   });
 
-  it('should transform hexagons to the specified resolution level correctly', () => {
-    const searchUserHexIds: Set<string> = new Set<string>(['881eccb6edfffff', '881eccb401fffff', '891eccb6ecbffff']);
+  it('transformHexagonsToLevel should transform hexagons to the specified resolution level correctly', () => {
+    const searchUserHexIds: Set<string> = new Set<string>(['881eccb401fffff', '813fbffffffffff', '891eccb6ecbffff']);
     const resolutionLevel = 8;
 
     const result = component.transformHexagonsToLevel(searchUserHexIds);
@@ -444,5 +444,138 @@ describe('MapComponent', () => {
       expect(hexResolution).toBe(resolutionLevel);
     }
   });
+
+  it('should find and display a specific hexagon on the map 1', () => {
+    const hexId = '881eccb401fffff';
+
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+    
+    const result = component.findHexagon(hexId);
+    
+    expect(result).toBeTruthy();
+  });
+
+  it('should find and display a specific hexagon on the map 2', () => {
+    // Arrange
+    const hexId = '813fbffffffffff';
+
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+    
+    const result = component.findHexagon(hexId);
+    
+    expect(result).toBeTruthy();
+  });
+  
+
+  it('should find and display a specific hexagon on the map 3', () => {
+    const hexId = '891eccb6ecbffff';
+
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+    
+    const result = component.findHexagon(hexId);
+    
+    expect(result).toBeTruthy();
+  });
+
+
+  it('should not find and display a specific hexagon on the map', () => {
+    const hexId = 'VeryBadHexID';
+
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+    
+    const result = component.findHexagon(hexId);
+    
+    expect(result).toBeFalsy();
+  });
 });
+
+
 

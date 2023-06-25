@@ -197,7 +197,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       const hexagonCoords = h3.cellToBoundary(hex, true);
       const fillOp = this.hexDensities.get(hex) || 0;
       if (h3.getResolution(hex) > resolutionLevel){
-        console.log("enters")
         const hexagonPolygon = new google.maps.Polygon({
           paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
           strokeColor: '#fff',

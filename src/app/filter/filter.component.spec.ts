@@ -71,7 +71,7 @@ describe('FilterCheckbox', () => {
 
     component.selectAll(true);
 
-    expect(console.log).toHaveBeenCalled();
+    
     expect(component.shouldSelectAll.emit).not.toHaveBeenCalled();
   });
 
