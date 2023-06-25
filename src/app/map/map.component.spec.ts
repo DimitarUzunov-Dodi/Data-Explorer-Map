@@ -418,5 +418,30 @@ describe('MapComponent', () => {
     expect(component.displaySearchedHex).toHaveBeenCalledWith(parentIds[0], fillOp);
   });
 
+  it('small hexagons should be displayed', () => {
+
+    let hexId = '891eccb6ecbffff';
+  
+    component.displaySmallHex(hexId);
+    expect(component.polygonIds).toEqual([hexId]);
+  });
+
+  it('searched hexagons should be displayed', () => {
+
+    const hexId = '891eccb6ecbffff';
+    const fillOp = component.hexDensities.get(hexId) || 0;
+
+    component.displaySearchedHex(hexId, fillOp);
+    expect(component.polygonIds).toEqual([hexId]);
+  });
+
+  it('hexagons should be displayed', () => {
+
+    const hexId = '891eccb6ecbffff';
+    const fillOp = component.hexDensities.get(hexId) || 0;
+
+    component.displayNormalHex(hexId, fillOp);
+    expect(component.polygonIds).toEqual([hexId]);
+  });
 
 });
