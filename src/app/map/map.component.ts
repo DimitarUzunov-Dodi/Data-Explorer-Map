@@ -19,7 +19,7 @@ import { MAP_STYLES } from '../Services/models/mapStyle';
 export class MapComponent implements OnInit, AfterViewInit {
   @ViewChild('map') mapElement!: ElementRef;
   map!: google.maps.Map;
-  center: google.maps.LatLngLiteral = { lat: 37.7749, lng: -122.4194 };
+  center: google.maps.LatLng = new google.maps.LatLng( 37.7749,-122.4194);
   zoom = 12;
   mapOptions: google.maps.MapOptions = {
     mapTypeId: 'roadmap',
@@ -94,15 +94,19 @@ export class MapComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        this.center = { lat: position.coords.latitude, lng: position.coords.longitude };
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        this.center = new google.maps.LatLng(lat, lng);
         this.initializeMap();
       },
-      () => {
+      (error) => {
+        const defaultLat = 37.7749; // Default latitude
+        const defaultLng = -122.4194; // Default longitude
+        this.center = new google.maps.LatLng(defaultLat, defaultLng);
         this.initializeMap();
       }
     );
   }
-
   /**
    * Initializes the map component with the specified center coordinates and options.
    * Creates a Google Maps map instance and binds it to the map element in the view.
