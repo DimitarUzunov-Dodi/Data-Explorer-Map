@@ -424,6 +424,7 @@ describe('MapComponent', () => {
   
     component.displaySmallHex(hexId);
     expect(component.polygonIds).toEqual([hexId]);
+    expect(component.displayedHexagons.size).toEqual(1);
   });
 
   it('searched hexagons should be displayed', () => {
@@ -433,6 +434,7 @@ describe('MapComponent', () => {
 
     component.displaySearchedHex(hexId, fillOp);
     expect(component.polygonIds).toEqual([hexId]);
+    expect(component.displayedHexagons.size).toEqual(1);
   });
 
   it('hexagons should be displayed', () => {
@@ -442,6 +444,7 @@ describe('MapComponent', () => {
 
     component.displayNormalHex(hexId, fillOp);
     expect(component.polygonIds).toEqual([hexId]);
+    expect(component.displayedHexagons.size).toEqual(1);
   });
 
 });
