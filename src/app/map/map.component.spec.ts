@@ -481,6 +481,7 @@ describe('MapComponent', () => {
     // Arrange
     const hexId = '813fbffffffffff';
 
+    
     const center = new google.maps.LatLng(37.7749, -122.4194);
     const zoom = 12;
     const mapOptions: google.maps.MapOptions = {
@@ -543,7 +544,6 @@ describe('MapComponent', () => {
     expect(result).toBeTruthy();
   });
 
-
   it('should not find and display a specific hexagon on the map', () => {
     const hexId = 'VeryBadHexID';
 
@@ -575,6 +575,254 @@ describe('MapComponent', () => {
     
     expect(result).toBeFalsy();
   });
+
+  it('should find and display a specific hexagon on the map by POIid 1', () => {
+    const poiId = '12316229';
+    spyOn(poiService, 'getPoiArr').and.returnValue([
+      { id: '12316229', type: RoadHazardType.Police, createdAt: new Date(), hexId: '881eccb401fffff', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user2' }
+    ]);
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+    
+    const result = component.findPoi(poiId);
+    
+    expect(result).toBeTruthy();
+  });
+
+  it('should find and display a specific hexagon on the map by POIid 2', () => {
+    const poiId = '12316229';
+    spyOn(poiService, 'getPoiArr').and.returnValue([
+      { id: '12316229', type: RoadHazardType.Police, createdAt: new Date(), hexId: '813fbffffffffff', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user2' }
+    ]);
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+    
+    const result = component.findPoi(poiId);
+    
+    expect(result).toBeTruthy();
+  });
+
+
+  it('should find and display a specific hexagon on the map by POIid 3', () => {
+    const poiId = '12316229';
+    spyOn(poiService, 'getPoiArr').and.returnValue([
+      { id: '12316229', type: RoadHazardType.Police, createdAt: new Date(), hexId: '891eccb6ecbffff', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user2' }
+    ]);
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+    
+    const result = component.findPoi(poiId);
+    
+    expect(result).toBeTruthy();
+  });
+
+  it('should find and display a specific hexagon on the map by POIid 1', () => {
+    const poiId = '12316229';
+    spyOn(poiService, 'getPoiArr').and.returnValue([
+      { id: '12316229', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'BadHEx', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user2' }
+    ]);
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+    
+    const result = component.findPoi(poiId);
+    
+    expect(result).toBeFalsy();
+  });
+
+
+  it('should not find and display a specific hexagon on the map by POIid 2', () => {
+    const poiId = '12316229';
+    spyOn(poiService, 'getPoiArr').and.returnValue([
+      { id: '1', type: RoadHazardType.Police, createdAt: new Date(), hexId: '891eccb6ecbffff', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user2' }
+    ]);
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+    
+    const result = component.findPoi(poiId);
+    
+    expect(result).toBeFalsy();
+  });
+
+  it('should find and display all hexagons on the map by userID', () => {
+    const userId = 'user1';
+    spyOn(poiService, 'getPoiArr').and.returnValue([
+      { id: '12316229', type: RoadHazardType.Police, createdAt: new Date(), hexId: '891eccb6ecbffff', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user1' }
+    ]);
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+    
+    const result = component.findUser(userId);
+    
+    expect(result).toBeTruthy();
+  });
+
+  it('should not find and display all hexagons on the map by userID', () => {
+    const userId = 'notAValidUser';
+    spyOn(poiService, 'getPoiArr').and.returnValue([
+      { id: '12316229', type: RoadHazardType.Police, createdAt: new Date(), hexId: '891eccb6ecbffff', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user1' }
+    ]);
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+    
+    const result = component.findUser(userId);
+    
+    expect(result).toBeFalsy();
+  });
+
 });
 
 
