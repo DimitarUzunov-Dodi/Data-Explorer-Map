@@ -3,13 +3,19 @@ import { MapComponent } from './map.component';
 import { HomepageComponent } from '../homepage/homepage.component';
 import { PoiService } from '../Services/poi.service';
 import { PointOfInterest, RoadHazardType } from '../Services/models/poi';
+import { ElementRef } from '@angular/core';
+import { MAP_STYLES } from '../Services/models/mapStyle';
 
 describe('MapComponent', () => {
   let component: MapComponent;
   let fixture: ComponentFixture<MapComponent>;
   let poiService: PoiService;
+  let mockMapElement: ElementRef;
 
   beforeEach(async () => {
+    mockMapElement = {
+      nativeElement: document.createElement('div'),
+    } as ElementRef;
     await TestBed.configureTestingModule({
       declarations: [MapComponent],
       providers: [HomepageComponent, PoiService]
@@ -17,21 +23,12 @@ describe('MapComponent', () => {
   });
 
   beforeEach(() => {
+    
     fixture = TestBed.createComponent(MapComponent);
     component = fixture.componentInstance;
+    component.mapElement = mockMapElement;
     poiService = TestBed.inject(PoiService);
-  });
-
-  beforeEach(() => {
-    // Mock the Google Maps API
-    (window as any).google = {
-      maps: {
-        Map: jasmine.createSpy('Map'),
-        event: {
-          addListener: jasmine.createSpy('addListener')
-        }
-      }
-    };
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
@@ -74,7 +71,7 @@ describe('MapComponent', () => {
   it('should handle error during data loading', async () => {
     spyOn(poiService, 'processJson').and.callThrough();
     spyOn(poiService, 'getPoiMap').and.returnValue(new Map<string, PointOfInterest[]>());
-
+    
     const response = await fetch('./assets/mock_data_explorer.json');
     const jsonData = await response.json();
 
@@ -110,7 +107,10 @@ describe('MapComponent', () => {
     component.ngAfterViewInit();
 
     expect(navigator.geolocation.getCurrentPosition).toHaveBeenCalled();
-    expect(component.center).toEqual({ lat: 40.712776, lng: -74.005974 });
+    const defaultLat = 40.712776;
+    const defaultLng = -74.005974;
+    expect(component.center.lat()).toEqual(defaultLat);
+    expect(component.center.lng()).toEqual(defaultLng);
     expect(component.initializeMap).toHaveBeenCalled();
   });
 
@@ -119,21 +119,25 @@ describe('MapComponent', () => {
       code: 1,
       PERMISSION_DENIED: 1,
       POSITION_UNAVAILABLE: 2,
-      TIMEOUT: 3, // Use the appropriate constant value based on your test case
+      TIMEOUT: 3,
       message: ''
     };
-
-    spyOn(navigator.geolocation, 'getCurrentPosition')
-      .and.callFake((successCallback: PositionCallback, errorCallback: PositionErrorCallback) => {
+  
+    spyOn(navigator.geolocation, 'getCurrentPosition').and.callFake(
+      (successCallback: PositionCallback, errorCallback: PositionErrorCallback) => {
         errorCallback(mockError);
-      });
-
+      }
+    );
+  
     spyOn(component, 'initializeMap');
-
+  
     component.ngAfterViewInit();
-
+  
     expect(navigator.geolocation.getCurrentPosition).toHaveBeenCalled();
-    expect(component.center).toEqual({ lat: 37.7749, lng: -122.4194 });
+    const defaultLat = 37.7749;
+    const defaultLng = -122.4194;
+    expect(component.center.lat()).toEqual(defaultLat);
+    expect(component.center.lng()).toEqual(defaultLng);
     expect(component.initializeMap).toHaveBeenCalled();
   });
 
@@ -205,4 +209,70 @@ describe('MapComponent', () => {
     const densities = component.calculateHexagonDensity(poisPerHex);
     expect(densities).toEqual(expectedDensities);
   });
+
+  //updatehazards
+  it('updateHazards', () => {
+    const neededHazards = new Set<RoadHazardType>
+    neededHazards.add(RoadHazardType.Fog)
+    neededHazards.add(RoadHazardType.Police)
+    component.updateHazards(neededHazards);
+    expect(component.searchedHazards).toEqual(neededHazards);
+  });
+  //initializeMap
+  it('initializeMap', () => {
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+    expect(component.map).toBeDefined();
+    expect(component.map.getCenter()).toEqual(center);
+  });
+
+  //   //visualizeMap
+  // it('visualizeMap', () => {
+  //   const center = { lat: 37.7749, lng: -122.4194 };
+  //   const zoom = 12;
+  //   const mapOptions: google.maps.MapOptions = {
+  //     mapTypeId: 'roadmap',
+  //     backgroundColor: '#212121',
+  //     styles: MAP_STYLES,
+  //     disableDefaultUI: true,
+  //     maxZoom: 20,
+  //     minZoom: 1,
+  //     restriction: {
+  //       latLngBounds: {
+  //         north: 85,
+  //         south: -85,
+  //         west: -180,
+  //         east: 180,
+  //       },
+  //       strictBounds: true,
+  //     },
+  //   };
+  //   component.map = new google.maps.Map(mockMapElement.nativeElement, {
+  //     center: this.center,
+  //     zoom: this.zoom,
+  //     ...this.mapOptions
+  //   });
+  //   expect(component.map).toBeDefined();
+  // });
 });
