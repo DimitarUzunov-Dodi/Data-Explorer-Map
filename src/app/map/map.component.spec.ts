@@ -1,10 +1,12 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { MapComponent } from './map.component';
 import { HomepageComponent } from '../homepage/homepage.component';
 import { PoiService } from '../Services/poi.service';
 import { PointOfInterest, RoadHazardType } from '../Services/models/poi';
 import { ElementRef } from '@angular/core';
 import { MAP_STYLES } from '../Services/models/mapStyle';
+import { resolutionLevel } from '../Services/models/mapModels';
+import * as h3 from 'h3-js';
 
 describe('MapComponent', () => {
   let component: MapComponent;
@@ -303,8 +305,7 @@ describe('MapComponent', () => {
     // Call the visualizeMap method
     component.visualizeMap();
   
-    // Add another tick to ensure any pending timers are executed
-    tick();
+    flush();
   
     // Assert the expectations
     const myBounds = component.map.getBounds();
@@ -313,4 +314,109 @@ describe('MapComponent', () => {
     expect(component.calculateHexagonDensity).toHaveBeenCalledWith(component.poiPerHex);
     expect(component.displayHexagons).toHaveBeenCalledWith(hexInBounds, component.poiPerHex);
   }));
+
+  it('should display hexagons', () => {
+
+    spyOn(component, 'displaySmallHex');
+
+    const poi: PointOfInterest = {
+      id: '135892',
+      type: RoadHazardType.Police,
+      createdAt: new Date('2016-11-04T16:57:11.718Z'),
+      hexId: '891eccb6ecbffff',
+      status: 'Active',
+      note: 'mock_note',
+      userId: 'user1'
+    };
+
+    const poi2: PointOfInterest = {
+      id: '12316176',
+      type: RoadHazardType.Potholes,
+      createdAt: new Date('2023-01-13T00:16:28.982Z'),
+      hexId: '8e1ec0b2e3a0007',
+      status: 'Active',
+      note: 'mock_note',
+      userId: 'user3'
+    };
+    const inp = new Map<string, PointOfInterest[]>();
+    inp.set('891eccb6ecbffff', [poi]);
+    inp.set('8e1ec0b2e3a0007', [poi2]);
+        
+    component.displayHexagons(new Set(['891eccb6ecbffff', '8e1ec0b2e3a0007']), inp);
+    expect(component.displaySmallHex).toHaveBeenCalledWith('891eccb6ecbffff');
+    expect(component.displaySmallHex).toHaveBeenCalledWith('8e1ec0b2e3a0007');
+  });
+  
+  it('should display hexagons only for selected hazards', () => {
+    spyOn(component, 'displayNormalHex');
+
+    const poi1: PointOfInterest = {
+      id: '135892',
+      type: RoadHazardType.Police,
+      createdAt: new Date('2016-11-04T16:57:11.718Z'),
+      hexId: '891eccb6ecbffff',
+      status: 'Active',
+      note: 'mock_note',
+      userId: 'user1'
+    };
+  
+    const poi2: PointOfInterest = {
+      id: '12316176',
+      type: RoadHazardType.Potholes,
+      createdAt: new Date('2023-01-13T00:16:28.982Z'),
+      hexId: '8e1ec0b2e3a0007',
+      status: 'Active',
+      note: 'mock_note',
+      userId: 'user3'
+    };
+  
+    const poiMap = new Map<string, PointOfInterest[]>();
+    const parentIds = [h3.cellToParent('891eccb6ecbffff', resolutionLevel), h3.cellToParent('8e1ec0b2e3a0007', resolutionLevel)];
+    poiMap.set(parentIds[0], [poi1]);
+    poiMap.set(parentIds[1], [poi2]);
+    
+    component.updateHazards(new Set([RoadHazardType.Potholes]));
+    const fillOp = component.hexDensities.get(parentIds[0]) || 0;
+  
+    component.displayHexagons(new Set(parentIds), poiMap);
+    expect(component.displayNormalHex).toHaveBeenCalledWith(parentIds[1], fillOp);
+  });
+
+  it('should display hexagons only for searched hex id', () => {
+    spyOn(component, 'displaySearchedHex');
+
+    const poi1: PointOfInterest = {
+      id: '135892',
+      type: RoadHazardType.Police,
+      createdAt: new Date('2016-11-04T16:57:11.718Z'),
+      hexId: '891eccb6ecbffff',
+      status: 'Active',
+      note: 'mock_note',
+      userId: 'user1'
+    };
+  
+    const poi2: PointOfInterest = {
+      id: '12316176',
+      type: RoadHazardType.Potholes,
+      createdAt: new Date('2023-01-13T00:16:28.982Z'),
+      hexId: '8e1ec0b2e3a0007',
+      status: 'Active',
+      note: 'mock_note',
+      userId: 'user3'
+    };
+  
+    const poiMap = new Map<string, PointOfInterest[]>();
+    const parentIds = [h3.cellToParent('891eccb6ecbffff', resolutionLevel), h3.cellToParent('8e1ec0b2e3a0007', resolutionLevel)];
+    poiMap.set(parentIds[0], [poi1]);
+    poiMap.set(parentIds[1], [poi2]);
+    
+    component.updateHazards(new Set([RoadHazardType.Police]));
+    component.searchHexIds = new Set([parentIds[0]]);
+    const fillOp = component.hexDensities.get(parentIds[0]) || 0;
+  
+    component.displayHexagons(new Set(parentIds), poiMap);
+    expect(component.displaySearchedHex).toHaveBeenCalledWith(parentIds[0], fillOp);
+  });
+
+
 });
