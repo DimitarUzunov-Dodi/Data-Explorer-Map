@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { MapComponent } from './map.component';
 import { HomepageComponent } from '../homepage/homepage.component';
 import { PoiService } from '../Services/poi.service';
@@ -10,12 +10,8 @@ describe('MapComponent', () => {
   let component: MapComponent;
   let fixture: ComponentFixture<MapComponent>;
   let poiService: PoiService;
-  let mockMapElement: ElementRef;
 
   beforeEach(async () => {
-    mockMapElement = {
-      nativeElement: document.createElement('div'),
-    } as ElementRef;
     await TestBed.configureTestingModule({
       declarations: [MapComponent],
       providers: [HomepageComponent, PoiService]
@@ -26,7 +22,6 @@ describe('MapComponent', () => {
     
     fixture = TestBed.createComponent(MapComponent);
     component = fixture.componentInstance;
-    component.mapElement = mockMapElement;
     poiService = TestBed.inject(PoiService);
     fixture.detectChanges();
   });
@@ -218,6 +213,7 @@ describe('MapComponent', () => {
     component.updateHazards(neededHazards);
     expect(component.searchedHazards).toEqual(neededHazards);
   });
+
   //initializeMap
   it('initializeMap', () => {
     const center = new google.maps.LatLng(37.7749, -122.4194);
@@ -247,32 +243,72 @@ describe('MapComponent', () => {
     expect(component.map.getCenter()).toEqual(center);
   });
 
-  //   //visualizeMap
-  // it('visualizeMap', () => {
-  //   const center = { lat: 37.7749, lng: -122.4194 };
-  //   const zoom = 12;
-  //   const mapOptions: google.maps.MapOptions = {
-  //     mapTypeId: 'roadmap',
-  //     backgroundColor: '#212121',
-  //     styles: MAP_STYLES,
-  //     disableDefaultUI: true,
-  //     maxZoom: 20,
-  //     minZoom: 1,
-  //     restriction: {
-  //       latLngBounds: {
-  //         north: 85,
-  //         south: -85,
-  //         west: -180,
-  //         east: 180,
-  //       },
-  //       strictBounds: true,
-  //     },
-  //   };
-  //   component.map = new google.maps.Map(mockMapElement.nativeElement, {
-  //     center: this.center,
-  //     zoom: this.zoom,
-  //     ...this.mapOptions
-  //   });
-  //   expect(component.map).toBeDefined();
-  // });
+  //filterInBounds
+  it('filterInBounds', () => {
+    const bounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(42.4391223, 27.3580761),
+      new google.maps.LatLng(42.6139216, 27.5458556)
+      
+    );
+  
+    component.hexagonIds = new Set<string>(['881eccb6edfffff', '881eccb409fffff', '881eccb40bfffff', '881eccb2a7fffff']);
+    const result = component.filterInBounds(bounds);
+
+
+    expect(result).toEqual(new Set<string>(['881eccb6edfffff', '881eccb409fffff', '881eccb40bfffff']));
+  });
+
+  //visualizeMap
+  it('visualizeMap', fakeAsync(() => {
+    const bounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(42.4391223, 27.3580761),
+      new google.maps.LatLng(42.6139216, 27.5458556)
+    );
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+  
+    // Use fakeAsync and tick to simulate async operations
+    tick();
+
+    const hexInBounds = new Set<string>(['hex1', 'hex2']);
+    const hexDensities = new Map<string, number>([['hex1', 3], ['hex2', 5]]);
+    spyOn(component, 'filterInBounds').and.returnValue(hexInBounds);
+    spyOn(component, 'calculateHexagonDensity').and.returnValue(hexDensities);
+    spyOn(component, 'displayHexagons');
+
+    // Spy on the getBounds method and return the mock bounds
+    spyOn(component.map, 'getBounds').and.returnValue(bounds);
+    
+    // Call the visualizeMap method
+    component.visualizeMap();
+  
+    // Assert the expectations
+    const myBounds = component.map.getBounds();
+    expect(myBounds).toEqual(bounds);
+    expect(component.filterInBounds).toHaveBeenCalledWith(bounds);
+    expect(component.calculateHexagonDensity).toHaveBeenCalledWith(component.poiPerHex);
+    expect(component.displayHexagons).toHaveBeenCalledWith(hexInBounds, component.poiPerHex);
+  
+  }));
 });

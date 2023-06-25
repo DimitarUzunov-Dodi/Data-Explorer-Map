@@ -147,10 +147,10 @@ export class MapComponent implements OnInit, AfterViewInit {
       });
       this.displayedHexagons = new Map<string, google.maps.Polygon>();
       const hexInBounds = this.filterInBounds(coords);
+      console.log(hexInBounds)
       this.hexDensities = this.calculateHexagonDensity(this.poiPerHex);
       this.displayHexagons(hexInBounds, this.poiPerHex)
       }
-
   }
 
   /**
