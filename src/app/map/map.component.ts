@@ -352,14 +352,32 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
   }
   
+  /**
+  * Retrieves the boundary coordinates of a hexagon based on its hexagon ID.
+  *
+  * @param hexId - A string representing the hexagon ID.
+  * @returns An array of arrays representing the boundary coordinates of the hexagon.
+  */
   getCellBoundary(hexId: string): number[][] {
     return h3.cellToBoundary(hexId, true);
   }
   
+  /**
+  * Retrieves the resolution level of a hexagon based on its hexagon ID.
+  *
+  * @param hexId - A string representing the hexagon ID.
+  * @returns The resolution level of the hexagon.
+  */
   getResolution(hexId: string): number {
     return h3.getResolution(hexId);
   }
   
+  /**
+  * Retrieves the resolution level of a hexagon based on its hexagon ID.
+  *
+  * @param hexId - A string representing the hexagon ID.
+  * @returns The resolution level of the hexagon.
+  */
   processLowerResolutionHexagons(hexId: string): void {
     const poiIdSet = new Set<string>();
     poiIdSet.add(hexId);
@@ -368,16 +386,34 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
   }
   
+  /**
+  * Processes the hexagon with a higher resolution level than the specified resolution level.
+  * Sets the appropriate hexagons to be displayed on the map.
+  *
+  * @param hexId - A string representing the hexagon ID.
+  */
   processHigherResolutionHexagon(hexId: string): void {
     this.smallHexToDisplay.clear();
     this.smallHexToDisplay.add(hexId);
   }
   
+  /**
+  * Processes the hexagon with the same resolution level as the specified resolution level.
+  * Sets the appropriate hexagons to be displayed on the map.
+  *
+  * @param hexId - A string representing the hexagon ID.
+  */
   processSameResolutionHexagon(hexId: string): void {
     this.searchHexIds.clear();
     this.searchHexIds.add(hexId);
   }
   
+  /**
+  * Calculates the map bounds based on the coordinates of a hexagon.
+  *
+  * @param hexagonCoords - An array of arrays representing the boundary coordinates of a hexagon.
+  * @returns A `google.maps.LatLngBounds` object representing the calculated map bounds.
+  */
   calculateBounds(hexagonCoords: number[][]): google.maps.LatLngBounds {
     let maxLat = -Infinity;
     let minLat = Infinity;
@@ -396,6 +432,11 @@ export class MapComponent implements OnInit, AfterViewInit {
     return new google.maps.LatLngBounds(bottomLeft, topRight);
   }
   
+  /**
+  * Adjusts the map view to fit the provided map bounds.
+  *
+  * @param bounds - A `google.maps.LatLngBounds` object representing the desired map bounds.
+  */
   fitMapBounds(bounds: google.maps.LatLngBounds): void {
     this.map.fitBounds(bounds);
   }
@@ -439,6 +480,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
   }
   
+  /**
+  * Retrieves the hexagon ID associated with the provided point of interest (POI) ID.
+  *
+  * @param poiId A string representing the ID of the point of interest.
+  * @return The hexagon ID associated with the provided POI ID.
+  * @throws Error If the POI is not found.
+  */
   getSearchedHexFromPoiId(poiId: string): string {
     const poiArr = this.poiService.getPoiArr();
     const filteredPoi = poiArr.filter((x) => x.id === poiId.replace(/\s/g, ""));
@@ -479,6 +527,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+  * Calculates the boundaries of the hexagons associated with a specific user.
+  *
+  * @param searchedHexes An array of hexagon IDs associated with the user's points of interest.
+  * @return An object containing the maximum latitude, minimum latitude, maximum longitude, and minimum longitude
+  *         values of the user's hexagons.
+  */
   calculateBoundsOfUser(searchedHexes: string[]): { maxLat: number; minLat: number; maxLng: number; minLng: number } {
     let maxLat = -Infinity;
     let minLat = Infinity;
@@ -497,14 +552,29 @@ export class MapComponent implements OnInit, AfterViewInit {
   
     return { maxLat, minLat, maxLng, minLng };
   }
-  
+
+  /**
+  * Retrieves the hexagon IDs associated with the provided user ID.
+  *
+  * @param userId A string representing the ID of the user.
+  * @return An array of hexagon IDs associated with the provided user ID.
+  */
   getSearchedHexesFromUserId(userId: string): string[] {
     const poiArr = this.poiService.getPoiArr();
     return poiArr.filter((x) => x.userId === userId).map((x) => x.hexId);
   }
   
   
-  
+  /**
+  * Converts the maximum latitude, minimum latitude, maximum longitude, and minimum longitude values
+  * into a `LatLngBounds` object.
+  *
+  * @param maxLat The maximum latitude value.
+  * @param minLat The minimum latitude value.
+  * @param maxLng The maximum longitude value.
+  * @param minLng The minimum longitude value.
+  * @return A `LatLngBounds` object representing the boundaries.
+  */
   boundsToCoordinates(maxLat: number, minLat: number, maxLng: number, minLng: number): google.maps.LatLngBounds {
     const bottomLeft = new google.maps.LatLng(minLng, minLat);
     const topRight = new google.maps.LatLng(maxLng, maxLat);
