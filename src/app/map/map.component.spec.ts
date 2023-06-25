@@ -275,4 +275,56 @@ describe('MapComponent', () => {
   //   });
   //   expect(component.map).toBeDefined();
   // });
+
+  it('getCellBoundary should retrieve the boundary coordinates of a hexagon', () => {
+    const hexId: string = '891eccb6ecbffff';
+    const boundary: number[][] = component.getCellBoundary(hexId);
+    expect(boundary).toBeDefined();
+    expect(Array.isArray(boundary)).toBe(true);
+  });
+
+  it('getResolution should retrieve the resolution level of a hexagon', () => {
+    const hexId: string = '891eccb6ecbffff';
+    const resolution: number = component.getResolution(hexId);
+    expect(resolution).toBeDefined();
+    expect(typeof resolution).toBe('number');
+  });
+
+  it('processLowerResolutionHexagons should process lower resolution hexagons', () => {
+    const hexId: string = '891eccb6ecbffff';
+    component.processLowerResolutionHexagons(hexId);
+    expect(component.searchHexIds).toContain('881eccb6edfffff')
+  });
+
+  it('processHigherResolutionHexagon should process a higher resolution hexagon', () => {
+    const hexId: string = '881eccb401fffff';
+    component.processHigherResolutionHexagon(hexId);
+    expect(component.smallHexToDisplay).toContain('881eccb401fffff')
+  });
+
+  it('processSameResolutionHexagon should process a same resolution hexagon', () => {
+    const hexId: string = '881eccb6edfffff';
+    component.processSameResolutionHexagon(hexId);
+    expect(component.searchHexIds).toContain('881eccb6edfffff')
+  });
+
+  it('calculateBounds should calculate the bounds based on hexagon coordinates', () => {
+    const hexagonCoords: number[][] = [
+      [40.7128, -74.0060], 
+      [37.7749, -122.4194],
+      [34.0522, -118.2437],
+    ];
+    const bounds = component.calculateBounds(hexagonCoords);
+
+    // Perform assertions on the 'bounds' object to ensure it matches the expected result
+    expect(bounds).toBeDefined();
+    expect(bounds instanceof google.maps.LatLngBounds).toBe(true);
+    
+    const expectedBottomLeft = new google.maps.LatLng(-122.4194, 37.7749);
+    const expectedTopRight = new google.maps.LatLng(-74.0060, 40.7128);
+
+    expect(bounds.getSouthWest().equals(expectedBottomLeft)).toBe(true);
+    expect(bounds.getNorthEast().equals(expectedTopRight)).toBe(true);
+  });
+
 });
