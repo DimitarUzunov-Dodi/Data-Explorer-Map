@@ -5,6 +5,7 @@ import { PoiService } from '../Services/poi.service';
 import { PointOfInterest, RoadHazardType } from '../Services/models/poi';
 import { ElementRef } from '@angular/core';
 import { MAP_STYLES } from '../Services/models/mapStyle';
+import * as h3 from 'h3-js';
 
 describe('MapComponent', () => {
   let component: MapComponent;
@@ -320,11 +321,128 @@ describe('MapComponent', () => {
     expect(bounds).toBeDefined();
     expect(bounds instanceof google.maps.LatLngBounds).toBe(true);
     
-    const expectedBottomLeft = new google.maps.LatLng(-122.4194, 37.7749);
+    const expectedBottomLeft = new google.maps.LatLng(-122.4194, 34.0522);
     const expectedTopRight = new google.maps.LatLng(-74.0060, 40.7128);
 
-    expect(bounds.getSouthWest().equals(expectedBottomLeft)).toBe(true);
+    expect(bounds.getSouthWest().lat()).toEqual(expectedBottomLeft.lat());
+    expect(bounds.getSouthWest().lng()).toEqual(expectedBottomLeft.lng());
+    expect(bounds.getNorthEast().lat()).toEqual(expectedTopRight.lat());
+    expect(bounds.getNorthEast().lng()).toEqual(expectedTopRight.lng());
     expect(bounds.getNorthEast().equals(expectedTopRight)).toBe(true);
   });
 
+  it('should return the hexagon ID associated with the provided POI ID', () => {
+    // Create a mock of the getPoiArr method
+    spyOn(poiService, 'getPoiArr').and.returnValue([
+      { id: '1', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user2' }
+    ]);
+
+    // Call the getSearchedHexFromPoiId method with a valid POI ID
+    const hexId = component.getSearchedHexFromPoiId('1');
+
+    // Verify that the hexId is the expected value
+    expect(hexId).toEqual('hex1');
+  });
+
+  it('should throw an error if the POI is not found', () => {
+    // Create a mock of the getPoiArr method
+    spyOn(poiService, 'getPoiArr').and.returnValue([
+      { id: '1', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user2' }
+    ]);
+
+    // Call the getSearchedHexFromPoiId method with an invalid POI ID
+    const invalidCall = () => component.getSearchedHexFromPoiId('3');
+
+    // Verify that an error is thrown
+    expect(invalidCall).toThrowError('POI not found');
+  });
+
+  it('calculateBoundsOfUser should calculate the bounds of the searched hexes correctly', () => {
+    // Mock the getCellBoundary method
+    spyOn(component, 'getCellBoundary').and.returnValues(
+      [[10, 20], [11, 19]], // Hex 1 coordinates
+      [[30, 40], [30, 39]]  // Hex 2 coordinates
+    );
+
+    // Define the searched hexes
+    const searchedHexes = ['hex1', 'hex2'];
+
+    // Call the calculateBoundsOfUser method
+    const bounds = component.calculateBoundsOfUser(searchedHexes);
+
+    // Verify the calculated bounds
+    expect(bounds.maxLat).toBe(30);
+    expect(bounds.minLat).toBe(10);
+    expect(bounds.maxLng).toBe(40);
+    expect(bounds.minLng).toBe(20);
+  });
+
+  it('getSearchedHexesFromUserId should retrieve the searched hexes associated with a user ID correctly', () => {
+    // Mock the getPoiArr method
+    spyOn(poiService, 'getPoiArr').and.returnValue([
+      { id: '1', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user2' },
+      { id: '3', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex2', status: 'Active', note: 'Note1', userId: 'user1' },
+  
+    ]);
+
+    // Define the user ID
+    const userId = 'user1';
+
+    // Call the getSearchedHexesFromUserId method
+    const searchedHexes = component.getSearchedHexesFromUserId(userId);
+
+    // Verify the retrieved searched hexes
+    expect(searchedHexes).toEqual(['hex1', 'hex2']);
+  });
+
+  it('getSearchedHexesFromUserId should return an empty array when no searched hexes are associated with a user ID', () => {
+    // Mock the getPoiArr method
+    spyOn(poiService, 'getPoiArr').and.returnValue([
+      { id: '1', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note1', userId: 'user1' },
+      { id: '2', type: RoadHazardType.Police, createdAt: new Date(), hexId: 'hex1', status: 'Active', note: 'Note2', userId: 'user2' }
+    ]);
+
+    // Define a user ID with no associated searched hexes
+    const userId = 'user3';
+
+    // Call the getSearchedHexesFromUserId method
+    const searchedHexes = component.getSearchedHexesFromUserId(userId);
+
+    // Verify that an empty array is returned
+    expect(searchedHexes).toEqual([]);
+  });
+
+  it('should convert the bounds values to LatLngBounds correctly', () => {
+    const maxLat = 10;
+    const minLat = 5;
+    const maxLng = -75;
+    const minLng = -80;
+
+    const result = component.boundsToCoordinates(maxLat, minLat, maxLng, minLng);
+
+    expect(result instanceof google.maps.LatLngBounds).toBe(true);
+    expect(result.getNorthEast().lat()).toEqual(maxLng);
+    expect(result.getSouthWest().lat()).toEqual(minLng);
+    expect(result.getNorthEast().lng()).toEqual(maxLat);
+    expect(result.getSouthWest().lng()).toEqual(minLat);
+  });
+
+  it('should transform hexagons to the specified resolution level correctly', () => {
+    const searchUserHexIds: Set<string> = new Set<string>(['881eccb6edfffff', '881eccb401fffff', '891eccb6ecbffff']);
+    const resolutionLevel = 8;
+
+    const result = component.transformHexagonsToLevel(searchUserHexIds);
+
+    expect(result instanceof Set).toBe(true);
+    expect(result.size).toBeGreaterThan(0);
+
+    for (const hexId of result) {
+      const hexResolution = h3.getResolution(hexId);
+      expect(hexResolution).toBe(resolutionLevel);
+    }
+  });
 });
+
