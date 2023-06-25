@@ -290,18 +290,21 @@ describe('MapComponent', () => {
   
     // Use fakeAsync and tick to simulate async operations
     tick();
-
+  
     const hexInBounds = new Set<string>(['hex1', 'hex2']);
     const hexDensities = new Map<string, number>([['hex1', 3], ['hex2', 5]]);
     spyOn(component, 'filterInBounds').and.returnValue(hexInBounds);
     spyOn(component, 'calculateHexagonDensity').and.returnValue(hexDensities);
     spyOn(component, 'displayHexagons');
-
+  
     // Spy on the getBounds method and return the mock bounds
     spyOn(component.map, 'getBounds').and.returnValue(bounds);
-    
+  
     // Call the visualizeMap method
     component.visualizeMap();
+  
+    // Add another tick to ensure any pending timers are executed
+    tick();
   
     // Assert the expectations
     const myBounds = component.map.getBounds();
@@ -309,6 +312,5 @@ describe('MapComponent', () => {
     expect(component.filterInBounds).toHaveBeenCalledWith(bounds);
     expect(component.calculateHexagonDensity).toHaveBeenCalledWith(component.poiPerHex);
     expect(component.displayHexagons).toHaveBeenCalledWith(hexInBounds, component.poiPerHex);
-  
   }));
 });
