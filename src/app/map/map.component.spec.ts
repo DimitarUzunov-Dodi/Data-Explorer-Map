@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, flush, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, flush, tick, fakeAsync } from '@angular/core/testing';
 import { MapComponent } from './map.component';
 import { HomepageComponent } from '../homepage/homepage.component';
 import { PoiService } from '../Services/poi.service';
