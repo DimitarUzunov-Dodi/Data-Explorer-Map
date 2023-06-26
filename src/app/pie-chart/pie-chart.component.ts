@@ -81,22 +81,19 @@ export class PieChartComponent implements OnInit, OnChanges{
 
     // button needs to be added for time period
     const tt = this.poiService.loadData(this.hexId,hist)
-    if(tt.incCount == 0 && tt.cameraCount == 0 &&
-      tt.policeCount == 0 && tt.potCount == 0 && tt.aqCount == 0
-      && tt.fogCount == 0 && tt.trafficJamsCount == 0 && tt.condCount == 0
-      && tt.icyCount == 0 && tt.emergCount == 0){
+    const values = Array.from(tt.values())
+    if(values.filter(x => x>0).length == 0){
       window.alert("No Data Available for This Period")
-
     }
     else{
       this.chart = new Chart("MyChart", {
         type: 'pie', //this denotes tha type of chart
 
         data: {// values on X-Axis
-          labels: ['Potholes', 'Fog','Aquaplaning','Icy Roads','Traffic Jams','Emergencies', 'Road Conditions', 'Police', 'Cameras/Radars', 'Incidents'],
+          labels: Array.from(tt.keys()),
           datasets: [{
             label: 'Occurrences',
-            data: [tt.potCount, tt.fogCount, tt.aqCount, tt.icyCount, tt.trafficJamsCount, tt.emergCount, tt.condCount, tt.policeCount, tt.cameraCount, tt.incCount],
+            data: values,
             backgroundColor: [
               '#1E313A',
               '#577D86',

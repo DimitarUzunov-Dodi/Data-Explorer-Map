@@ -23,7 +23,7 @@ export enum RoadHazardType {
   Fog = 'Fog',
   Aquaplaning = 'Aquaplaning',
   IcyRoads = 'Icy Roads',
-  TrafficJams = 'TrafficJams',
+  TrafficJams = 'Traffic Jams',
   RoadEmergencies = 'Road Emergencies',
   RoadConditions = 'Road Conditions',
   Police = 'Police',

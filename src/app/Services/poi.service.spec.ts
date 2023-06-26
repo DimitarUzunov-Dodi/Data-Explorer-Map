@@ -144,7 +144,7 @@ describe('PoiService', () => {
   });
 
 
-  //loadData
+  // loadData
   it('should filter POI data for Year', () => {
     const hexId = '891ec1bb28bffff';
     const history = 'year';
@@ -191,9 +191,9 @@ describe('PoiService', () => {
     const chartModel = service.loadData(hexId, history);
 
     expect(chartModel).toBeDefined();
-    expect(chartModel.potCount).toBe(1);
-    expect(chartModel.fogCount).toBe(1);
-    expect(chartModel.aqCount).toBe(0);
+    expect(chartModel.get(RoadHazardType.Potholes)).toBe(1);
+    expect(chartModel.get(RoadHazardType.Fog)).toBe(1);
+    expect(chartModel.get(RoadHazardType.Aquaplaning)).toBe(0);
   });
 
   it('should filter POI data for Month', () => {
@@ -242,9 +242,9 @@ describe('PoiService', () => {
     const chartModel = service.loadData(hexId, history);
 
     expect(chartModel).toBeDefined();
-    expect(chartModel.aqCount).toBe(1);
-    expect(chartModel.icyCount).toBe(1);
-    expect(chartModel.trafficJamsCount).toBe(0);
+    expect(chartModel.get(RoadHazardType.Aquaplaning)).toBe(1);
+    expect(chartModel.get(RoadHazardType.IcyRoads)).toBe(1);
+    expect(chartModel.get(RoadHazardType.TrafficJams)).toBe(0);
   });
 
   it('should filter POI data for Week', () => {
@@ -293,9 +293,9 @@ describe('PoiService', () => {
     const chartModel = service.loadData(hexId, history);
 
     expect(chartModel).toBeDefined();
-    expect(chartModel.trafficJamsCount).toBe(1);
-    expect(chartModel.emergCount).toBe(1);
-    expect(chartModel.condCount).toBe(0);
+    expect(chartModel.get(RoadHazardType.TrafficJams)).toBe(1);
+    expect(chartModel.get(RoadHazardType.RoadEmergencies)).toBe(1);
+    expect(chartModel.get(RoadHazardType.RoadConditions)).toBe(0);
   });
 
   it('should filter POI data for Week And Rest', () => {
@@ -342,10 +342,10 @@ describe('PoiService', () => {
     const chartModel = service.loadData(hexId, history);
 
     expect(chartModel).toBeDefined();
-    expect(chartModel.condCount).toBe(1);
-    expect(chartModel.policeCount).toBe(1);
-    expect(chartModel.cameraCount).toBe(1);
-    expect(chartModel.incCount).toBe(1);
+    expect(chartModel.get(RoadHazardType.RoadConditions)).toBe(1);
+    expect(chartModel.get(RoadHazardType.Police)).toBe(1);
+    expect(chartModel.get(RoadHazardType.CamerasAndRadars)).toBe(1);
+    expect(chartModel.get(RoadHazardType.Incidents)).toBe(1);
   });
 
   //getUserPOIs
