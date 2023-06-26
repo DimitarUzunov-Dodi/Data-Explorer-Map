@@ -72,6 +72,8 @@ export class PoiService {
           map.get(poi.hexId)?.push(poi) ?? map.set(poi.hexId, [poi]);
         }
       } catch (error) {
+        alert(error);
+        throw error;
       }
       return map;
     }, beginMapSetup);

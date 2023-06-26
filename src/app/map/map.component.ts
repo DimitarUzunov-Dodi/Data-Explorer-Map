@@ -147,10 +147,10 @@ export class MapComponent implements OnInit, AfterViewInit {
       });
       this.displayedHexagons = new Map<string, google.maps.Polygon>();
       const hexInBounds = this.filterInBounds(coords);
+      console.log(hexInBounds)
       this.hexDensities = this.calculateHexagonDensity(this.poiPerHex);
       this.displayHexagons(hexInBounds, this.poiPerHex)
       }
-
   }
 
   /**
@@ -188,123 +188,153 @@ export class MapComponent implements OnInit, AfterViewInit {
     for( const hex of this.smallHexToDisplay){
       hexagons.add(hex);
     }
-    for (const hex of this.smallHexToDisplay) {
-      this.poiService.getPoIsByHexId(hex).filter(x => this.searchedHazards.has(x.type));
-    }
     for (const hex of hexagons) {
-      const poisInHex = this.poiService.getPoIsByHexId(hex).filter(x => this.searchedHazards.has(x.type))
+      const poisInHex = poisPerHex.get(hex)?.filter(x => this.searchedHazards.has(x.type)) ?? [];
 
-      const hexagonCoords = h3.cellToBoundary(hex, true);
       const fillOp = this.hexDensities.get(hex) || 0;
       if (h3.getResolution(hex) > resolutionLevel){
-        const hexagonPolygon = new google.maps.Polygon({
-          paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-          strokeColor: '#fff',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#577D86',
-          fillOpacity: 1,
-          zIndex: 2
-        });
 
-        hexagonPolygon.setMap(this.map);
-        this.displayedHexagons.set(hex, hexagonPolygon);
-        this.polygonIds.push(hex);
+        this.displaySmallHex(hex);
+
       }
-      else if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && poisInHex.length>0 || this.smallHexToDisplay.has(hex) ) {
-        const hexagonPolygon = new google.maps.Polygon({
-          paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-          strokeColor: '#fff',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#577D86',
-          fillOpacity: fillOp,
-          zIndex: 2
-        });
+      else if ((this.searchHexIds.has(hex) || this.searchUserHexIds.has(hex)) && 
+      poisInHex.length>0 || this.smallHexToDisplay.has(hex) ) {
 
-        hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-          this.homepage.enqueue(['hex', hex], this.homepage.past);
-          this.homepage.handleSearchTriggered(["hex",  hex])
-          this.flag=true;
-        });
+        this.displaySearchedHex(hex, fillOp);
 
-        hexagonPolygon.setMap(this.map);
-        this.displayedHexagons.set(hex, hexagonPolygon);
-        this.polygonIds.push(hex);
       } else {
         const pois: PointOfInterest[] | undefined = poisPerHex.get(hex);
-        if (typeof pois !== 'undefined' && pois.length > 0) {
-          if (pois.map((x) => x.type).filter((y) => this.searchedHazards.has(y)).length > 0) {
-            const hexagonPolygon = new google.maps.Polygon({
-              paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
-              strokeColor: '#577D86',
-              strokeOpacity: 0.8,
-              strokeWeight: 2,
-              fillColor: '#577D86',
-              fillOpacity: fillOp,
-              zIndex: 1
-            });
+        if ((typeof pois !== 'undefined' && pois.length > 0) &&
+         (pois.map((x) => x.type).filter((y) => this.searchedHazards.has(y)).length > 0)) {
 
+          this.displayNormalHex(hex, fillOp);
 
-            hexagonPolygon.addListener('mouseover', (event: google.maps.MapMouseEvent) => {
-
-              const model = this.poiService.loadData(hex,"")
-
-              if(model.emergCount > 0){
-                this.poiTypes.add("Emergency Conditions")
-              }
-              if(model.icyCount > 0){
-                this.poiTypes.add("Icy Conditions")
-              }
-              if(model.condCount > 0){
-                this.poiTypes.add("Traffic Conditions")
-              }
-              if(model.aqCount > 0){
-                this.poiTypes.add("Aquaplaning")
-              }
-              if(model.fogCount > 0){
-                this.poiTypes.add("Fog")
-              }
-              if(model.potCount > 0){
-                this.poiTypes.add("Potholes")
-              }
-              if(model.policeCount > 0){
-                this.poiTypes.add("Police")
-              }
-              if(model.cameraCount > 0){
-                this.poiTypes.add("Camera")
-              }
-              if(model.incCount > 0){
-                this.poiTypes.add("Incidents")
-              }
-              if(model.trafficJamsCount > 0){
-                this.poiTypes.add("Traffic Jams")
-              }
-
-              this.showPopup = true
-
-            });
-
-            hexagonPolygon.addListener('mouseout', (event: google.maps.MapMouseEvent) => {
-              this.showPopup = false
-              this.poiTypes.clear()
-            });
-
-            hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
-              this.homepage.enqueue(['hex', hex], this.homepage.past);
-              this.homepage.handleSearchTriggered(["hex",  hex])
-              this.flag=true;
-            });
-
-            hexagonPolygon.setMap(this.map);
-            this.displayedHexagons.set(hex, hexagonPolygon);
-            this.polygonIds.push(hex);
-
-
-          }
         }
       }
     }
+  }
+
+  /**
+   * Helper method that displays a hexagon on the map (part of displayHexagons method)
+   * @param hex : ID of hexagon to be displayed
+   */
+  displaySmallHex(hex: string) {
+    console.log("enters")
+    const hexagonCoords = h3.cellToBoundary(hex, true);
+    const hexagonPolygon = new google.maps.Polygon({
+      paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+      strokeColor: '#fff',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#577D86',
+      fillOpacity: 1,
+      zIndex: 2
+    });
+
+    hexagonPolygon.setMap(this.map);
+    this.displayedHexagons.set(hex, hexagonPolygon);
+    this.polygonIds.push(hex);
+  }
+
+  /**
+   * Helper method to display the searched hexagon (part of displayHexagons method)
+   * @param hex : ID of hexagon to be displayed
+   * @param fillOp : Opacity for the hexagon
+   */
+  displaySearchedHex(hex: string, fillOp: number) {
+    const hexagonCoords = h3.cellToBoundary(hex, true);
+    const hexagonPolygon = new google.maps.Polygon({
+      paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+      strokeColor: '#fff',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#577D86',
+      fillOpacity: fillOp,
+      zIndex: 2
+    });
+
+    hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
+      this.homepage.enqueue(['hex', hex], this.homepage.past);
+      this.homepage.handleSearchTriggered(["hex",  hex])
+      this.flag=true;
+    });
+
+    hexagonPolygon.setMap(this.map);
+    this.displayedHexagons.set(hex, hexagonPolygon);
+    this.polygonIds.push(hex);
+  }
+
+  /**
+   * Helper method to display a hexagon normally (part of displayHexagons method)
+   * @param hex : ID of hexagon to be displayed
+   * @param fillOp : Opacity for the hexagon
+   */
+  displayNormalHex(hex: string, fillOp: number) {
+    const hexagonCoords = h3.cellToBoundary(hex, true);
+    const hexagonPolygon = new google.maps.Polygon({
+      paths: hexagonCoords.map((coord) => ({ lat: coord[1], lng: coord[0] })),
+      strokeColor: '#577D86',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#577D86',
+      fillOpacity: fillOp,
+      zIndex: 1
+    });
+
+
+    hexagonPolygon.addListener('mouseover', (event: google.maps.MapMouseEvent) => {
+
+      const model = this.poiService.loadData(hex,"")
+
+      if(model.emergCount > 0){
+        this.poiTypes.add("Emergency Conditions")
+      }
+      if(model.icyCount > 0){
+        this.poiTypes.add("Icy Conditions")
+      }
+      if(model.condCount > 0){
+        this.poiTypes.add("Traffic Conditions")
+      }
+      if(model.aqCount > 0){
+        this.poiTypes.add("Aquaplaning")
+      }
+      if(model.fogCount > 0){
+        this.poiTypes.add("Fog")
+      }
+      if(model.potCount > 0){
+        this.poiTypes.add("Potholes")
+      }
+      if(model.policeCount > 0){
+        this.poiTypes.add("Police")
+      }
+      if(model.cameraCount > 0){
+        this.poiTypes.add("Camera")
+      }
+      if(model.incCount > 0){
+        this.poiTypes.add("Incidents")
+      }
+      if(model.trafficJamsCount > 0){
+        this.poiTypes.add("Traffic Jams")
+      }
+
+      this.showPopup = true
+
+    });
+
+    hexagonPolygon.addListener('mouseout', (event: google.maps.MapMouseEvent) => {
+      this.showPopup = false
+      this.poiTypes.clear()
+    });
+
+    hexagonPolygon.addListener('click', (event: google.maps.MapMouseEvent) => {
+      this.homepage.enqueue(['hex', hex], this.homepage.past);
+      this.homepage.handleSearchTriggered(["hex",  hex])
+      this.flag=true;
+    });
+
+    hexagonPolygon.setMap(this.map);
+    this.displayedHexagons.set(hex, hexagonPolygon);
+    this.polygonIds.push(hex);
   }
 
   /**

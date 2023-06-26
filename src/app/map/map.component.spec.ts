@@ -5,18 +5,15 @@ import { PoiService } from '../Services/poi.service';
 import { PointOfInterest, RoadHazardType } from '../Services/models/poi';
 import { ElementRef } from '@angular/core';
 import { MAP_STYLES } from '../Services/models/mapStyle';
+import { resolutionLevel } from '../Services/models/mapModels';
 import * as h3 from 'h3-js';
 
 describe('MapComponent', () => {
   let component: MapComponent;
   let fixture: ComponentFixture<MapComponent>;
   let poiService: PoiService;
-  let mockMapElement: ElementRef;
 
   beforeEach(async () => {
-    mockMapElement = {
-      nativeElement: document.createElement('div'),
-    } as ElementRef;
     await TestBed.configureTestingModule({
       declarations: [MapComponent],
       providers: [HomepageComponent, PoiService]
@@ -27,7 +24,6 @@ describe('MapComponent', () => {
     
     fixture = TestBed.createComponent(MapComponent);
     component = fixture.componentInstance;
-    component.mapElement = mockMapElement;
     poiService = TestBed.inject(PoiService);
     fixture.detectChanges();
   });
@@ -219,6 +215,7 @@ describe('MapComponent', () => {
     component.updateHazards(neededHazards);
     expect(component.searchedHazards).toEqual(neededHazards);
   });
+
   //initializeMap
   it('initializeMap', () => {
     const center = new google.maps.LatLng(37.7749, -122.4194);
@@ -821,6 +818,208 @@ describe('MapComponent', () => {
     const result = component.findUser(userId);
     
     expect(result).toBeFalsy();
+  });
+
+  //filterInBounds
+  it('filterInBounds', () => {
+    const bounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(42.4391223, 27.3580761),
+      new google.maps.LatLng(42.6139216, 27.5458556)
+      
+    );
+  
+    component.hexagonIds = new Set<string>(['881eccb6edfffff', '881eccb409fffff', '881eccb40bfffff', '881eccb2a7fffff']);
+    const result = component.filterInBounds(bounds);
+
+
+    expect(result).toEqual(new Set<string>(['881eccb6edfffff', '881eccb409fffff', '881eccb40bfffff']));
+  });
+
+  //visualizeMap
+  it('visualizeMap', fakeAsync(() => {
+    const bounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(42.4391223, 27.3580761),
+      new google.maps.LatLng(42.6139216, 27.5458556)
+    );
+    const center = new google.maps.LatLng(37.7749, -122.4194);
+    const zoom = 12;
+    const mapOptions: google.maps.MapOptions = {
+      mapTypeId: 'roadmap',
+      backgroundColor: '#212121',
+      styles: MAP_STYLES,
+      disableDefaultUI: true,
+      maxZoom: 20,
+      minZoom: 1,
+      restriction: {
+        latLngBounds: {
+          north: 85,
+          south: -85,
+          west: -180,
+          east: 180,
+        },
+        strictBounds: true,
+      },
+    };
+    component.center = center;
+    component.zoom = zoom;
+    component.mapOptions = mapOptions;
+    component.initializeMap();
+  
+    // Use fakeAsync and tick to simulate async operations
+    tick();
+  
+    const hexInBounds = new Set<string>(['hex1', 'hex2']);
+    const hexDensities = new Map<string, number>([['hex1', 3], ['hex2', 5]]);
+    spyOn(component, 'filterInBounds').and.returnValue(hexInBounds);
+    spyOn(component, 'calculateHexagonDensity').and.returnValue(hexDensities);
+    spyOn(component, 'displayHexagons');
+  
+    // Spy on the getBounds method and return the mock bounds
+    spyOn(component.map, 'getBounds').and.returnValue(bounds);
+  
+    // Call the visualizeMap method
+    component.visualizeMap();
+  
+    flush();
+  
+    // Assert the expectations
+    const myBounds = component.map.getBounds();
+    expect(myBounds).toEqual(bounds);
+    expect(component.filterInBounds).toHaveBeenCalledWith(bounds);
+    expect(component.calculateHexagonDensity).toHaveBeenCalledWith(component.poiPerHex);
+    expect(component.displayHexagons).toHaveBeenCalledWith(hexInBounds, component.poiPerHex);
+  }));
+
+  it('should display hexagons', () => {
+
+    spyOn(component, 'displaySmallHex');
+
+    const poi: PointOfInterest = {
+      id: '135892',
+      type: RoadHazardType.Police,
+      createdAt: new Date('2016-11-04T16:57:11.718Z'),
+      hexId: '891eccb6ecbffff',
+      status: 'Active',
+      note: 'mock_note',
+      userId: 'user1'
+    };
+
+    const poi2: PointOfInterest = {
+      id: '12316176',
+      type: RoadHazardType.Potholes,
+      createdAt: new Date('2023-01-13T00:16:28.982Z'),
+      hexId: '8e1ec0b2e3a0007',
+      status: 'Active',
+      note: 'mock_note',
+      userId: 'user3'
+    };
+    const inp = new Map<string, PointOfInterest[]>();
+    inp.set('891eccb6ecbffff', [poi]);
+    inp.set('8e1ec0b2e3a0007', [poi2]);
+        
+    component.displayHexagons(new Set(['891eccb6ecbffff', '8e1ec0b2e3a0007']), inp);
+    expect(component.displaySmallHex).toHaveBeenCalledWith('891eccb6ecbffff');
+    expect(component.displaySmallHex).toHaveBeenCalledWith('8e1ec0b2e3a0007');
+  });
+  
+  it('should display hexagons only for selected hazards', () => {
+    spyOn(component, 'displayNormalHex');
+
+    const poi1: PointOfInterest = {
+      id: '135892',
+      type: RoadHazardType.Police,
+      createdAt: new Date('2016-11-04T16:57:11.718Z'),
+      hexId: '891eccb6ecbffff',
+      status: 'Active',
+      note: 'mock_note',
+      userId: 'user1'
+    };
+  
+    const poi2: PointOfInterest = {
+      id: '12316176',
+      type: RoadHazardType.Potholes,
+      createdAt: new Date('2023-01-13T00:16:28.982Z'),
+      hexId: '8e1ec0b2e3a0007',
+      status: 'Active',
+      note: 'mock_note',
+      userId: 'user3'
+    };
+  
+    const poiMap = new Map<string, PointOfInterest[]>();
+    const parentIds = [h3.cellToParent('891eccb6ecbffff', resolutionLevel), h3.cellToParent('8e1ec0b2e3a0007', resolutionLevel)];
+    poiMap.set(parentIds[0], [poi1]);
+    poiMap.set(parentIds[1], [poi2]);
+    
+    component.updateHazards(new Set([RoadHazardType.Potholes]));
+    const fillOp = component.hexDensities.get(parentIds[0]) || 0;
+  
+    component.displayHexagons(new Set(parentIds), poiMap);
+    expect(component.displayNormalHex).toHaveBeenCalledWith(parentIds[1], fillOp);
+  });
+
+  it('should display hexagons only for searched hex id', () => {
+    spyOn(component, 'displaySearchedHex');
+
+    const poi1: PointOfInterest = {
+      id: '135892',
+      type: RoadHazardType.Police,
+      createdAt: new Date('2016-11-04T16:57:11.718Z'),
+      hexId: '891eccb6ecbffff',
+      status: 'Active',
+      note: 'mock_note',
+      userId: 'user1'
+    };
+  
+    const poi2: PointOfInterest = {
+      id: '12316176',
+      type: RoadHazardType.Potholes,
+      createdAt: new Date('2023-01-13T00:16:28.982Z'),
+      hexId: '8e1ec0b2e3a0007',
+      status: 'Active',
+      note: 'mock_note',
+      userId: 'user3'
+    };
+  
+    const poiMap = new Map<string, PointOfInterest[]>();
+    const parentIds = [h3.cellToParent('891eccb6ecbffff', resolutionLevel), h3.cellToParent('8e1ec0b2e3a0007', resolutionLevel)];
+    poiMap.set(parentIds[0], [poi1]);
+    poiMap.set(parentIds[1], [poi2]);
+    
+    component.updateHazards(new Set([RoadHazardType.Police]));
+    component.searchHexIds = new Set([parentIds[0]]);
+    const fillOp = component.hexDensities.get(parentIds[0]) || 0;
+  
+    component.displayHexagons(new Set(parentIds), poiMap);
+    expect(component.displaySearchedHex).toHaveBeenCalledWith(parentIds[0], fillOp);
+  });
+
+  it('small hexagons should be displayed', () => {
+
+    const hexId = '891eccb6ecbffff';
+  
+    component.displaySmallHex(hexId);
+    expect(component.polygonIds).toEqual([hexId]);
+    expect(component.displayedHexagons.size).toEqual(1);
+  });
+
+  it('searched hexagons should be displayed', () => {
+
+    const hexId = '891eccb6ecbffff';
+    const fillOp = component.hexDensities.get(hexId) || 0;
+
+    component.displaySearchedHex(hexId, fillOp);
+    expect(component.polygonIds).toEqual([hexId]);
+    expect(component.displayedHexagons.size).toEqual(1);
+  });
+
+  it('hexagons should be displayed', () => {
+
+    const hexId = '891eccb6ecbffff';
+    const fillOp = component.hexDensities.get(hexId) || 0;
+
+    component.displayNormalHex(hexId, fillOp);
+    expect(component.polygonIds).toEqual([hexId]);
+    expect(component.displayedHexagons.size).toEqual(1);
   });
 
 });
