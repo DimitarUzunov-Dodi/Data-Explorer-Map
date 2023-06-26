@@ -57,8 +57,6 @@ export class FilterCheckbox {
    * @param isChecked : weather the selected hazard is being selected or deselected
    */
   handleCheckboxChange(hazardType: string, isChecked: boolean) {
-    console.log(hazardType);
-    console.log([hazardType, isChecked])
     this.hazardChecked.emit([hazardType, isChecked]);
   }
 }
