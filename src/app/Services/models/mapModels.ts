@@ -1,0 +1,1 @@
+export const resolutionLevel = 8;

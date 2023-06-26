@@ -1,0 +1,96 @@
+  table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th {
+    background-color: rgba(94, 103, 105, 1);
+    color: #f2f2f2;
+  }
+  .field {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  h3{
+    font-family: Arial, sans-serif;
+  }
+  #toggle-panel-btn  {
+    text-align: center;
+    padding: 10px 20px;
+    margin-left: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #577d86;
+    color: black;
+    cursor: pointer;
+    font-size: 20px;
+    font-family: Arial,"Times New Roman", Times, serif; /* Set the desired font family */
+    margin-bottom: 10px; /* Add margin-bottom for space between the button and the table */
+
+  }
+  #all-hex{
+    text-align: center;
+    height: 100%;
+    width: 100%;
+  }
+  :host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+
+  
+  p{
+    padding: 5%;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  ul p {
+    margin: 5px 0;
+  }
+  
+  ul p a {
+    text-decoration: none;
+  }
+  
+  ul p a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+
+  /* Styling for field container */
+  #countries {
+    margin-bottom: 20px;
+  }
+
+  /* Styling for heading */
+  #countriesh3 {
+    font-family: Arial, serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  /* Styling for unordered list */
+  #countries ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Styling for list items */
+  #countries li {
+    font-family: Arial, serif;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+

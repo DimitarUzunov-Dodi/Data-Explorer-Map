@@ -1,0 +1,56 @@
+.top-panel {
+  position: fixed;
+  top: 2%;
+  left: 25%;
+  right: 25%;
+
+  background-color: rgba(94, 103, 105, 0.5); /* Semi-transparent white background */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  z-index: 2;
+  border-radius: 10px; /* Round edges */
+  backdrop-filter: blur(5px); /* Apply a blur effect */
+  height: 45px;
+  min-width: 300px; /* Set a minimum width */
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container input[type="text"] {
+  /* width: 300px; Update the width value as per your requirement */
+  width: 100%; /* Fill the available width */
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid #577d86;
+  font-size: 14px;
+  color: #9de3f2; /* White text color */
+  background-color: #333;
+  
+}
+
+.search-container .search-button {
+  margin-left: 10px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background-color: #577d86;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+#png{
+  width: 14px;
+  height: 14px;
+}
+
+#logo{
+  width: 500px;
+  height: 50px;
+}
+
+

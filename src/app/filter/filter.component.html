@@ -1,0 +1,21 @@
+<div class = "buttonHolder">
+    <button id="minimizeBtn" (click)="changeState()"><input type="image" id="hazardBtnImage" src=".\..\assets\hazard_list_button.png"></button> 
+</div>
+<div class = "filter" [class.show]="isShown" [class.hide]="!isShown">
+    <div class = "hazards">
+        <button id="selectAll" (click)="selectAll(true)">Select All</button>
+        <button id="deselectAll" (click)="selectAll(false)">Clear Selections</button>
+        <br>
+            
+        <div id="checkBoxForm" class="grid">
+            <div class="checkbox-container" *ngFor="let hazard of hazards; let i = index">
+                <label class="slider">
+                <input type="checkbox" [(ngModel)]="hazard.checked" (change)="handleCheckboxChange(hazard.value, hazard.checked)" name="boxcheck">
+                <span class="slider-round"></span>
+                </label>
+                <span class="slider-label">{{ hazard.value }}</span>
+            </div>
+        </div>
+
+    </div>
+</div>

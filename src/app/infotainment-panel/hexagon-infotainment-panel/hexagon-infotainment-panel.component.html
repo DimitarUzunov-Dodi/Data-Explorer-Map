@@ -1,0 +1,57 @@
+<div id="all-hex">
+  <h3>Hexagon</h3>
+    <div class="field">
+      <ul>
+      <p>Hex ID: {{ searchedHex }}</p>
+      <p>Area: {{area}} km^2</p>
+      </ul>
+    </div>
+    <div class="field">
+      <button id="toggle-panel-btn" (click)="openPoiData()" style="color: #f2f2f2">List of POIs</button>
+      <div *ngIf="showPoiData">
+        <div *ngIf="pois.length > 0">
+          <table>
+            <tr>
+              <th>poiId</th>
+              <th>type</th>
+              <th>userId</th>
+            </tr>
+            <tr *ngFor="let poi of pois">
+              <td><a (click)="openPoiInfotainment(poi.id)" style="cursor: pointer;text-decoration: underline;">{{ poi.id }}</a></td>
+              <td>{{ poi.type }}</td>
+              <td><a (click)="openUserInfotainment(poi.userId)" style="cursor: pointer;text-decoration: underline;">{{ poi.userId }}</a></td>
+            </tr>
+          </table>
+        </div>
+
+      <div class="field" *ngIf="pois.length === 0">
+        <h3>No POIs available for this hexagon.</h3>
+      </div>
+
+      </div>
+    </div>
+
+
+
+    <div class="field" id="countries">
+      <h3>Countries:</h3>
+      <ul>
+        <li *ngFor="let country of countries">{{ country }}</li>
+      </ul>
+    </div>
+
+    <div class="field">
+      <h3>Weather Forecast:</h3>
+      <div>
+        <img src="http://openweathermap.org/img/wn/{{ weatherIcon }}.png" alt="Weather Icon" style="width: 50px; height: 50px;">
+        {{ weatherDescription }}
+      </div>
+      <p>{{ minTemp }}</p>
+      <p>{{ maxTemp }}</p>
+      <p>{{ feelsLikes }}</p>
+      <p>{{ windspeed }}</p>
+      <p>Rain: {{ rain }}</p>
+    </div>
+
+  <app-pie-chart [hexId]="searchedHex"> </app-pie-chart>
+</div>

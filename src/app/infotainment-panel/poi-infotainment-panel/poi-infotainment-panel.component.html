@@ -1,0 +1,18 @@
+    <div id="all-pois">
+      <h3>Point of Interest</h3>
+    <div class="field" *ngIf="poi">
+      <ul >
+        <p>ID: {{ poi.id }}</p>
+        <p>Type: {{ poi.type }}</p>
+        <p>Date of creation: {{ poi.createdAt | date:'dd/MM/yyyy' }}</p>
+        <p>Expiration date: {{expDate | date:'dd/MM/yyyy'}} </p>
+        <p>Status: {{ stat }}</p>
+        <p>Hexagon ID: <a (click)="openHexInfotainment(hexIdMaxRes)">{{hexIdMaxRes}} </a>  </p>
+        <p>User ID: <a (click)="openUserInfotainment(poi.userId)">{{ poi.userId }}</a></p>
+      </ul>
+    </div>
+    <div class="field" *ngIf="poi=== null">
+      <h3>No POIs available for this hexagon.</h3>
+    </div>
+    </div>
+
