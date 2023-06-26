@@ -6,7 +6,6 @@ import { resolutionLevel } from '../Services/models/mapModels';
 import { SearchFunction } from '../Services/models/searchModels'
 import { GoogleMapsModule } from '@angular/google-maps';
 import { HomepageComponent } from '../homepage/homepage.component';
-import {ChartModel} from "../Services/models/chartModel";
 import { MAP_STYLES } from '../Services/models/mapStyle';
 
 
@@ -284,40 +283,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     hexagonPolygon.addListener('mouseover', (event: google.maps.MapMouseEvent) => {
 
-      const model = this.poiService.loadData(hex,"")
+      this.poiTypes = new Set(this.poiPerHex.get(hex)?.map(x => x.type) ?? []);
 
-      if(model.emergCount > 0){
-        this.poiTypes.add("Emergency Conditions")
-      }
-      if(model.icyCount > 0){
-        this.poiTypes.add("Icy Conditions")
-      }
-      if(model.condCount > 0){
-        this.poiTypes.add("Traffic Conditions")
-      }
-      if(model.aqCount > 0){
-        this.poiTypes.add("Aquaplaning")
-      }
-      if(model.fogCount > 0){
-        this.poiTypes.add("Fog")
-      }
-      if(model.potCount > 0){
-        this.poiTypes.add("Potholes")
-      }
-      if(model.policeCount > 0){
-        this.poiTypes.add("Police")
-      }
-      if(model.cameraCount > 0){
-        this.poiTypes.add("Camera")
-      }
-      if(model.incCount > 0){
-        this.poiTypes.add("Incidents")
-      }
-      if(model.trafficJamsCount > 0){
-        this.poiTypes.add("Traffic Jams")
-      }
-
-      this.showPopup = true
+      this.showPopup = true;
 
     });
 

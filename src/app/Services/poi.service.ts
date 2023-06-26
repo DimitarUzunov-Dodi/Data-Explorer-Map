@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {PointOfInterest, RoadHazardType} from "./models/poi";
-import {ChartModel} from "./models/chartModel";
 import { resolutionLevel } from './models/mapModels';
 import * as h3 from 'h3-js';
 
@@ -117,10 +116,9 @@ export class PoiService {
    */
   loadData(hexId: string, history: string) {
 
-    const retModel = new ChartModel(0,
-      0, 0,0,
-      0,0,0,
-      0,0,0)
+    const retModel = new Map<string, number>();
+
+    Object.values(RoadHazardType).forEach(type => retModel.set(type, 0));
 
 
     const poInt = this.getPoIsByHexId(hexId)
@@ -142,39 +140,9 @@ export class PoiService {
     startDate.setDate(startDate.getDate() - daysFilter); // Calculate the start date
 
     const filtered= poInt.filter(obj => new Date(obj.createdAt) >= startDate && new Date(obj.createdAt) <= currentDate);
-    for (const pointOfInterest of filtered) {
-
-      if(pointOfInterest.type == 'Potholes'){
-        retModel.potCount++
-      }
-      else if(pointOfInterest.type == 'Fog'){
-        retModel.fogCount++
-      }
-      else if(pointOfInterest.type == 'Aquaplaning'){
-        retModel.aqCount++
-      }
-      else if(pointOfInterest.type == 'Icy Roads'){
-        retModel.icyCount++
-      }
-      else if(pointOfInterest.type == 'TrafficJams'){
-        retModel.trafficJamsCount++
-      }
-      else if(pointOfInterest.type == 'Road Emergencies'){
-        retModel.emergCount++
-      }
-      else if(pointOfInterest.type == 'Road Conditions'){
-        retModel.condCount++
-      }
-      else if(pointOfInterest.type == 'Police'){
-        retModel.policeCount++
-      }
-      else if(pointOfInterest.type == 'Cameras And Radars'){
-        retModel.cameraCount++
-      }
-      else if(pointOfInterest.type == 'Incidents'){
-        retModel.incCount++
-      }
-
+    for (const poi of filtered) {
+      const count = retModel.get(poi.type)? retModel.get(poi.type)! + 1 : 1;
+      retModel.set(poi.type, count);
     }
 
     return retModel
