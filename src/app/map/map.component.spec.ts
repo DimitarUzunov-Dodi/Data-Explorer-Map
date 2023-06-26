@@ -420,7 +420,7 @@ describe('MapComponent', () => {
 
   it('small hexagons should be displayed', () => {
 
-    let hexId = '891eccb6ecbffff';
+    const hexId = '891eccb6ecbffff';
   
     component.displaySmallHex(hexId);
     expect(component.polygonIds).toEqual([hexId]);

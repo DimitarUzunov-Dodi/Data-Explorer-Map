@@ -1,3 +1,4 @@
+ /* eslint-disable */
 export const MAP_STYLES: google.maps.MapTypeStyle[] = [
     {
       featureType: 'poi',
