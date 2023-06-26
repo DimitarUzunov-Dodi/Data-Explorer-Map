@@ -275,33 +275,33 @@ describe('MapComponent', () => {
   // });
 
   it('getCellBoundary should retrieve the boundary coordinates of a hexagon', () => {
-    const hexId: string = '891eccb6ecbffff';
+    const hexId = '891eccb6ecbffff';
     const boundary: number[][] = component.getCellBoundary(hexId);
     expect(boundary).toBeDefined();
     expect(Array.isArray(boundary)).toBe(true);
   });
 
   it('getResolution should retrieve the resolution level of a hexagon', () => {
-    const hexId: string = '891eccb6ecbffff';
+    const hexId = '891eccb6ecbffff';
     const resolution: number = component.getResolution(hexId);
     expect(resolution).toBeDefined();
     expect(typeof resolution).toBe('number');
   });
 
   it('processLowerResolutionHexagons should process lower resolution hexagons', () => {
-    const hexId: string = '891eccb6ecbffff';
+    const hexId = '891eccb6ecbffff';
     component.processLowerResolutionHexagons(hexId);
     expect(component.searchHexIds).toContain('881eccb6edfffff')
   });
 
   it('processHigherResolutionHexagon should process a higher resolution hexagon', () => {
-    const hexId: string = '881eccb401fffff';
+    const hexId = '881eccb401fffff';
     component.processHigherResolutionHexagon(hexId);
     expect(component.smallHexToDisplay).toContain('881eccb401fffff')
   });
 
   it('processSameResolutionHexagon should process a same resolution hexagon', () => {
-    const hexId: string = '881eccb6edfffff';
+    const hexId = '881eccb6edfffff';
     component.processSameResolutionHexagon(hexId);
     expect(component.searchHexIds).toContain('881eccb6edfffff')
   });
