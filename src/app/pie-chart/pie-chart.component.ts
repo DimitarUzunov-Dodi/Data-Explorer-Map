@@ -47,14 +47,12 @@ export class PieChartComponent implements OnInit, OnChanges{
       this.chart.destroy();
     }
 
-    console.log("PieChart Hex: " + this.hexId)
     const dropdown = document.getElementById('myDropdown') as HTMLSelectElement;
     const getSelectedBtn = document.getElementById('getSelectedBtn');
 
     // @ts-ignore
     getSelectedBtn.addEventListener('click', () => {
       const selectedOption = dropdown.value;
-      console.log(selectedOption)
 
       this.createChart(selectedOption);
     });
@@ -83,7 +81,6 @@ export class PieChartComponent implements OnInit, OnChanges{
 
     // button needs to be added for time period
     const tt = this.poiService.loadData(this.hexId,hist)
-    // console.log(tt)
     if(tt.incCount == 0 && tt.cameraCount == 0 &&
       tt.policeCount == 0 && tt.potCount == 0 && tt.aqCount == 0
       && tt.fogCount == 0 && tt.trafficJamsCount == 0 && tt.condCount == 0

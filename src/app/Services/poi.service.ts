@@ -38,7 +38,6 @@ export class PoiService {
    * @param rawData
    */
   processJson(rawData: PointOfInterest[]): void {
-    console.log("type is" + (typeof rawData));
     this.poiArr = rawData.map(data => new PointOfInterest(
       data.id,
       data.type,
@@ -49,7 +48,6 @@ export class PoiService {
       data.userId
     ));
 
-    console.log(this.poiArr);
     this.setupPois();
 
   }
@@ -59,7 +57,6 @@ export class PoiService {
    * into the poiPerHex map.
    */
   setupPois() {
-    console.log("begin setup");
     const beginMapSetup : Map<string, PointOfInterest[]> = new Map<string, PointOfInterest[]>;
 
     this.poiPerHex = this.poiArr.reduce((map, poi) => {
@@ -75,7 +72,8 @@ export class PoiService {
           map.get(poi.hexId)?.push(poi) ?? map.set(poi.hexId, [poi]);
         }
       } catch (error) {
-        console.log("this ahi:" + resolutionLevel + " " + poi)
+        alert(error);
+        throw error;
       }
       return map;
     }, beginMapSetup);

@@ -18,7 +18,7 @@ export class TopBarComponent {
   type:SearchFunction = SearchFunction.SearchByHex;
   @Output() searchTriggered: EventEmitter<[string,string]> = new EventEmitter<[string,string]>();
   @Output() clearSearchTriggered: EventEmitter<void> = new EventEmitter<void>();
-  constructor(private homepage: HomepageComponent, private poiService: PoiService){}
+  constructor(private poiService: PoiService){}
 
   /**
   Handles the key press event when a user interacts with the search input field.
@@ -50,16 +50,12 @@ export class TopBarComponent {
   search(query: string){
     try{
       if(isValidCell(query)){
-        console.log("Enter hex")
         this.searchTriggered.emit([SearchFunction.SearchByHex,this.searchText]); 
       }else if(this.isValidPoi(query)){
-        console.log("Enter poi")
         this.searchTriggered.emit([SearchFunction.SearchByPoiId,this.searchText]); 
       }else if(this.isValidUser(query)){
-        console.log("Enter user")
         this.searchTriggered.emit([SearchFunction.SearchByUser,this.searchText]); 
       }else{
-        console.log("Enter region")
         this.searchTriggered.emit([SearchFunction.SearchByRegion,this.searchText]); 
       }
 

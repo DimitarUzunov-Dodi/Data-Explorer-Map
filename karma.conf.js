@@ -4,6 +4,10 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
+    files: [
+      'mocks/maps.googleapis.com-maps-api.js',
+      'http://maps.googleapis.com/maps/api/js?sensor=false&language=en'
+    ],
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
@@ -41,5 +45,6 @@ module.exports = function (config) {
         flags: ['--no-sandbox']
       }
     }
+    
   });
 };
